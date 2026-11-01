@@ -4,6 +4,7 @@
 // details and no form link, and use none of the words the site never uses for itself.
 import { test, expect, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { ENTRIES_OPEN, ENTRIES_OPEN_DAY } from './dates.mjs';
 
 const NORMAL = 'http://localhost:4331';
 const OPEN = 'http://localhost:4332';
@@ -35,7 +36,7 @@ const faqAnswers: Record<string, string> = {
   'which-category': "Your age on 17 January 2027. If you're 14 or under, you're Junior. Otherwise you're Open. Open has no upper age limit.",
   'enter-more-than-once': 'No, one essay per person.',
   'under-18': 'A parent or guardian has to agree to you entering and to us handling your details. The entry form asks for a second email address; we suggest theirs.',
-  'open-and-close': "Entries open on Monday 16 November 2026 and close on Sunday 17 January 2027 at 23:59 Malaysia time (MYT). Late entries aren't judged.",
+  'open-and-close': `Entries open on ${ENTRIES_OPEN_DAY} and close on Sunday 17 January 2027 at 23:59 Malaysia time (MYT). Late entries aren't judged.`,
   'fix-a-mistake': "Yes, until entries close (17 January 2027, 23:59 Malaysia time). Email pharosprize@gmail.com with your full name, the email address you entered with, and what needs fixing. If it's your essay, attach the corrected PDF. After the deadline we can't accept changes.",
   'word-count': "Everything from the first word of your essay to the last, including footnotes. Your title and your reference list don't count. Essays over 800 words aren't judged.",
   'references': "If you use someone else's words, ideas or numbers, credit them. Any clear, consistent style is fine.",
@@ -241,7 +242,7 @@ test.describe('FAQ page', () => {
     await page.goto('/faq/');
     const answer = page.locator('div#pay-how');
     await expect(answer).toHaveText(
-      `By bank transfer in ringgit to T.A.S.K's account. The details go up on the How to enter page when entries open on 16 November 2026. Use the reference "PHAROS + your full name", and keep a screenshot to upload on the form.`,
+      `By bank transfer in ringgit to T.A.S.K's account. The details go up on the How to enter page when entries open on ${ENTRIES_OPEN}. Use the reference "PHAROS + your full name", and keep a screenshot to upload on the form.`,
     );
     await expect(answer.locator('a')).toHaveCount(0);
     await expect(page.locator('main a[href^="/register"]')).toHaveCount(0);
