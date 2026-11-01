@@ -156,7 +156,7 @@ export const JUDGING_PDF_PAGES = 1;
 
 // Every date on the site, as YYYY-MM-DD. Pages show them through formatDate().
 export const DATES = {
-  entriesOpen: '2026-11-16',
+  entriesOpen: '2026-11-05',
   deadline: '2027-01-17', // 23:59 Malaysia time (DEADLINE_TIME); also the date entrants' ages are counted on
   results: '2027-02-03', // winners are announced on this date
   entryDataDeleted: '2027-08-03', // by this date entry data we no longer need is deleted (see the Privacy page)

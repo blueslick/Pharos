@@ -3,6 +3,7 @@
 // built site must not show the entry form link or the bank details yet.
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { ENTRIES_OPEN } from './dates.mjs';
 
 const pages = ['/', '/about/', '/blog/', '/competition/', '/contact/', '/faq/', '/privacy/', '/register/', '/rules/', '/verify/'];
 
@@ -69,7 +70,7 @@ test('About names the soup kitchen instead of "a local soup kitchen"', async ({ 
 
 test('the Register page is only an "Opening soon" notice while closed', async ({ page }) => {
   await page.goto('/register/');
-  await expect(page.getByText('Entries open 16 November 2026.')).toBeVisible();
+  await expect(page.getByText(`Entries open ${ENTRIES_OPEN}.`)).toBeVisible();
   await expect(page.getByRole('button', { name: 'Opening soon' })).toBeDisabled();
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
 });

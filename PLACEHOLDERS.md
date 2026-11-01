@@ -44,7 +44,7 @@ One judge (the owner). Nothing is left as a placeholder in the code: the rubric 
 
 | Item | Value | Where it's set |
 |---|---|---|
-| Entries open | 16 November 2026 | `DATES.entriesOpen` in `src/site.ts` (Home, Competition, Register) |
+| Entries open | 5 November 2026 | `DATES.entriesOpen` in `src/site.ts` (Home, Competition, Register) |
 | Entry deadline | 17 January 2027, 23:59 Malaysia time (MYT). Ages are counted on this date | `DATES.deadline` and `DEADLINE_TIME` in `src/site.ts` (Competition, Register, the "Entries are open" arch) |
 | Results | 3 February 2027 | `DATES.results` in `src/site.ts` (Competition, "How it works") |
 | Waitlist form | Tally form `kbdkBR`, share link https://tally.so/r/kbdkBR | `WAITLIST_FORM_ID` in `src/site.ts` (one line; the share link and embed address are built from it) |

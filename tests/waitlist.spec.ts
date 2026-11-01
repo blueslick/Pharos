@@ -4,6 +4,7 @@
 // mocked or blocked.
 import { test, expect, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { ENTRIES_OPEN } from './dates.mjs';
 
 const FORM = 'https://tally.so/r/kbdkBR';
 const SCRIPT = 'https://tally.so/widgets/embed.js';
@@ -78,11 +79,11 @@ test('Tally is loaded only on pages that show the form', async ({ page }) => {
 
 test('the dates and soup kitchen name come from site.ts', async ({ page }) => {
   await page.goto('/competition/');
-  await expect(page.locator('.top__opens')).toHaveText('Opens 16 November 2026');
+  await expect(page.locator('.top__opens')).toHaveText(`Opens ${ENTRIES_OPEN}`);
   await expect(page.locator('.fact', { hasText: 'Deadline' })).toContainText('17 January 2027');
   await expect(page.getByText('Winners are announced by 3 February 2027.')).toBeVisible();
   await page.goto('/');
-  await expect(page.getByText('fundraiser for The Assembly Soup Kitchen (T.A.S.K). Opens 16 November 2026.')).toBeVisible();
+  await expect(page.getByText(`fundraiser for The Assembly Soup Kitchen (T.A.S.K). Opens ${ENTRIES_OPEN}.`)).toBeVisible();
 });
 
 test('the Privacy page covers the waitlist', async ({ page }) => {
