@@ -46,6 +46,11 @@ const css = `${tokensCss()}:root{--grain:url("data:image/svg+xml;utf8,${encodeUR
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="/favicon-16.png" type="image/png" sizes="16x16" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
     {noindex ? <meta name="robots" content="noindex, nofollow" /> : <link rel="canonical" href={pageUrl} />}
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={SITE_NAME} />
