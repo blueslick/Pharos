@@ -156,5 +156,8 @@ jobs:
           QUEUE_SHEET_ID: ${{ secrets.QUEUE_SHEET_ID }}
           IG_USER_ID: ${{ secrets.IG_USER_ID }}
           IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          # The token is a system-user token from Meta's "Unified login" setup, which works on
+          # graph.facebook.com (not graph.instagram.com). It never expires, so no refresh is needed.
+          IG_GRAPH_URL: https://graph.facebook.com/v23.0
           MEDIA_BASE_URL: https://raw.githubusercontent.com/${{ github.repository }}/${{ needs.build.outputs.sha || 'none' }}/tools/social/posts
         run: node publish/publish.js --live
