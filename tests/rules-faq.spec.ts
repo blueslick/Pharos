@@ -19,21 +19,23 @@ const redLines = ['charity', 'non-profit', 'nonprofit', 'not-for-profit', 'ngo',
 const footerPages = ['/', '/competition/', '/about/', '/blog/', '/contact/', '/privacy/', '/verify/', '/rules/', '/faq/'];
 
 const rulesText = [
-  'Students only, from any country. Junior is 14 and under; Open is students of any age. Your age is your age on 17 January 2027.',
+  'Students only, from any country. Junior is 14 and under; Open is 25 and under. Your age is your age on 17 January 2027.',
   'One essay per person, answering one of the three prompts.',
   "Up to 800 words, in English, uploaded as a PDF. Don't put your name or school in the file.",
   "It must be your own work. Don't use AI tools to write, rewrite, expand or translate any of it, and don't enter an essay that's been published or entered somewhere else.",
   'Pay the entry fee, RM 40 (or RM 20 with approved fee support), straight to The Assembly Soup Kitchen (T.A.S.K) before you submit, and upload proof on the form.',
-  'Under 18? A parent or guardian must agree to you entering.',
+  'Under 18? A parent or guardian must agree to you entering. On the form, tick the box saying they agree and give their email address; we may email them to check.',
   'Submit by Sunday 17 January 2027, 23:59 Malaysia time. No extensions.',
   "Essays are read and judged by people, against the published judging criteria. The judges' decisions are final.",
   'Winners and shortlisted entrants may be named (name only) on pharosprize.org and Instagram. Prizes: USD 50 (Junior) and USD 100 (Open).',
+  "Before prizes are paid, winners must confirm their age and that they're a student (see the FAQ). If a winner can't, the prize goes to the next-ranked entry.",
 ];
 
 // Every FAQ answer (the ones that differ between builds are checked separately).
 const faqAnswers: Record<string, string> = {
   'who-is-a-student': 'Anyone studying at a school, college or university on 17 January 2027. We may ask for proof, such as a student card or a letter from your school, before we award a prize.',
-  'which-category': "Your age on 17 January 2027. If you're 14 or under, you're Junior. Otherwise you're Open. Open has no upper age limit.",
+  'which-category': "Your age on 17 January 2027. If you're 14 or under, you're Junior. Otherwise, if you're 25 or under, you're Open.",
+  'poster-says-any-age': 'The Open category is for students aged 25 and under (as at 17 January 2027). Some early posters and listings show an older version; the Rules page is always the one that counts.',
   'enter-more-than-once': 'No, one essay per person.',
   'under-18': 'A parent or guardian has to agree to you entering and to us handling your details. The entry form asks for a second email address; we suggest theirs.',
   'open-and-close': `Entries open on ${ENTRIES_OPEN_DAY} and close on Sunday 17 January 2027 at 23:59 Malaysia time (MYT). Late entries aren't judged.`,
@@ -56,6 +58,7 @@ const faqAnswers: Record<string, string> = {
   'feedback': "No. We can't give individual scores or feedback.",
   'results': 'Wednesday 3 February 2027, on pharosprize.org and Instagram (@pharosprize). Winners are also told by email.',
   'prizes-paid': "By bank transfer or Wise to the winner, or to a parent or guardian if the winner is under 18, within 2 weeks of the results. Prizes are funded separately, not from entry fees. If we can't reach a winner within 14 days of the results, we may award the prize to the next-placed essay.",
+  'winner-age-check': "Before we pay a prize, we check the winner's age and that they're a student. You can either show your ID on a short video call, or send a photo of it with the ID number partly covered (on a MyKad, cover the last six digits; the first six show your date of birth). A letter from your school also works. If you're under 18, a parent or guardian joins the call or sends the photo. We don't keep a copy of your ID or its number; we only note that the check was done.",
   'certificate': 'Winners and shortlisted entrants get a certificate with a code anyone can check at pharosprize.org/verify/.',
   'who-owns-my-essay': 'You do. You let us store and read it to run the competition.',
   'essay-published': "Only if it wins and you (and a parent or guardian, if you're under 18) give separate permission after the results.",
@@ -66,14 +69,14 @@ const faqAnswers: Record<string, string> = {
 };
 
 const faqQuestions = [
-  'Who counts as a student?', 'Which category am I in?', 'Can I enter more than once?', "I'm under 18. What do I need?",
+  'Who counts as a student?', 'Which category am I in?', 'I saw a poster that says Open is for any age. Which is right?', 'Can I enter more than once?', "I'm under 18. What do I need?",
   'When do entries open and close?', 'I made a mistake in my entry. Can I fix it?',
   'What counts towards the 800 words?', 'Do I need references?', 'Can I write in another language?',
   "Why can't I put my name in the PDF?", 'How do I make a PDF?',
   'Can I use AI at all?', 'What happens if you think an essay used AI?',
   'Where does my fee go?', 'How do I pay?', "I'm not in Malaysia. How do I pay?", 'How do I know my payment arrived?',
   'What is fee support?', 'Who can ask for it?', 'How do I ask?', 'Is there a deadline?',
-  'Who judges the essays?', 'Will I get feedback or a score?', 'When are the results?', 'How are prizes paid?', 'Do I get a certificate?',
+  'Who judges the essays?', 'Will I get feedback or a score?', 'When are the results?', 'How are prizes paid?', 'How do winners confirm their age?', 'Do I get a certificate?',
   'Who owns my essay?', 'Will my essay be published?', 'What do you publish about me?', 'How do you handle my data?',
   'Do I have to follow or tag Pharos to enter?', 'Who runs Pharos?',
 ];
@@ -135,12 +138,12 @@ test.describe('indexing', () => {
 });
 
 test.describe('Rules page', () => {
-  test('is a numbered list of nine rules with the approved wording', async ({ page }) => {
+  test('is a numbered list of ten rules with the approved wording', async ({ page }) => {
     await page.goto('/rules/');
     await expect(page.getByRole('heading', { level: 1, name: 'Rules' })).toBeVisible();
-    await expect(page.getByText('Nine rules. The FAQ explains the details.', { exact: true })).toBeVisible();
+    await expect(page.getByText('Ten rules. The FAQ explains the details.', { exact: true })).toBeVisible();
     const items = page.locator('main ol > li');
-    await expect(items).toHaveCount(9);
+    await expect(items).toHaveCount(10);
     await expect(items).toHaveText(rulesText);
     await expect(page.locator('main ol')).toHaveCount(1);
     const main = page.locator('main');
@@ -153,8 +156,45 @@ test.describe('Rules page', () => {
     const link = page.locator('main ol').getByRole('link', { name: 'judging criteria' });
     await expect(link).toHaveAttribute('href', '/pharos-judging-criteria.pdf');
     expect((await request.get(`${NORMAL}/pharos-judging-criteria.pdf`)).status()).toBe(200);
-    await expect(page.locator('main').getByRole('link', { name: 'the FAQ' })).toHaveAttribute('href', '/faq/');
+    await expect(page.locator('main p.rules__after').getByRole('link', { name: 'the FAQ' })).toHaveAttribute('href', '/faq/');
+    // Rule 10 points at the FAQ answer about the winner age check, and that answer exists.
+    await expect(page.locator('main ol').getByRole('link', { name: 'the FAQ' })).toHaveAttribute('href', '/faq/#winner-age-check');
+    await page.goto('/faq/#winner-age-check');
+    await expect(page.locator('details:has(> div#winner-age-check)')).toHaveAttribute('open', '');
+    await page.goto('/rules/');
     await expect(page.locator('main').getByRole('link', { name: 'pharosprize@gmail.com' })).toHaveAttribute('href', 'mailto:pharosprize@gmail.com');
+  });
+
+  test('says the Open category is 25 and under, and the rules themselves never say "any age"', async ({ page }) => {
+    await page.goto('/rules/');
+    const list = page.locator('main ol');
+    await expect(list).toContainText('Open is 25 and under');
+    await expect(list).not.toContainText(/any age|no upper (age )?limit|of any age/i);
+    // The one place the old wording may appear is the "previously any age" note under the list.
+    const rest = (await page.locator('main').innerText()).replace('(previously any age)', '');
+    expect(rest).toContain('25 and under');
+    expect(rest).not.toMatch(/any age|no upper (age )?limit/i);
+  });
+
+  test('has the two small lines under the list, in the regular text size and no smaller than 16px', async ({ page }) => {
+    await page.goto('/rules/');
+    const small = page.locator('main p.rules__small');
+    await expect(small).toHaveText([
+      'If a poster, listing or post says something different, these rules apply.',
+      'Last updated 2 November 2026: the Open category is now for students aged 25 and under (previously any age).',
+    ]);
+    // Both come after the list, and are smaller than the rules but not under 16px.
+    const [list, line, rule] = await Promise.all([
+      page.locator('main ol').boundingBox(),
+      small.first().boundingBox(),
+      page.locator('main ol li').first().evaluate((el) => parseFloat(getComputedStyle(el).fontSize)),
+    ]);
+    expect(line!.y).toBeGreaterThan(list!.y + list!.height);
+    const sizes = await small.evaluateAll((els) => els.map((el) => parseFloat(getComputedStyle(el).fontSize)));
+    for (const size of sizes) {
+      expect(size).toBeGreaterThanOrEqual(16);
+      expect(size).toBeLessThan(rule);
+    }
   });
 
   test('is the same in the entries-open build', async ({ page }) => {
@@ -338,7 +378,7 @@ test.describe('Privacy page fixes', () => {
     await expect(m).not.toContainText('Draft');
     await expect(m).not.toContainText('waiting for review');
     await expect(page.locator('.pill')).toHaveCount(0);
-    await expect(m).toContainText('Last updated 28 October 2026.');
+    await expect(m).toContainText('Last updated 2 November 2026.');
   });
 
   test('the three new lines are in the right sections', async ({ page }) => {
@@ -346,6 +386,9 @@ test.describe('Privacy page fixes', () => {
     const section = (title: string) => page.locator('main section', { has: page.getByRole('heading', { level: 2, name: title, exact: true }) });
     await expect(section('The entry form')).toContainText(
       "If you win, we may ask for proof that you're a student, such as a student card or a school letter. We use it only to check eligibility and delete it once the prize is paid.",
+    );
+    await expect(section('The entry form')).toContainText(
+      "Winners only: before prizes are paid, we look at an ID document or a school letter to confirm age and student status. We don't keep a copy or the ID number; we only record that the check was done.",
     );
     await expect(section('If you are shortlisted or win')).toContainText(
       "We'll only publish a winning essay if its writer (and a parent or guardian, if under 18) gives separate permission after the results.",

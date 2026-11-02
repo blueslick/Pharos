@@ -41,7 +41,9 @@ Reads the CSV and builds `work/tracker.xlsx`, one row per entry, with an entry I
 | PDF problem | the essay answer isn't a PDF upload (blank, text, a link or another file type such as .docx), the file isn't in the downloads folder, it is damaged or password-protected, it is a scan/photo (no text), or two entries matched the same file | red |
 | Duplicate entrant | same email or same name as another entry (case and spaces ignored) | amber |
 | Non-Latin name | the name has letters that aren't Latin script (e.g. Chinese, Arabic, Cyrillic). The form asks for English letters only. Accented Latin letters such as é are not flagged. | amber |
-| Age unclear | age missing or not a number. There is no upper age limit (the Open category is for students of any age) | red |
+| Age unclear | age missing or not a number | red |
+| Over Open age limit | age above 25 (`open_max_age` in `config.toml`). The Open category is 25 and under, counted on 17 January 2027, and the form's own age box goes up to 99, so it can't stop these. Look before confirming: it may be a typo, or someone who typed their age today instead of their age on the deadline | red |
+| Parent email missing | under 18 (`adult_age`) and the form's "Secondary email" is blank, or is the entrant's own address. The form suggests a parent or guardian's address but can't check whose it is, so this only catches a missing or obviously wrong one. The "parent or guardian agrees" tick is a required box on the form, so every entry has it | red |
 | Fee code problem | half fee chosen and the code is missing, not on `codes.xlsx`, or already used. Also raised if the fee answer is neither of the two options on the form. | red |
 | No proof of payment | the Proof of payment question is empty | red |
 | Duplicate transfer reference | same transfer reference as another entry | red |
@@ -87,6 +89,8 @@ Copies the essays of entries that are **Confirmed with Payment verified = Y** in
 - The tool rewrites each PDF so the author name and software details hidden inside the file are dropped (file names alone aren't enough).
 - It warns you if an essay's text contains the entrant's name, email or school, which would let judges identify them. Edit those essays by hand before judging.
 - If you later change someone to Rejected, running `pack` again removes their PDF from `judging/`.
+
+**The age checks need the "Secondary email" column.** If an export doesn't have it, `process` still runs, skips the parent-email check for everyone and prints a note saying so. Nobody is flagged by mistake.
 
 ## When Tally renames a question
 Open `config.toml`, find the question under `[columns]` and change the text on the **right** to match the new title in the CSV. That's the whole fix. If a name doesn't match, the tool stops and shows you the columns the CSV actually has.

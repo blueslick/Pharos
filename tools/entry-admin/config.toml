@@ -15,6 +15,8 @@ id_prefix = "ZH"          # entry IDs look like ZH-001
 id_digits = 3
 word_limit = 800          # flag essays with MORE words than this
 min_words_for_text = 20   # fewer words than this in a PDF = treated as a scan
+open_max_age = 25         # the Open category is for 25 and under (age on 17 January 2027): older entries get flagged for a manual check
+adult_age = 18            # under this age, the entry needs a parent or guardian's email (the form's "Secondary email")
 
 # !! WARNING !! These two lines must match the fee options on the Tally form WORD FOR WORD
 # (only capital letters and extra spaces are ignored). If you ever change the wording or the
@@ -50,6 +52,7 @@ email           = "Email"
 country         = "Country"
 school          = "School"
 age             = "Age on 17 January 2027"
+secondary_email = "Secondary email"    # only shown on the form to under-18s; the form suggests a parent or guardian's address
 prompt          = "Which prompt are you answering?"
 essay           = "Your essay (PDF)"
 fee             = "Your entry fee"

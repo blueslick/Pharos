@@ -23,7 +23,7 @@ sys.path.insert(0, str(HERE.parent))
 from entryadmin import codes as codes_mod  # noqa: E402
 
 HEADERS = ["Submission ID", "Respondent ID", "Submitted at", "Full name", "Email", "Country", "School",
-           "Age on 17 January 2027", "Which prompt are you answering?", "Your essay (PDF)", "Your entry fee",
+           "Age on 17 January 2027", "Secondary email", "Which prompt are you answering?", "Your essay (PDF)", "Your entry fee",
            "Fee support code", "Proof of payment", "Transfer reference or transaction ID", "Name on the account you paid from",
            "Before you submit"]
 FULL, HALF = "RM 40 (about USD 10)", "Fee support at 50%: RM 20 (about USD 5)"
@@ -76,6 +76,9 @@ def build(target: Path) -> dict:
     E = []
 
     def add(key, name, email, age=17, fee=FULL, code="", n=600, proof=True, txn=None, **kw):
+        # Under 18 (the default age is 17): the form shows a "Secondary email", so give a parent's address unless told otherwise.
+        if "second" not in kw:
+            kw["second"] = f"parent.{key}@example.com" if isinstance(age, int) and age < 18 else ""
         E.append(dict(key=key, name=name, email=email, age=age, fee=fee, code=code, n=n, proof=proof,
                       txn=txn if txn is not None else f"TXN{len(E) + 1:04d}FAKE", **kw))
 
@@ -89,7 +92,7 @@ def build(target: Path) -> dict:
     add("dupemail", "Hana Twin", "ada@example.com")                                   # same email as 'clean'
     add("dupname_a", "Ivy Same", "ivy.one@example.com")                               # same name as next
     add("dupname_b", "ivy  same", "ivy.two@example.com")                              # (case/space differences)
-    add("old", "Jon Elder", "jon@example.com", age=23)                                # an adult: fine, Open has no upper age
+    add("old", "Jon Elder", "jon@example.com", age=23)                                # an adult: fine (Open is 25 and under)
     add("age20", "Kit Twenty", "kit@example.com", age=20)                             # 20 is allowed
     add("half_ok", "Lia Half", "lia@example.com", fee=HALF, code=good[0], author="Lia Half",
         title="By Lia Half")                                                          # valid code (+ name in essay)
@@ -112,6 +115,12 @@ def build(target: Path) -> dict:
     add("docx", "Yara Word", "yara@example.com",
         essay_cell="https://storage.tally.so/private/essay-yara.docx?id=abc123&signature=fake")  # another file type
     add("nonlatin_multi", "Анна Test", "anna@example.com", age="unknown")              # non-Latin name AND another flag
+    add("age25", "Zed Limit", "zed@example.com", age=25)                               # 25 is the Open limit: fine
+    add("age26", "Amy Over", "amy.over@example.com", age=26)                           # one over the Open limit
+    add("age99", "Bo Ninetynine", "bo99@example.com", age=99)                          # the form's own cap: still over
+    add("age18", "Cleo Adult", "cleo@example.com", age=18)                             # 18 needs no parent email
+    add("minor_none", "Dan Minor", "dan@example.com", age=15, second="")               # under 18, no parent email
+    add("minor_self", "Eve Minor", "eve@example.com", age=16, second="EVE@example.com")  # second email is their own
 
     rows = []
     for i, e in enumerate(E, start=1):
@@ -130,7 +139,8 @@ def build(target: Path) -> dict:
             "Submission ID": sid, "Respondent ID": f"resp{i:03d}",
             "Submitted at": f"2026-11-{1 + i // 4:02d} {9 + i % 8:02d}:{i:02d}:00",
             "Full name": e["name"], "Email": e["email"], "Country": "Malaysia", "School": "Fake Example School",
-            "Age on 17 January 2027": e["age"], "Which prompt are you answering?": "Prompt A (placeholder)",
+            "Age on 17 January 2027": e["age"], "Secondary email": e["second"],
+            "Which prompt are you answering?": "Prompt A (placeholder)",
             "Your essay (PDF)": e["essay_cell"] if "essay_cell" in e else URL.format(fname), "Your entry fee": e["fee"], "Fee support code": e["code"],
             "Proof of payment": URL.format(f"proof-{e['key']}.png") if e["proof"] else "",
             "Transfer reference or transaction ID": e["txn"], "Name on the account you paid from": e["name"], "Before you submit": "Yes",

@@ -11,7 +11,7 @@ import Hero from '../components/Hero.astro';
 import FaqItem from '../components/FaqItem.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import {
-  SITE_NAME, CONTACT_EMAIL, INSTAGRAM_HANDLE, REGISTRATION_OPEN, FEE_SUPPORT, SOUP_KITCHEN_NAME, BANK, DATES,
+  SITE_NAME, CONTACT_EMAIL, INSTAGRAM_HANDLE, CATEGORIES, RULES_URL, REGISTRATION_OPEN, FEE_SUPPORT, SOUP_KITCHEN_NAME, BANK, DATES,
   ENTRY_FEE_RM, ENTRY_FEE_HALF, ENTRY_FEE_HALF_RM, ENTRY_FEE_USD, MEALS_ESTIMATE, PRIZES_NOTE, RUBRIC, DEADLINE_TIME, DEADLINE_TIME_PLAIN,
   FEE_SUPPORT_DAYS_BEFORE_DEADLINE, PAYMENT_GRACE_DAYS_AFTER_DEADLINE, formatDate, formatDateDay, addDays,
 } from '../site';
@@ -28,6 +28,11 @@ const supportAfterText = supportAfter.join(CONTACT_EMAIL);
 // "response to the prompt (30), insight and understanding (30), clarity and structure (20) and voice and originality (20)"
 const criteria = RUBRIC.map((c) => `${lowerFirst(c.name)} (${c.marks})`);
 const criteriaList = `${criteria.slice(0, -1).join(', ')} and ${criteria[criteria.length - 1]}`;
+
+const junior = CATEGORIES.find((c) => c.id === 'junior')!;
+const open = CATEGORIES.find((c) => c.id === 'open')!;
+// "14 and under" -> "14 or under", the way the answers say it
+const orUnder = (who: string) => who.replace(' and under', ' or under');
 
 const deadlineDate = formatDate(DATES.deadline);
 const feeSupportLastDay = formatDateDay(addDays(DATES.deadline, -FEE_SUPPORT_DAYS_BEFORE_DEADLINE));
@@ -47,7 +52,13 @@ const paymentFixDay = formatDateDay(addDays(DATES.deadline, PAYMENT_GRACE_DAYS_A
           <p>Anyone studying at a school, college or university on {deadlineDate}. We may ask for proof, such as a student card or a letter from your school, before we award a prize.</p>
         </FaqItem>
         <FaqItem id="which-category" question="Which category am I in?">
-          <p>Your age on {deadlineDate}. If you're 14 or under, you're Junior. Otherwise you're Open. Open has no upper age limit.</p>
+          <p>Your age on {deadlineDate}. If you're {orUnder(junior.who)}, you're {junior.name}. Otherwise, if you're {orUnder(open.who)}, you're {open.name}.</p>
+        </FaqItem>
+        <FaqItem id="poster-says-any-age" question="I saw a poster that says Open is for any age. Which is right?">
+          <p>
+            The Open category is for students aged {open.who} (as at {deadlineDate}). Some early posters and listings show an older version;{' '}
+            <a href={RULES_URL}>the Rules page</a> is always the one that counts.
+          </p>
         </FaqItem>
         <FaqItem id="enter-more-than-once" question="Can I enter more than once?">
           <p>No, one essay per person.</p>
@@ -172,6 +183,14 @@ const paymentFixDay = formatDateDay(addDays(DATES.deadline, PAYMENT_GRACE_DAYS_A
           <p>
             By bank transfer or Wise to the winner, or to a parent or guardian if the winner is under 18, within 2 weeks of the results. {PRIZES_NOTE}{' '}
             If we can't reach a winner within 14 days of the results, we may award the prize to the next-placed essay.
+          </p>
+        </FaqItem>
+        <FaqItem id="winner-age-check" question="How do winners confirm their age?">
+          <p>
+            Before we pay a prize, we check the winner's age and that they're a student. You can either show your ID on a short video call, or send a photo
+            of it with the ID number partly covered (on a MyKad, cover the last six digits; the first six show your date of birth). A letter from your school
+            also works. If you're under 18, a parent or guardian joins the call or sends the photo. We don't keep a copy of your ID or its number; we only note
+            that the check was done.
           </p>
         </FaqItem>
         <FaqItem id="certificate" question="Do I get a certificate?">

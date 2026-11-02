@@ -16,7 +16,7 @@ hook: "The Inaugural Edition is on Zero Hunger"   # used for the caption stand-i
 # "Run by student volunteers" and the handle from brand.yaml instead.
 
 caption:
-  - "Placeholder caption, paragraph one: entries open [month]. A student essay competition on justice, for students in two categories (Junior, 14 and under, and Open, any age), run by student volunteers."
+  - "Placeholder caption, paragraph one: entries open [month]. A student essay competition on justice, for students in two categories (Junior, 14 and under, and Open, 25 and under), run by student volunteers."
   - "Placeholder caption, paragraph two: the Inaugural Edition is a fundraiser for The Assembly Soup Kitchen (T.A.S.K). Join the waitlist: [link in bio]."
 hashtags: [ZeroHunger, SDG2, EssayCompetition]
 

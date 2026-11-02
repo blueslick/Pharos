@@ -6,7 +6,7 @@ with --all to remake drafts.
 Words in {curly brackets} are filled in automatically for each entrant:
   {first_name}  {name}  {entry_id}  {email}
   {site_name}  {edition}  {contact_email}  {soup_kitchen}  {sign_off}   (set in config.toml)
-  {word_limit}  {words}
+  {word_limit}  {words}  {open_max_age}
   {problems}    (problem.txt only: the list of things wrong with that entry)
 
 If you want a real curly bracket in the text, type it twice: {{ or }}.
