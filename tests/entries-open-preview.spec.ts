@@ -81,7 +81,7 @@ test('entries-open preview: /register/ links to the prompts instead of repeating
   for (const gone of ['Our AI policy', 'The rules, in short', 'Who can enter', 'Prizes are funded separately', 'Prize USD', 'One essay per person.']) {
     await expect(main).not.toContainText(gone);
   }
-  await expect(main).toContainText('Open to students only: Junior is 14 and under, Open is any age (your age on 17 January 2027).');
+  await expect(main).toContainText('Open to students only: Junior is 14 and under, Open is 25 and under (your age on 17 January 2027).');
   await expect(main).toContainText('Deadline: 17 January 2027, 23:59 Malaysia time (MYT).');
   // The anchor it points to exists on the Competition page of the same build.
   await page.goto(`${OPEN}/competition/#prompts`);

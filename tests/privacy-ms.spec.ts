@@ -106,7 +106,7 @@ test('shows no square brackets, the date in Malay, and the right links', async (
   await page.goto('/ms/privacy/');
   const text = await page.locator('main').innerText();
   expect(text).not.toMatch(/[\[\]]/);
-  expect(text).toContain('Kemas kini terakhir: 28 Oktober 2026');
+  expect(text).toContain('Kemas kini terakhir: 2 November 2026');
   expect(text).toContain('Menjelang 3 Ogos 2027, kami memadamkan');
 
   const mailtos = page.locator('main a[href^="mailto:"]');
@@ -120,6 +120,14 @@ test('shows no square brackets, the date in Malay, and the right links', async (
   }
   await expect(page.getByRole('link', { name: 'https://tally.so/r/kbdkBR' })).toHaveAttribute('href', 'https://tally.so/r/kbdkBR');
   await expect(page.getByRole('link', { name: 'halaman Semak (Verify)' })).toHaveAttribute('href', '/verify/');
+});
+
+test('the winners-only ID check line is in the entry form section, in Malay', async ({ page }) => {
+  await page.goto('/ms/privacy/');
+  const section = page.locator('main section', { has: page.getByRole('heading', { level: 2, name: 'Borang penyertaan', exact: true }) });
+  await expect(section).toContainText(
+    'Pemenang sahaja: sebelum hadiah dibayar, kami melihat dokumen pengenalan diri atau surat sekolah untuk mengesahkan umur dan status pelajar. Kami tidak menyimpan salinan atau nombor pengenalan diri; kami hanya merekodkan bahawa semakan telah dibuat.',
+  );
 });
 
 test('uses the site constants for the name and the soup kitchen, and none of the banned words', async ({ page }) => {

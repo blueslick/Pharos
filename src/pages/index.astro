@@ -3,9 +3,11 @@ import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
 import EditionCover from '../components/EditionCover.astro';
 import WaitlistAndFooter from '../components/WaitlistAndFooter.astro';
-import { SITE_NAME, SOUP_KITCHEN_NAME, SOUP_KITCHEN_INSTAGRAM_URL, FAQ_URL, DATES, formatDate } from '../site';
+import { SITE_NAME, SOUP_KITCHEN_NAME, SOUP_KITCHEN_INSTAGRAM_URL, FAQ_URL, DATES, CATEGORIES, formatDate } from '../site';
 
-const intro = `${SITE_NAME} is an essay competition for students, with a Junior category (14 and under) and an Open category (any age), built around the UN Sustainable Development Goals.`;
+const junior = CATEGORIES.find((c) => c.id === 'junior')!;
+const open = CATEGORIES.find((c) => c.id === 'open')!;
+const intro = `${SITE_NAME} is an essay competition for students, with a Junior category (${junior.who}) and an Open category (${open.who}), built around the UN Sustainable Development Goals.`;
 ---
 
 <Base description={intro}>

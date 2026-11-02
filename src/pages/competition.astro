@@ -16,6 +16,9 @@ import {
   PROMPTS, PROMPTS_INTRO, RUBRIC, RUBRIC_CLOSING, RUBRIC_TOTAL, JUDGING_PDF_URL, JUDGING_PDF_PAGES,
 } from '../site';
 
+const junior = CATEGORIES.find((c) => c.id === 'junior')!;
+const open = CATEGORIES.find((c) => c.id === 'open')!;
+
 const facts = [
   { label: `Deadline, ${DEADLINE_TIME_SHORT}`, value: formatDate(DATES.deadline) },
   { label: 'Who', value: 'Students, in two categories' },
@@ -43,7 +46,7 @@ const steps = [
 
 <Base
   title="Competition"
-  description={`The inaugural ${SITE_NAME} essay competition: Goal 2, Zero Hunger. For students, in two categories: Junior (14 and under) and Open (any age). Opens ${formatDate(DATES.entriesOpen)}.`}
+  description={`The inaugural ${SITE_NAME} essay competition: Goal 2, Zero Hunger. For students, in two categories: Junior (${junior.who}) and Open (${open.who}). Opens ${formatDate(DATES.entriesOpen)}.`}
 >
   <header class="top">
     <div class="top__slab">

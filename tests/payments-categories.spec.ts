@@ -28,7 +28,7 @@ test('Competition shows both categories, the prizes and where the money goes', a
   await expect(junior).toContainText('USD 50');
   const open = page.locator('.cat--open');
   await expect(open).toContainText('Open');
-  await expect(open).toContainText('Students of any age');
+  await expect(open).toContainText('25 and under');
   await expect(open).toContainText('USD 100');
   await expect(page.getByText('Prizes are funded separately, not from entry fees.')).toBeVisible();
   await expect(page.getByText('Your age is your age on 17 January 2027.')).toBeVisible();
@@ -78,7 +78,7 @@ test('the Register page is only an "Opening soon" notice while closed', async ({
 test('the Privacy page covers the entry form, payments, publishing, under-18s and retention', async ({ page }) => {
   await page.goto('/privacy/');
   const main = page.locator('main');
-  await expect(main).toContainText('Last updated 28 October 2026.');
+  await expect(main).toContainText('Last updated 2 November 2026.');
   await expect(main).not.toContainText('Draft');
   for (const item of [
     'your full name, email and country', 'your school (optional) and your age', 'your essay (a PDF)',

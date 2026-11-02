@@ -48,13 +48,14 @@ One judge (the owner). Nothing is left as a placeholder in the code: the rubric 
 | Entry deadline | 17 January 2027, 23:59 Malaysia time (MYT). Ages are counted on this date | `DATES.deadline` and `DEADLINE_TIME` in `src/site.ts` (Competition, Register, the "Entries are open" arch) |
 | Results | 3 February 2027 | `DATES.results` in `src/site.ts` (Competition, "How it works") |
 | Waitlist form | Tally form `kbdkBR`, share link https://tally.so/r/kbdkBR | `WAITLIST_FORM_ID` in `src/site.ts` (one line; the share link and embed address are built from it) |
-| Privacy "Last updated" | 28 October 2026 | `DATES.privacyUpdated` in `src/site.ts`. Change it whenever the notice's wording changes |
+| Privacy "Last updated" | 2 November 2026 | `DATES.privacyUpdated` in `src/site.ts`. Change it whenever the notice's wording changes |
+| Rules "Last updated" | 2 November 2026, with the note that Open is now 25 and under (previously any age) | `DATES.rulesUpdated` in `src/site.ts`. Change it whenever a rule changes; remove the "previously any age" note once the old posters are no longer around |
 | Email retention (Privacy) | 12 months after our last reply | `src/pages/privacy.astro` |
 | Under-18s (Privacy) | Waitlist: only an email is collected; parent or guardian should know; a parent can ask us to delete it any time. Entry form: a parent or guardian must agree to the entry, and we may contact the secondary email about this | `src/pages/privacy.astro` |
 | Entry data deleted by | 3 August 2027 (emails, ages, essays, payment screenshots, fee support emails; published names and certificate records are kept) | `DATES.entryDataDeleted` in `src/site.ts` (Privacy) |
 | Entry form | Tally form `Ar7QeB`, https://tally.so/r/Ar7QeB (shown nowhere while `REGISTRATION_OPEN` is `false`) | `REGISTRATION_URL` in `src/site.ts` (one value) |
 | Entry fee wording | RM 40 (about USD 10); with 50% fee support RM 20 (about USD 5). Ringgit leads; the USD figure is only a guide | `ENTRY_FEE`, `ENTRY_FEE_HALF` and the `ENTRY_FEE_*` values in `src/site.ts` |
-| Categories and prizes | Junior: 14 and under, prize USD 50. Open: students of any age, prize USD 100. Age is counted on 17 January 2027. Both are for students only. "Prizes are funded separately, not from entry fees." | `CATEGORIES`, `PRIZES_NOTE` in `src/site.ts` (Competition, Register) |
+| Categories and prizes | Junior: 14 and under, prize USD 50. Open: 25 and under, prize USD 100. Age is counted on 17 January 2027. Both are for students only. "Prizes are funded separately, not from entry fees." | `CATEGORIES`, `PRIZES_NOTE` in `src/site.ts` (Competition, Register) |
 | Bank details | Assembly Ground Sdn Bhd (the company behind T.A.S.K), RHB Bank, account 262111-00010155, reference "PHAROS + your full name". Shown only on `/register/` once `REGISTRATION_OPEN` is `true` (launch day, or the entries-open PR preview) | `BANK` in `src/site.ts` |
 | Meals per entry | "Every USD 10 entry funds about 3 meals at T.A.S.K." (figure from T.A.S.K) | `MEALS_PER_ENTRY` in `src/site.ts` (Competition, "Where the money goes") |
 | Volunteering card (Home) | Switched on: links to T.A.S.K's Instagram | `SOUP_KITCHEN_INSTAGRAM_URL` in `src/site.ts` |
@@ -81,7 +82,7 @@ The Inaugural Edition's three prompts and the judging rubric are live, whether o
 
 ## Slots for launch (marked with comments in `src/pages/competition.astro`, `about.astro` and `register/index.astro`)
 
-- [x] **Rules page link.** Done: `RULES_URL` in `src/site.ts` is `/rules/` (and `FAQ_URL` is `/faq/`). The Register page's "Read the full rules" link and "Questions? Read the FAQ" link, the footer, Home and Competition all read them. The Rules page is `src/pages/rules.astro` (nine numbered rules) and the FAQ is `src/pages/faq.astro` (one native `<details>` per question, each with a stable id such as `#fee-support-how`). Both are indexable, in the sitemap, and show before and after launch. Dates, fees, prizes, the soup kitchen's name and the contact email are built from `src/site.ts`; the wording itself is owner-approved, so edit it only on the owner's say-so. The FAQ's "How do I pay?" links to the How to enter page only once `REGISTRATION_OPEN` is true.
+- [x] **Rules page link.** Done: `RULES_URL` in `src/site.ts` is `/rules/` (and `FAQ_URL` is `/faq/`). The Register page's "Read the full rules" link and "Questions? Read the FAQ" link, the footer, Home and Competition all read them. The Rules page is `src/pages/rules.astro` (ten numbered rules, with a "Last updated" line read from `DATES.rulesUpdated`: change it whenever a rule changes) and the FAQ is `src/pages/faq.astro` (one native `<details>` per question, each with a stable id such as `#fee-support-how`). Both are indexable, in the sitemap, and show before and after launch. Dates, fees, prizes, the soup kitchen's name and the contact email are built from `src/site.ts`; the wording itself is owner-approved, so edit it only on the owner's say-so. The FAQ's "How do I pay?" links to the How to enter page only once `REGISTRATION_OPEN` is true.
 - **Fee support details.** Done: `FEE_SUPPORT` in `src/site.ts` says "Email {CONTACT_EMAIL} with your full name and school. You don't need to explain why." It is built from `CONTACT_EMAIL`, so changing the contact email changes it too, and the Register page shows the address as a mailto link. It sits in a small note inside Step 1 (`id="fee-support"`).
 - [x] Rules and questions (FAQ: rules, fee support, who can enter). Done: the Competition page's "Rules and questions" section links to `/rules/` and `/faq/`. There is no refunds question yet; add one to `src/pages/faq.astro` once the owner decides the refund wording.
 - [x] **Malay privacy notice (T50).** `/ms/privacy/` is built from `src/pages/ms/privacy.astro` and linked both ways with `/privacy/`. **Keep the two pages in step:** whenever the English Privacy wording changes, the Malay page needs the matching change, and `DATES.privacyUpdated` in `src/site.ts` (shared by both) must be updated.
@@ -103,7 +104,7 @@ The form is set up in Tally, not on this site. I could not open it from the buil
 | Item | Decided value |
 |---|---|
 | Entry fee | RM 40 (about USD 10), with 50% fee support: RM 20 (about USD 5). Fee support is 50% only: there is no free waiver |
-| Prizes | Junior (14 and under): USD 50. Open (students of any age): USD 100. Funded separately, not from entry fees |
+| Prizes | Junior (14 and under): USD 50. Open (25 and under): USD 100. Funded separately, not from entry fees |
 | Payment | Bank transfer in ringgit directly to T.A.S.K's account. Pharos never handles the money. No payment code or link on the site |
 
 ## Social post maker (`tools/social/`)
@@ -113,7 +114,7 @@ The three folders in `tools/social/posts/example-*` are samples with invented co
 | Placeholder | What it is | Where |
 |---|---|---|
 | Soup kitchen name (was a placeholder) | **Done.** Now spelled The Assembly Soup Kitchen (T.A.S.K) in the sample post. Copy that spelling exactly; the lint warns about any other spelling. | `posts/example-announcement/post.yaml` |
-| Fee wording | The sample's fee-support slide says fee support is 50% (RM 20, about USD 5, instead of RM 40, about USD 10), never a free waiver. Keep it in step with `ENTRY_FEE` and `ENTRY_FEE_HALF` in `src/site.ts` if the fee changes. The sample caption says "two categories (Junior, 14 and under, and Open, any age)". | `posts/example-announcement/post.yaml` |
+| Fee wording | The sample's fee-support slide says fee support is 50% (RM 20, about USD 5, instead of RM 40, about USD 10), never a free waiver. Keep it in step with `ENTRY_FEE` and `ENTRY_FEE_HALF` in `src/site.ts` if the fee changes. The sample caption says "two categories (Junior, 14 and under, and Open, 25 and under)". | `posts/example-announcement/post.yaml` |
 | `[month]`, `[deadline date]`, `[word limit]`, `[fee]`, `[contact email]`, `[link in bio]`, `[N] days left` | Real dates, fee and contact once decided. For the countdown use `deadline: YYYY-MM-DD` and `{days_left}` instead of `[N]`. | `posts/example-announcement/post.yaml` |
 | `[Publisher]`, `[Artist Name]`, `[Gallery or website]`, `[the artist or owner]` | Real credits for a real post. | `posts/example-report/`, `posts/example-artwork/` |
 
@@ -131,7 +132,7 @@ Settings and wording for the entry-processing tools (tracker, email drafts, judg
 | Edition wording | `config.toml`, `[email] edition` | Check it reads right. |
 | Fee answers | `config.toml`, `[fees]` | Set to "RM 40 (about USD 10)" and "Fee support at 50%: RM 20 (about USD 5)". Must match the Tally fee options word for word. If you edit the form's wording or prices, update this or every entry is flagged. |
 | Question titles | `config.toml`, `[columns]` | Checked against the live Tally form on 26 October 2026. Payment columns are "Proof of payment", "Transfer reference or transaction ID" and "Name on the account you paid from"; the age column is "Age on 17 January 2027". If you rename a question in Tally, change the matching title here. The secondary-email question is not read by the toolkit. |
-| Word limit, entry ID prefix | `config.toml`, `[entry]` | Confirm 800 words and `ZH`. There is no age limit any more (Open is for any age); the toolkit now flags only an age it can't read. |
+| Word limit, entry ID prefix | `config.toml`, `[entry]` | Confirm 800 words and `ZH`. Open is 25 and under (age on 17 January 2027): the toolkit flags an age it can't read, an age over 25 (`open_max_age`), and an under-18 with no parent or guardian email (`adult_age`; the form's "Secondary email"). The Tally age box still allows up to 99, so the flag is the only guard. |
 | Email wording | `templates/*.txt`, `templates/flag_messages.toml` | Read through and adjust the drafts' wording before first use. |
 
 ## The Register page (switched by `REGISTRATION_OPEN`: `REGISTRATION_SWITCH` on launch day, or the entries-open PR preview)

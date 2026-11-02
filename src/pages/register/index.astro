@@ -18,6 +18,7 @@ const description = REGISTRATION_OPEN
   : `How to enter the ${SITE_NAME} essay competition. Entries open soon.`;
 
 const junior = CATEGORIES.find((c) => c.id === 'junior')!;
+const open = CATEGORIES.find((c) => c.id === 'open')!;
 
 // FEE_SUPPORT contains CONTACT_EMAIL; the page shows that address as a mailto link.
 const [supportBefore, ...supportAfter] = FEE_SUPPORT.split(CONTACT_EMAIL);
@@ -62,7 +63,7 @@ const supportHasEmail = supportAfter.length > 0;
       <section class="before" aria-labelledby="before-title">
         <h2 id="before-title" class="sec__title">Before you start</h2>
         <p class="t-body-lg">
-          Open to students only: Junior is {junior.who}, Open is any age (your age on {formatDate(DATES.deadline)}).
+          Open to students only: Junior is {junior.who}, Open is {open.who} (your age on {formatDate(DATES.deadline)}).
           One essay of up to 800 words on one of the three prompts, as a PDF, written without AI tools.
           Deadline: {deadlineWithTime()}.
         </p>

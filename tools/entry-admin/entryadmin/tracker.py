@@ -34,6 +34,8 @@ FLAGS = [
     ("duplicate_entrant", "Duplicate entrant", AMBER),
     ("name_not_latin", "Non-Latin name", AMBER),
     ("age_unclear", "Age unclear", RED),
+    ("age_over_open", "Over Open age limit", RED),
+    ("parent_email", "Parent email missing", RED),
     ("fee_code", "Fee code problem", RED),
     ("no_proof", "No proof of payment", RED),
     ("duplicate_transfer", "Duplicate transfer reference", RED),
@@ -41,12 +43,15 @@ FLAGS = [
 FLAG_HEADERS = [h for _, h, _ in FLAGS]
 
 DATA_COLS = ["Entry ID", "Submission ID", "Submitted at", "Full name", "Email", "Country", "School", "Age",
-             "Prompt", "Fee", "Fee support code", "Transfer reference", "Name on paying account", "Declaration",
+             "Secondary email", "Prompt", "Fee", "Fee support code", "Transfer reference", "Name on paying account", "Declaration",
              "Essay file", "Word count"]
 HEADERS = DATA_COLS + ["Flags"] + FLAG_HEADERS + list(OWNER_COLS)
 
-# Columns the CSV must have. These two are allowed to be absent.
-OPTIONAL_KEYS = {"respondent_id", "declaration"}
+# Columns the CSV must have. These are allowed to be absent.
+OPTIONAL_KEYS = {"respondent_id", "declaration", "secondary_email"}
+# If one of these is absent we can't tell "left blank" from "not in the export", so the value is None, not "",
+# and any check that depends on it is skipped (with a note) instead of flagging everyone.
+UNKNOWN_IF_ABSENT = {"secondary_email"}
 
 
 # ---------------------------------------------------------------- reading the CSV
@@ -85,7 +90,8 @@ def read_csv(cfg: Config, path: Path) -> list[dict[str, str]]:
             "\n\nIf you renamed a question in Tally, change the text after = in config.toml.")
     rows = []
     for r in reader:
-        row = {k: (r.get(col) or "").strip() if col else "" for k, col in mapping.items()}
+        row = {k: (r.get(col) or "").strip() if col else (None if k in UNKNOWN_IF_ABSENT else "")
+               for k, col in mapping.items()}
         if row["submission_id"]:
             rows.append(row)
     seen: set[str] = set()
@@ -200,12 +206,23 @@ def compute_flags(entries: list[dict], cfg: Config, code_table: dict[str, dict])
         if bad:
             e["flags"]["name_not_latin"] = f"Non-Latin characters: {bad}"
 
-    # age
+    # age. Junior is 14 and under and Open is 25 and under (age on 17 January 2027), but the form has no
+    # category question: the category follows from the age. So the checks are: nobody over the Open limit
+    # (the form's own cap is 99, so it can't stop them), and anyone under 18 has a parent or guardian's email.
+    open_max, adult = ec["open_max_age"], ec["adult_age"]
     for e in entries:
         age = parse_age(e["age"])
         if age is None:
             e["flags"]["age_unclear"] = f"Unclear: age is '{e['age']}'" if e["age"] else "Unclear: no age given"
-        # There is no upper age limit: the Open category is for students of any age.
+        elif age > open_max:
+            e["flags"]["age_over_open"] = (f"Over {open_max}: age is {age}, and Open is {open_max} and under "
+                                           "(age on 17 January 2027). Check before confirming")
+        elif age < adult and e.get("secondary_email") is not None:  # None = the export has no such column
+            second = e["secondary_email"].strip()
+            if not second:
+                e["flags"]["parent_email"] = f"Missing: age {age} but no parent or guardian email given"
+            elif second.casefold() == e["email"].strip().casefold():
+                e["flags"]["parent_email"] = f"Same email: age {age} and the second email is the entrant's own"
 
     # proof of payment
     for e in entries:
@@ -264,6 +281,9 @@ def process(cfg: Config, csv_path: Path | None = None, files_dir: Path | None = 
     notes: list[str] = []
 
     rows = read_csv(cfg, csv_path)
+    if rows and rows[0]["secondary_email"] is None:
+        notes.append("The CSV has no 'Secondary email' column, so parent/guardian emails were NOT checked for under-18s. "
+                     "Check the question title under [columns] in config.toml.")
     if not files_dir.is_dir():
         notes.append(f"Downloads folder not found ({files_dir}), so every essay will be flagged as missing.")
     if not codes_path.exists():
@@ -287,7 +307,8 @@ def process(cfg: Config, csv_path: Path | None = None, files_dir: Path | None = 
         entries.append({
             "entry_id": r["entry_id"], "submission_id": r["submission_id"], "time": r["time"], "order": r["order"],
             "submitted_at": r["submitted_at"], "full_name": r["full_name"], "email": r["email"],
-            "country": r["country"], "school": r["school"], "age": r["age"], "prompt": r["prompt"],
+            "country": r["country"], "school": r["school"], "age": r["age"], "secondary_email": r["secondary_email"],
+            "prompt": r["prompt"],
             "fee": r["fee"], "fee_code": r["fee_code"], "transfer_ref": r["transfer_ref"],
             "payer_name": r["payer_name"], "declaration": r["declaration"],
             "essay_kind": kind, "essay_detail": detail,
@@ -321,6 +342,7 @@ def process(cfg: Config, csv_path: Path | None = None, files_dir: Path | None = 
             "Entry ID": e["entry_id"], "Submission ID": e["submission_id"], "Submitted at": e["submitted_at"],
             "Full name": e["full_name"], "Email": e["email"], "Country": e["country"], "School": e["school"],
             "Age": age if age is not None and e["age"].strip().isdigit() else e["age"],
+            "Secondary email": e["secondary_email"] or "",
             "Prompt": e["prompt"], "Fee": e["fee"], "Fee support code": e["fee_code"],
             "Transfer reference": e["transfer_ref"], "Name on paying account": e["payer_name"],
             "Declaration": e["declaration"],

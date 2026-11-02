@@ -67,7 +67,7 @@ tools/judging/data/
 
 The entry-admin `pack` command can make the essays folder and a `key.xlsx` for you (see `tools/entry-admin/README.md`). Copy them into `data/`.
 
-**Add a Category column to `key.xlsx`.** Each row needs `Junior` or `Open`. The pack does not add it: work it out from each entrant's age on the deadline (Junior is 14 and under, Open is any age). The toolkit stops with a clear message if a row has no valid category. The Name column may be called `Name` or `Full name`.
+**Add a Category column to `key.xlsx`.** Each row needs `Junior` or `Open`. The pack does not add it: work it out from each entrant's age on the deadline (Junior is 14 and under, Open is 25 and under). The toolkit stops with a clear message if a row has no valid category. The Name column may be called `Name` or `Full name`.
 
 ### 1. Make the scoring sheet
 

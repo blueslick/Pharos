@@ -94,6 +94,9 @@ class TestFlags(Base):
             "fee_other": {"fee_code"}, "nonlatin": {"name_not_latin"}, "accents": set(),
             "gdoc": {"pdf_problem"}, "other_url": {"pdf_problem"}, "few_words": {"pdf_problem"},
             "docx": {"pdf_problem"}, "nonlatin_multi": {"name_not_latin", "age_unclear"},
+            "age25": set(), "age18": set(),
+            "age26": {"age_over_open"}, "age99": {"age_over_open"},
+            "minor_none": {"parent_email"}, "minor_self": {"parent_email"},
         }
         # 'clean' shares an email with 'dupemail', so both are flagged
         expected["clean"] = {"duplicate_entrant"}
@@ -117,6 +120,35 @@ class TestFlags(Base):
             self.assertEqual(r[k]["Word count"], "")
         self.assertIn("docs.google.com", r["gdoc"]["PDF problem"])
         self.assertIn("see my email", r["few_words"]["PDF problem"])
+
+    def test_open_category_is_25_and_under(self):
+        """25 is fine; 26 and the form's own cap of 99 are flagged for a manual check, red, with the age in the text."""
+        self.process()
+        r = self.by_key()
+        self.assertEqual(self.cfg["entry"]["open_max_age"], 25)
+        self.assertEqual(r["age25"]["Over Open age limit"], "")
+        for key, age in (("age26", 26), ("age99", 99)):
+            text = r[key]["Over Open age limit"]
+            self.assertIn(f"age is {age}", text)
+            self.assertIn("Open is 25 and under", text)
+        self.assertEqual(r["old"]["Over Open age limit"], "")  # 23
+
+    def test_under_18_needs_a_parent_or_guardian_email(self):
+        self.process()
+        r = self.by_key()
+        self.assertTrue(r["minor_none"]["Parent email missing"].startswith("Missing"))
+        self.assertTrue(r["minor_self"]["Parent email missing"].startswith("Same email"))  # their own address, any capitals
+        for key in ("clean", "age18", "age20", "age25"):  # 17 with a parent's email, and adults, are fine
+            self.assertEqual(r[key]["Parent email missing"], "", key)
+
+    def test_a_csv_without_the_secondary_email_column_flags_nobody_but_says_so(self):
+        rows = self.csv_rows()
+        for row in rows:
+            del row["Secondary email"]
+        self.write_csv_rows(rows)
+        result = self.process()
+        self.assertFalse(any("parent_email" in f for f in self.flags().values()))
+        self.assertTrue(any("Secondary email" in n and "NOT checked" in n for n in result["notes"]))
 
     def test_word_count_is_exact_on_simple_pdfs(self):
         self.process()
@@ -425,10 +457,19 @@ class TestEmails(Base):
         # fixing the other problem later flips the wording back
         rows = self.csv_rows()
         rows[28]["Age on 17 January 2027"] = "17"
+        rows[28]["Secondary email"] = "parent.anna@example.com"  # an under-18 now, so they need a parent's email too
         self.write_csv_rows(rows)
         self.process()
         emails.make_drafts(self.cfg, "problem", only={"ZH-029"})
         self.assertIn(still_in, self.draft("problem", "ZH-029"))
+
+    def test_age_flags_have_problem_email_wording(self):
+        self.process()
+        emails.make_drafts(self.cfg, "problem")
+        over = self.draft("problem", self.by_key()["age26"]["Entry ID"])
+        self.assertIn("The Open category is for students aged 25 and under on 17 January 2027", over)  # {open_max_age} from config
+        minor = self.draft("problem", self.by_key()["minor_none"]["Entry ID"])
+        self.assertIn("we need a parent or guardian's email address", minor)
 
     def test_confirmed_needs_status_and_payment_verified(self):
         self.edit_tracker(clean={"Payment verified (Y/N)": "Y", "Status": "Confirmed"},
