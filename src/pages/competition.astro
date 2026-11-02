@@ -12,7 +12,7 @@ import WaitlistAndFooter from '../components/WaitlistAndFooter.astro';
 import SoupKitchenCard from '../components/SoupKitchenCard.astro';
 import {
   SITE_NAME, SOUP_KITCHEN_NAME, CONTACT_EMAIL, DATES, formatDate, deadlineWithTime, CATEGORIES, PRIZES_NOTE,
-  ENTRY_FEE, ENTRY_FEE_HALF, MEALS_PER_ENTRY, DEADLINE_TIME_SHORT, RULES_URL, FAQ_URL,
+  ENTRY_FEE, ENTRY_FEE_HALF, PROOF_OF_PAYMENT_INLINE, MEALS_PER_ENTRY, DEADLINE_TIME_SHORT, RULES_URL, FAQ_URL,
   PROMPTS, PROMPTS_INTRO, RUBRIC, RUBRIC_CLOSING, RUBRIC_TOTAL, JUDGING_PDF_URL, JUDGING_PDF_PAGES,
 } from '../site';
 
@@ -157,7 +157,7 @@ const steps = [
       <h2 id="money-title" class="t-heading">Where the money goes</h2>
       <p class="t-body-lg">{MEALS_PER_ENTRY}</p>
       <p class="t-body-lg">
-        Entry fee: {ENTRY_FEE}. Fee support at 50%: {ENTRY_FEE_HALF}. You pay {SOUP_KITCHEN_NAME} directly by bank transfer.{' '}
+        Entry fee: {ENTRY_FEE}. Fee support at 50%: {ENTRY_FEE_HALF}. You pay {SOUP_KITCHEN_NAME} directly by bank transfer in US dollars, and {PROOF_OF_PAYMENT_INLINE}.{' '}
         {SITE_NAME} never handles the money.
       </p>
       {/* MONEY SLOT (launch): "Raised so far" (no target) and "Donate without entering" go here. */}

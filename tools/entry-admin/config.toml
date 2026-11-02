@@ -23,8 +23,8 @@ adult_age = 18            # under this age, the entry needs a parent or guardian
 # price of a fee option in Tally, change it here too, or EVERY entry will be flagged
 # "Fee code problem: Unclear" until you do.
 [fees]
-full = "RM 40 (about USD 10)"
-half = "Fee support at 50%: RM 20 (about USD 5)"
+full = "USD 10"
+half = "Fee support at 50%: USD 5"
 
 [codes]
 length = 8                # characters per code (shown in groups)

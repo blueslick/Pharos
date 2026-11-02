@@ -4,12 +4,12 @@
 // details, no entry-form link. When it is open the page is three steps: pay, fill in
 // the entry form, we confirm. It does not repeat the Competition page (categories, prizes,
 // prompts, rules): it links there. Everything entrants do (age check, consent ticks, the
-// PDF essay, the payment screenshot) happens in the external entry form (REGISTRATION_URL).
+// PDF essay, the proof of payment) happens in the external entry form (REGISTRATION_URL).
 // It has no scripts and collects and stores nothing. Money never passes through this site.
 import Base from '../../layouts/Base.astro';
 import ExternalAction from '../../components/ExternalAction.astro';
 import {
-  SITE_NAME, REGISTRATION_OPEN, REGISTRATION_URL, RULES_URL, FAQ_URL, FEE_SUPPORT_DAYS_BEFORE_DEADLINE, ENTRY_FEE, ENTRY_FEE_HALF, ENTRY_FEE_RM, ENTRY_FEE_HALF_RM,
+  SITE_NAME, REGISTRATION_OPEN, REGISTRATION_URL, RULES_URL, FAQ_URL, FEE_SUPPORT_DAYS_BEFORE_DEADLINE, ENTRY_FEE, ENTRY_FEE_HALF, PAY_IN_USD, PROOF_OF_PAYMENT,
   FEE_SUPPORT, CONTACT_EMAIL, SOUP_KITCHEN_NAME, BANK, CATEGORIES, DATES, formatDate, deadlineWithTime, isPlaceholder,
 } from '../../site';
 
@@ -85,22 +85,22 @@ const supportHasEmail = supportAfter.length > 0;
       <section class="step" id="how-to-pay" aria-labelledby="pay-title">
         <span class="step__n" aria-hidden="true">1</span>
         <div class="step__body">
-          <h2 id="pay-title" class="sec__title"><span class="visually-hidden">Step 1: </span>Pay {ENTRY_FEE_RM} to {SOUP_KITCHEN_NAME}</h2>
+          <h2 id="pay-title" class="sec__title"><span class="visually-hidden">Step 1: </span>Pay {ENTRY_FEE} to {SOUP_KITCHEN_NAME}</h2>
           <p class="t-body-lg">Pay {ENTRY_FEE} straight to the soup kitchen. {SITE_NAME} never handles the money.</p>
           <dl class="bank">
-            <div><dt>Amount</dt><dd>{ENTRY_FEE_RM} ({ENTRY_FEE_HALF_RM} with an approved fee support code)</dd></div>
+            <div><dt>Amount</dt><dd>{ENTRY_FEE} ({ENTRY_FEE_HALF} with an approved fee support code)</dd></div>
+            <div><dt>Currency</dt><dd>{BANK.currency}</dd></div>
             <div><dt>Account name</dt><dd>{BANK.accountName} ({BANK.accountNote})</dd></div>
             <div><dt>Bank</dt><dd>{BANK.bank}</dd></div>
             <div class="bank__copy"><dt>Account number</dt><dd><span class="bank__value bank__value--number">{BANK.accountNumber}</span></dd></div>
             <div class="bank__copy"><dt>Reference</dt><dd><span class="bank__value">{BANK.reference}</span></dd></div>
           </dl>
           <p class="t-body-lg">
-            Any method is fine as long as the full {ENTRY_FEE_RM} arrives: DuitNow or online banking in Malaysia;
-            Wise, Remitly or Western Union from abroad (transfer fees are yours). Keep a screenshot: you'll upload it on the form.
+            {PAY_IN_USD} Any method is fine as long as the full amount arrives in US dollars; transfer fees are yours. {PROOF_OF_PAYMENT}
           </p>
           {/* FEE SUPPORT SLOT: FEE_SUPPORT in src/site.ts says how to ask; its email address becomes a mailto link. */}
           <p class="note" id="fee-support">
-            Can't afford {ENTRY_FEE_RM}? Ask for <a href={`${FAQ_URL}#fee-support-how`}>fee support</a> before you pay and you'll pay {ENTRY_FEE_HALF}.{' '}
+            Can't afford {ENTRY_FEE}? Ask for <a href={`${FAQ_URL}#fee-support-how`}>fee support</a> before you pay and you'll pay {ENTRY_FEE_HALF}.{' '}
             {supportHasEmail ? <>{supportBefore}<a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>{supportAfter.join(CONTACT_EMAIL)}</> : FEE_SUPPORT}{' '}
             Requests close {FEE_SUPPORT_DAYS_BEFORE_DEADLINE} days before the deadline; we reply within 72 hours with a code for the form.
           </p>
