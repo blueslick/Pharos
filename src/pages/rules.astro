@@ -8,7 +8,7 @@ import Hero from '../components/Hero.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import {
   SITE_NAME, CONTACT_EMAIL, FAQ_URL, JUDGING_PDF_URL, SOUP_KITCHEN_NAME, CATEGORIES, DATES,
-  ENTRY_FEE_RM, ENTRY_FEE_HALF_RM, DEADLINE_TIME_PLAIN, formatDate, formatDateDay, FAQ_URL_WINNER_AGE,
+  ENTRY_FEE, ENTRY_FEE_HALF, PROOF_OF_PAYMENT_INLINE, DEADLINE_TIME_PLAIN, formatDate, formatDateDay, FAQ_URL_WINNER_AGE,
 } from '../site';
 
 const junior = CATEGORIES.find((c) => c.id === 'junior')!;
@@ -36,7 +36,7 @@ const intro = 'Ten rules. The FAQ explains the details.';
         It must be your own work. Don't use AI tools to write, rewrite, expand or translate any of it, and don't enter an essay that's been published or entered somewhere else.
       </li>
       <li>
-        Pay the entry fee, {ENTRY_FEE_RM} (or {ENTRY_FEE_HALF_RM} with approved fee support), straight to {SOUP_KITCHEN_NAME} before you submit, and upload proof on the form.
+        Pay the entry fee, {ENTRY_FEE} (or {ENTRY_FEE_HALF} with approved fee support), in US dollars, straight to {SOUP_KITCHEN_NAME} before you submit, and {PROOF_OF_PAYMENT_INLINE}.
       </li>
       <li>
         Under 18? A parent or guardian must agree to you entering. On the form, tick the box saying they agree and give their email address; we may email them to check.

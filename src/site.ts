@@ -40,14 +40,14 @@ export const FAQ_URL_WINNER_AGE = '/faq/#winner-age-check'; // the FAQ answer ru
 export const FEE_SUPPORT = `Email ${CONTACT_EMAIL} with your full name and school. You don't need to explain why.`;
 
 // Entry fee. One wording, used everywhere a fee is mentioned.
-export const ENTRY_FEE_USD = 'USD 10';
-export const ENTRY_FEE_HALF_USD = 'USD 5';
-export const ENTRY_FEE_RM = 'RM 40';
-export const ENTRY_FEE_HALF_RM = 'RM 20';
-export const ENTRY_FEE = `${ENTRY_FEE_RM} (about ${ENTRY_FEE_USD})`; // ringgit leads: entrants pay in RM by bank transfer; the USD figure is only a guide
-export const ENTRY_FEE_HALF = `${ENTRY_FEE_HALF_RM} (about ${ENTRY_FEE_HALF_USD})`; // the fee at 50% fee support
+export const ENTRY_FEE = 'USD 10'; // US dollars only: entrants transfer the fee in US dollars
+export const ENTRY_FEE_HALF = 'USD 5'; // the fee at 50% fee support
+// The two standard payment sentences. Use these words every time we say how to pay.
+export const PAY_IN_USD = 'Transfer the fee in US dollars (USD).';
+export const PROOF_OF_PAYMENT = 'Upload proof of payment on the form.';
+export const PROOF_OF_PAYMENT_INLINE = 'upload proof of payment on the form'; // the same sentence, for use mid-sentence
 export const MEALS_ESTIMATE = 'about 3 meals'; // figure from T.A.S.K; the FAQ's "Where does my fee go?" reads this too
-export const MEALS_PER_ENTRY = `Every ${ENTRY_FEE_USD} entry funds ${MEALS_ESTIMATE} at T.A.S.K.`;
+export const MEALS_PER_ENTRY = `Every ${ENTRY_FEE} entry funds ${MEALS_ESTIMATE} at T.A.S.K.`;
 
 // Bank transfer details, shown on /register/ once REGISTRATION_OPEN is true.
 // Payments go straight to the soup kitchen's account; this site never handles money.
@@ -56,6 +56,7 @@ export const BANK = {
   accountNote: 'the company behind T.A.S.K',
   bank: 'RHB Bank',
   accountNumber: '262111-00010155',
+  currency: 'US dollars (USD)',
   reference: 'PHAROS + your full name',
 } as const;
 

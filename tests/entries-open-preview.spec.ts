@@ -39,7 +39,7 @@ test('entries-open preview: /register/ is three steps: pay, fill in the form, we
   await expect(main.getByRole('heading', { level: 2 })).toHaveText([
     'At a glance',
     'Before you start',
-    'Step 1: Pay RM 40 to The Assembly Soup Kitchen (T.A.S.K)',
+    'Step 1: Pay USD 10 to The Assembly Soup Kitchen (T.A.S.K)',
     'Step 2: Fill in the entry form',
     'Step 3: We confirm',
   ]);
@@ -51,12 +51,16 @@ test('entries-open preview: /register/ shows the bank number, reference, fee sup
   await expect(page.locator('#how-to-pay')).toHaveCount(1);
   await expect(pay.getByText(BANK.accountNumber)).toHaveCount(1);
   await expect(pay.getByText(BANK.reference)).toHaveCount(1);
-  await expect(pay).toContainText('Any method is fine as long as the full RM 40 arrives');
-  await expect(pay).toContainText('Keep a screenshot');
+  await expect(pay.locator('dl.bank div', { hasText: 'Amount' })).toContainText('USD 10 (USD 5 with an approved fee support code)');
+  await expect(pay.locator('dl.bank div', { hasText: 'Currency' })).toContainText('US dollars (USD)');
+  // the Currency row sits directly under Amount
+  await expect(pay.locator('dl.bank > div > dt')).toHaveText(['Amount', 'Currency', 'Account name', 'Bank', 'Account number', 'Reference']);
+  await expect(pay).toContainText('Transfer the fee in US dollars (USD). Any method is fine as long as the full amount arrives in US dollars; transfer fees are yours. Upload proof of payment on the form.');
+  await expect(pay).not.toContainText('DuitNow');
   // Fee support is a note inside step 1, with a mailto link built from CONTACT_EMAIL.
   const note = pay.locator('#fee-support');
   await expect(note).toHaveCount(1);
-  await expect(note).toContainText("Can't afford RM 40? Ask for fee support before you pay and you'll pay RM 20 (about USD 5).");
+  await expect(note).toContainText("Can't afford USD 10? Ask for fee support before you pay and you'll pay USD 5.");
   await expect(note).toContainText("with your full name and school. You don't need to explain why.");
   await expect(note).toContainText('Requests close 5 days before the deadline; we reply within 72 hours with a code for the form.');
   await expect(note.getByRole('link', { name: CONTACT_EMAIL })).toHaveAttribute('href', `mailto:${CONTACT_EMAIL}`);
@@ -108,7 +112,7 @@ test('entries-open preview: the three steps are numbered, and the page is short 
 test('entries-open preview: on desktop the plum summary panel stays in view while the steps scroll', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto(`${OPEN}/register/`);
-  await expect(page.locator('.glance')).toContainText('RM 40 (about USD 10)');
+  await expect(page.locator('.glance')).toContainText('USD 10');
   await expect(page.locator('.glance')).toContainText('17 January 2027, 23:59 Malaysia time (MYT)');
   await expect(page.locator('.glance')).toContainText('Students only, two categories');
   await expect(page.locator('.reg__summary').getByRole('link', { name: 'Enter now' })).toHaveCount(0);

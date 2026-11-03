@@ -23,7 +23,7 @@ const rulesText = [
   'One essay per person, answering one of the three prompts.',
   "Up to 800 words, in English, uploaded as a PDF. Don't put your name or school in the file.",
   "It must be your own work. Don't use AI tools to write, rewrite, expand or translate any of it, and don't enter an essay that's been published or entered somewhere else.",
-  'Pay the entry fee, RM 40 (or RM 20 with approved fee support), straight to The Assembly Soup Kitchen (T.A.S.K) before you submit, and upload proof on the form.',
+  'Pay the entry fee, USD 10 (or USD 5 with approved fee support), in US dollars, straight to The Assembly Soup Kitchen (T.A.S.K) before you submit, and upload proof of payment on the form.',
   'Under 18? A parent or guardian must agree to you entering. On the form, tick the box saying they agree and give their email address; we may email them to check.',
   'Submit by Sunday 17 January 2027, 23:59 Malaysia time. No extensions.',
   "Essays are read and judged by people, against the published judging criteria. The judges' decisions are final.",
@@ -48,11 +48,11 @@ const faqAnswers: Record<string, string> = {
   'ai-use': 'Not to write, rewrite, expand or translate any part of your essay. Spelling and grammar checkers that only fix mistakes are fine. Using AI to find sources is fine, but read the sources yourself and write every word yourself.',
   'ai-suspected': "We contact you first and may ask to see your notes or drafts. We never disqualify an essay because of a detection tool's result alone.",
   'where-the-fee-goes': 'Straight to The Assembly Soup Kitchen (T.A.S.K). Pharos never handles the money. T.A.S.K tells us every USD 10 is about 3 meals.',
-  'pay-from-abroad': 'Use a service such as Wise, Remitly or Western Union that pays into a Malaysian bank account in ringgit. Any method is fine as long as the full amount arrives. Transfer fees are yours.',
+  'pay-from-abroad': "Use your bank's international transfer or a service such as Wise, Remitly or Western Union, and send the fee in US dollars. Any method is fine as long as the full amount arrives. Transfer fees are yours.",
   'payment-arrived': "We check payments with T.A.S.K once a week and email you within a week of your entry. If we can't find your payment, we'll email you. You have until Sunday 24 January 2027 to sort it out. If we still can't find it by then, your entry is disqualified.",
-  'fee-support-what': 'If RM 40 is hard for you to afford, you can pay half: RM 20 (about USD 5).',
+  'fee-support-what': 'If USD 10 is hard for you to afford, you can pay half: USD 5.',
   'fee-support-who': "Any student who finds the fee hard to afford. You don't need to explain why, and we don't ask for proof.",
-  'fee-support-how': "Before you pay, email pharosprize@gmail.com with your full name and school. You don't need to explain why. We reply within 72 hours with a code. Pay RM 20, then choose fee support on the entry form and type in your code.",
+  'fee-support-how': "Before you pay, email pharosprize@gmail.com with your full name and school. You don't need to explain why. We reply within 72 hours with a code. Pay USD 5 in US dollars, then choose fee support on the entry form, type in your code and upload proof of payment on the form.",
   'fee-support-deadline': 'Yes: ask at least 5 days before entries close, so by Tuesday 12 January 2027.',
   'who-judges': 'The Pharos organisers, against the published judging criteria: response to the prompt (30), insight and understanding (30), clarity and structure (20) and voice and originality (20). You can download the criteria from the Competition page. AI is never used to score, rank or shortlist essays.',
   'feedback': "No. We can't give individual scores or feedback.",
@@ -282,7 +282,7 @@ test.describe('FAQ page', () => {
     await page.goto('/faq/');
     const answer = page.locator('div#pay-how');
     await expect(answer).toHaveText(
-      `By bank transfer in ringgit to T.A.S.K's account. The details go up on the How to enter page when entries open on ${ENTRIES_OPEN}. Use the reference "PHAROS + your full name", and keep a screenshot to upload on the form.`,
+      `By bank transfer in US dollars to T.A.S.K's account. The details go up on the How to enter page when entries open on ${ENTRIES_OPEN}. Use the reference "PHAROS + your full name". Upload proof of payment on the form.`,
     );
     await expect(answer.locator('a')).toHaveCount(0);
     await expect(page.locator('main a[href^="/register"]')).toHaveCount(0);
@@ -292,7 +292,7 @@ test.describe('FAQ page', () => {
     await page.goto(`${OPEN}/faq/`);
     const answer = page.locator('div#pay-how');
     await expect(answer).toHaveText(
-      `By bank transfer in ringgit to T.A.S.K's account. The details are on the How to enter page. Use the reference "PHAROS + your full name", and keep a screenshot to upload on the form.`,
+      `By bank transfer in US dollars to T.A.S.K's account. The details are on the How to enter page. Use the reference "PHAROS + your full name". Upload proof of payment on the form.`,
     );
     await expect(answer.locator('a', { hasText: 'How to enter page' })).toHaveAttribute('href', '/register/#how-to-pay');
     expect(await page.content()).not.toContain(accountNumber);

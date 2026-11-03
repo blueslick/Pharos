@@ -12,7 +12,7 @@ import FaqItem from '../components/FaqItem.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import {
   SITE_NAME, CONTACT_EMAIL, INSTAGRAM_HANDLE, CATEGORIES, RULES_URL, REGISTRATION_OPEN, FEE_SUPPORT, SOUP_KITCHEN_NAME, BANK, DATES,
-  ENTRY_FEE_RM, ENTRY_FEE_HALF, ENTRY_FEE_HALF_RM, ENTRY_FEE_USD, MEALS_ESTIMATE, PRIZES_NOTE, RUBRIC, DEADLINE_TIME, DEADLINE_TIME_PLAIN,
+  ENTRY_FEE, ENTRY_FEE_HALF, PROOF_OF_PAYMENT, PROOF_OF_PAYMENT_INLINE, MEALS_ESTIMATE, PRIZES_NOTE, RUBRIC, DEADLINE_TIME, DEADLINE_TIME_PLAIN,
   FEE_SUPPORT_DAYS_BEFORE_DEADLINE, PAYMENT_GRACE_DAYS_AFTER_DEADLINE, formatDate, formatDateDay, addDays,
 } from '../site';
 
@@ -115,12 +115,12 @@ const paymentFixDay = formatDateDay(addDays(DATES.deadline, PAYMENT_GRACE_DAYS_A
       <h2 id="paying" class="t-heading-sm">Paying</h2>
       <div class="faq-group__items">
         <FaqItem id="where-the-fee-goes" question="Where does my fee go?">
-          <p>Straight to {SOUP_KITCHEN_NAME}. {SITE_NAME} never handles the money. T.A.S.K tells us every {ENTRY_FEE_USD} is {MEALS_ESTIMATE}.</p>
+          <p>Straight to {SOUP_KITCHEN_NAME}. {SITE_NAME} never handles the money. T.A.S.K tells us every {ENTRY_FEE} is {MEALS_ESTIMATE}.</p>
         </FaqItem>
         <FaqItem id="pay-how" question="How do I pay?">
           {/* Bank details are never on this page. Before launch the How to enter page has no details yet, so no link. */}
           <p>
-            By bank transfer in ringgit to T.A.S.K's account.{' '}
+            By bank transfer in US dollars to T.A.S.K's account.{' '}
             {
               REGISTRATION_OPEN ? (
                 <>The details are on the <a href="/register/#how-to-pay">How to enter page</a>.</>
@@ -128,11 +128,11 @@ const paymentFixDay = formatDateDay(addDays(DATES.deadline, PAYMENT_GRACE_DAYS_A
                 <>The details go up on the How to enter page when entries open on {formatDate(DATES.entriesOpen)}.</>
               )
             }{' '}
-            Use the reference "{BANK.reference}", and keep a screenshot to upload on the form.
+            Use the reference "{BANK.reference}". {PROOF_OF_PAYMENT}
           </p>
         </FaqItem>
         <FaqItem id="pay-from-abroad" question="I'm not in Malaysia. How do I pay?">
-          <p>Use a service such as Wise, Remitly or Western Union that pays into a Malaysian bank account in ringgit. Any method is fine as long as the full amount arrives. Transfer fees are yours.</p>
+          <p>Use your bank's international transfer or a service such as Wise, Remitly or Western Union, and send the fee in US dollars. Any method is fine as long as the full amount arrives. Transfer fees are yours.</p>
         </FaqItem>
         <FaqItem id="payment-arrived" question="How do I know my payment arrived?">
           <p>
@@ -147,7 +147,7 @@ const paymentFixDay = formatDateDay(addDays(DATES.deadline, PAYMENT_GRACE_DAYS_A
       <h2 id="fee-support" class="t-heading-sm">Fee support</h2>
       <div class="faq-group__items">
         <FaqItem id="fee-support-what" question="What is fee support?">
-          <p>If {ENTRY_FEE_RM} is hard for you to afford, you can pay half: {ENTRY_FEE_HALF}.</p>
+          <p>If {ENTRY_FEE} is hard for you to afford, you can pay half: {ENTRY_FEE_HALF}.</p>
         </FaqItem>
         <FaqItem id="fee-support-who" question="Who can ask for it?">
           <p>Any student who finds the fee hard to afford. You don't need to explain why, and we don't ask for proof.</p>
@@ -155,7 +155,7 @@ const paymentFixDay = formatDateDay(addDays(DATES.deadline, PAYMENT_GRACE_DAYS_A
         <FaqItem id="fee-support-how" question="How do I ask?">
           <p>
             Before you pay, {supportBefore}<a href={mailto}>{CONTACT_EMAIL}</a>{supportAfterText} We reply within 72 hours with a code.
-            Pay {ENTRY_FEE_HALF_RM}, then choose fee support on the entry form and type in your code.
+            Pay {ENTRY_FEE_HALF} in US dollars, then choose fee support on the entry form, type in your code and {PROOF_OF_PAYMENT_INLINE}.
           </p>
         </FaqItem>
         <FaqItem id="fee-support-deadline" question="Is there a deadline?">

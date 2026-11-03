@@ -33,8 +33,7 @@ test('Competition shows both categories, the prizes and where the money goes', a
   await expect(page.getByText('Prizes are funded separately, not from entry fees.')).toBeVisible();
   await expect(page.getByText('Your age is your age on 17 January 2027.')).toBeVisible();
   await expect(page.getByText('Every USD 10 entry funds about 3 meals at T.A.S.K.')).toBeVisible();
-  await expect(page.getByText('RM 40 (about USD 10)').first()).toBeVisible();
-  await expect(page.getByText('RM 20 (about USD 5)').first()).toBeVisible();
+  await expect(page.getByText('Entry fee: USD 10. Fee support at 50%: USD 5. You pay The Assembly Soup Kitchen (T.A.S.K) directly by bank transfer in US dollars, and upload proof of payment on the form.')).toBeVisible();
   await expect(page.getByText('Pharos never handles the money.')).toBeVisible();
   await expect(page.locator('.fact', { hasText: 'Deadline' })).toContainText('17 January 2027');
   await expect(page.getByText('23:59 Malaysia time (MYT)').first()).toBeVisible();
