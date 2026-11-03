@@ -81,7 +81,7 @@ test('the dates and soup kitchen name come from site.ts', async ({ page }) => {
   await page.goto('/competition/');
   await expect(page.locator('.top__opens')).toHaveText(`Opens ${ENTRIES_OPEN}`);
   await expect(page.locator('.fact', { hasText: 'Deadline' })).toContainText('17 January 2027');
-  await expect(page.getByText('Winners are announced by 3 February 2027.')).toBeVisible();
+  await expect(page.getByText('Winners announced by 3 February 2027.')).toBeVisible();
   await page.goto('/');
   await expect(page.getByText(`fundraiser for The Assembly Soup Kitchen (T.A.S.K). Opens ${ENTRIES_OPEN}.`)).toBeVisible();
 });
