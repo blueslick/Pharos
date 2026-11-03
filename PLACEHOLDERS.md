@@ -15,7 +15,7 @@ Search the code for the bracketed text (for example `[full rules link]`) to find
 
 | Placeholder | What it is | Where |
 |---|---|---|
-| Soup kitchen name (was a placeholder) | **Done.** The soup kitchen gave written permission (24 Oct 2026): it is The Assembly Soup Kitchen (T.A.S.K). Set once as `SOUP_KITCHEN_NAME` in `src/site.ts`; the site shows it on Home, the Register page, the Volunteering card on Home, and the "A fundraiser for ..." line next to its logo on Competition and About. Never hard-code or re-spell it on the site. | `src/site.ts`, Home, Register, Competition, About |
+| Soup kitchen name (was a placeholder) | **Done.** The soup kitchen gave written permission (24 Oct 2026): it is The Assembly Soup Kitchen (T.A.S.K). Set once as `SOUP_KITCHEN_NAME` in `src/site.ts`; the site shows it on Home, the Register page, the Volunteering card on Home, and the "A fundraiser for ..." line next to its logo on Home, Competition and About. Never hard-code or re-spell it on the site. | `src/site.ts`, Home, Register, Competition, About |
 
 ## Certificate verification (`/verify/`)
 
@@ -61,7 +61,7 @@ One judge (the owner). Nothing is left as a placeholder in the code: the rubric 
 | Volunteering card (Home) | Switched on: links to T.A.S.K's Instagram | `SOUP_KITCHEN_INSTAGRAM_URL` in `src/site.ts` |
 | About: "Why we started this" | Draft copy written for the owner's review | `src/pages/about.astro` |
 | Contact email | pharosprize@gmail.com (a `mailto:` link) | `CONTACT_EMAIL` in `src/site.ts` |
-| Soup kitchen logo | `public/images/task-logo-600.webp` and `.png`, used with the soup kitchen's written permission. Shown only on Competition and About (component `src/components/SoupKitchenCard.astro`); never in the header, footer or Pharos wordmark. Alt text: "The Assembly Soup Kitchen (T.A.S.K) logo" | `SoupKitchenCard.astro` |
+| Soup kitchen logo | `public/images/task-logo-600.webp` and `.png`, used with the soup kitchen's written permission. Shown only on Home (edition section, under an "Inaugural Edition partner" label), Competition and About (component `src/components/SoupKitchenCard.astro`); never in the header, footer or Pharos wordmark. Alt text: "The Assembly Soup Kitchen (T.A.S.K) logo" | `SoupKitchenCard.astro` |
 | Soup kitchen socials | Facebook https://www.facebook.com/theassemblysoupkitchen/ and Instagram https://www.instagram.com/assemblysoupkitchen/ (open in a new tab) | `SOUP_KITCHEN_FACEBOOK_URL` and `SOUP_KITCHEN_INSTAGRAM_URL` in `src/site.ts` |
 | Instagram | @pharosprize (links to instagram.com/pharosprize) | `INSTAGRAM_HANDLE` and `INSTAGRAM_URL` in `src/site.ts` |
 
@@ -76,7 +76,7 @@ The Inaugural Edition's three prompts and the judging rubric are live, whether o
 ## Waiting on someone else
 
 - **Volunteering details** (Home, "What we do"). The card is live and sends people to T.A.S.K's Instagram. If T.A.S.K wants its own volunteering page or sign-up link, swap the link and wording on the card.
-- **Partner band** (Competition, About): shows T.A.S.K's logo, "A fundraiser for The Assembly Soup Kitchen (T.A.S.K)" and links to their Facebook and Instagram. Still to add when their announcement is ready: an endorsement and a link to their post.
+- **Partner card** (Home edition section, Competition, About): shows T.A.S.K's logo, "A fundraiser for The Assembly Soup Kitchen (T.A.S.K)" and links to their Facebook and Instagram. Still to add when their announcement is ready: an endorsement and a link to their post.
 - **Privacy notice.** No longer marked "Draft" (approved, Q23). It covers the waitlist and the entry form (Tally), payments, publishing names, proof of student status for winners, publishing a winning essay, fee support emails, under-18s and retention. I could not open Tally's privacy policy from the build environment: the "stored in the European Union" wording comes from search results about Tally's own pages, so please read https://tally.so/help/privacy-policy and check it.
 - **Waitlist form settings in Tally.** The form itself is set up in Tally, not on this site: keep a consent tickbox on it, and keep it on a light theme (it sits on a cream card). Delete the waitlist emails once entries close, as the Privacy page promises.
 
