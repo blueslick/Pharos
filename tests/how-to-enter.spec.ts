@@ -14,6 +14,7 @@ const ENTRY_FEE = constant('ENTRY_FEE');
 const bankBlock = siteSource.match(/export const BANK = \{([\s\S]*?)\} as const;/)![1];
 const ACCOUNT_NUMBER = bankBlock.match(/accountNumber:\s*'([^']+)'/)![1];
 
+const MAX_PHONE_HEIGHT = 2050; // measured 1958 at 375px after the restyle (it was 2373 before)
 const OPEN = 'http://localhost:4332';
 const NORMAL = 'http://localhost:4331';
 
@@ -59,7 +60,7 @@ test('entries-open: step 2 keeps the word limit, the PDF, no AI, no name or scho
   await expect(step.getByRole('link', { name: 'See the prompts' })).toHaveAttribute('href', '/competition/#prompts');
 });
 
-test('entries-open: step 3 is #how-to-pay with the account number, #fee-support and the payment wording', async ({ page }) => {
+test('entries-open: step 3 is #how-to-pay with the account number and the payment wording (proof of payment is in step 5 only)', async ({ page }) => {
   await page.goto(`${OPEN}/register/`);
   const pay = page.locator('#how-to-pay');
   await expect(pay).toHaveCount(1);
@@ -68,10 +69,42 @@ test('entries-open: step 3 is #how-to-pay with the account number, #fee-support 
   await expect(pay.getByText(ACCOUNT_NUMBER)).toHaveCount(1);
   await expect(pay.locator('dl.bank > div > dt')).toHaveText(['Amount', 'Currency', 'Account name', 'Bank', 'Account number', 'Reference']);
   await expect(pay).toContainText('The Assembly Soup Kitchen (T.A.S.K)');
-  await expect(pay).toContainText('Transfer the fee in US dollars (USD). Any method is fine as long as the full amount arrives in US dollars; transfer fees are yours. Upload proof of payment on the form.');
-  await expect(page.locator('#fee-support')).toHaveCount(1);
-  await expect(pay.locator('#fee-support')).toContainText('Requests close 5 days before the deadline; we reply within 72 hours with a code for the form.');
-  await expect(pay.locator('#fee-support a[href^="mailto:"]')).toHaveCount(1);
+  await expect(pay).toContainText('Transfer the fee in US dollars (USD). Any method is fine as long as the full amount arrives in US dollars; transfer fees are yours.');
+  await expect(pay).not.toContainText('proof of payment');
+  await expect(page.locator('section.hte ol > li').nth(4)).toContainText('upload proof of payment on the form');
+});
+
+test('entries-open: fee support is a closed <details id="fee-support"> with the text and the mailto link inside', async ({ page }) => {
+  await page.goto(`${OPEN}/register/`);
+  const fee = page.locator('#fee-support');
+  await expect(fee).toHaveCount(1);
+  expect(await fee.evaluate((el) => el.tagName)).toBe('DETAILS');
+  await expect(page.locator('#how-to-pay #fee-support')).toHaveCount(1);
+  expect(await fee.evaluate((el: HTMLDetailsElement) => el.open)).toBe(false);
+  await expect(fee.locator('summary')).toHaveText("Can't afford USD 10? Ask for fee support");
+  // the text is in the page for anyone (and anything) that reads it, and shows when the summary is opened
+  await expect(fee).toContainText('Requests close 5 days before the deadline; we reply within 72 hours with a code for the form.');
+  await expect(fee).toContainText("with your full name and school. You don't need to explain why.");
+  await expect(fee.locator('a[href^="mailto:"]')).toHaveCount(1);
+  await expect(fee.getByText('Requests close 5 days')).toBeHidden();
+  await fee.locator('summary').click();
+  expect(await fee.evaluate((el: HTMLDetailsElement) => el.open)).toBe(true);
+  await expect(fee.getByText('Requests close 5 days')).toBeVisible();
+  await expect(fee.getByRole('link', { name: 'fee support' })).toHaveAttribute('href', `${FAQ_URL}#fee-support-how`);
+  await fee.locator('summary').click();
+  await expect(fee.getByText('Requests close 5 days')).toBeHidden();
+});
+
+test('entries-open: /register/#fee-support opens the fee-support details on load', async ({ page }) => {
+  await page.goto(`${OPEN}/register/#fee-support`);
+  const fee = page.locator('#fee-support');
+  await expect(fee.getByText('Requests close 5 days')).toBeVisible();
+  expect(await fee.evaluate((el: HTMLDetailsElement) => el.open)).toBe(true);
+  // and when the hash changes on the page itself
+  await page.goto(`${OPEN}/register/`);
+  expect(await fee.evaluate((el: HTMLDetailsElement) => el.open)).toBe(false);
+  await page.evaluate(() => { location.hash = '#fee-support'; });
+  await expect(fee.getByText('Requests close 5 days')).toBeVisible();
 });
 
 test('entries-open: /register/#how-to-pay (the link the entry form and FAQ use) scrolls to the bank details', async ({ page }) => {
@@ -187,6 +220,65 @@ test('entries-open: at 1024px the steps are already in the desktop arrangement',
   expect(b[3].y).toBeCloseTo(b[5].y, 0);
   expect(b[3].x).toBeLessThan(b[5].x);
   expect(await overflow(page)).toBeLessThanOrEqual(0);
+});
+
+test('entries-open: every step is one outlined box in the bank list\'s line colour, with the cream fill and no pink or peach card', async ({ page }) => {
+  await page.goto(`${OPEN}/register/`);
+  const look = await page.locator('section.hte ol > li').evaluateAll((els) =>
+    els.map((el) => { const s = getComputedStyle(el); return { w: s.borderTopWidth, st: s.borderTopStyle, c: s.borderTopColor, bg: s.backgroundColor, r: s.borderTopLeftRadius }; }));
+  const bankLine = await page.locator('dl.bank > div').first().evaluate((el) => { const s = getComputedStyle(el); return { w: s.borderTopWidth, c: s.borderTopColor }; });
+  const tokens = await page.evaluate(() => {
+    const probe = (v: string) => { const d = document.createElement('div'); d.style.color = `var(${v})`; document.body.append(d); const c = getComputedStyle(d).color; d.remove(); return c; };
+    return { cream: probe('--c-cream'), peach: probe('--c-peach'), pink: probe('--c-pink') };
+  });
+  for (const l of look) {
+    expect(l.w).toBe(bankLine.w);
+    expect(l.st).toBe('solid');
+    expect(l.c).toBe(bankLine.c);
+    expect(l.bg).toBe(tokens.cream);
+    expect(l.bg).not.toBe(tokens.peach);
+    expect(l.bg).not.toBe(tokens.pink);
+    expect(l.r).toBe('0px'); // the bank list has square corners: so do the boxes
+  }
+});
+
+test('entries-open: on a phone the number sits on the same line as the title, in a small circle', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto(`${OPEN}/register/`);
+  const rows = await page.locator('section.hte ol > li').evaluateAll((els) =>
+    els.map((el) => {
+      const n = el.querySelector('.hte__n')!.getBoundingClientRect();
+      const h = el.querySelector('h3')!.getBoundingClientRect();
+      return { nRight: n.right, hLeft: h.left, nMid: n.top + n.height / 2, hMid: h.top + h.height / 2, size: n.width };
+    }));
+  for (const r of rows) {
+    expect(Math.abs(r.nMid - r.hMid)).toBeLessThanOrEqual(3);
+    expect(r.hLeft).toBeGreaterThanOrEqual(r.nRight);
+    expect(r.size).toBeLessThanOrEqual(32);
+  }
+});
+
+test('entries-open: on a phone the bank details are label-left, value-right (one row each), except the two big copy values', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto(`${OPEN}/register/`);
+  const rows = await page.locator('dl.bank > div').evaluateAll((els) =>
+    els.map((el) => {
+      const dt = el.querySelector('dt')!.getBoundingClientRect();
+      const dd = el.querySelector('dd')!.getBoundingClientRect();
+      return { sameLine: Math.abs(dt.top - dd.top) < 6, ddRight: dd.left >= dt.right - 1 };
+    }));
+  for (const r of rows.slice(0, 4)) { expect(r.sameLine).toBe(true); expect(r.ddRight).toBe(true); }
+  // account number and reference are large and keep their label above
+  expect(rows[4].sameLine).toBe(false);
+  expect(rows[5].sameLine).toBe(false);
+  expect(await overflow(page)).toBeLessThanOrEqual(0);
+});
+
+test('entries-open: the phone page is much shorter than before (2373px at 375px wide)', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto(`${OPEN}/register/`);
+  const height = await page.evaluate(() => document.documentElement.scrollHeight);
+  expect(height).toBeLessThan(MAX_PHONE_HEIGHT);
 });
 
 test('normal (closed) build: no steps, only the Opening soon notice', async ({ page, request }) => {

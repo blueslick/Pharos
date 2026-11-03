@@ -67,15 +67,19 @@ test('entries-open preview: /register/ shows the bank number, reference, fee sup
   await expect(pay.locator('dl.bank div', { hasText: 'Currency' })).toContainText('US dollars (USD)');
   // the Currency row sits directly under Amount
   await expect(pay.locator('dl.bank > div > dt')).toHaveText(['Amount', 'Currency', 'Account name', 'Bank', 'Account number', 'Reference']);
-  await expect(pay).toContainText('Transfer the fee in US dollars (USD). Any method is fine as long as the full amount arrives in US dollars; transfer fees are yours. Upload proof of payment on the form.');
+  await expect(pay).toContainText('Transfer the fee in US dollars (USD). Any method is fine as long as the full amount arrives in US dollars; transfer fees are yours.');
+  // the proof of payment is asked for once, in step 5, where it is uploaded
+  await expect(pay).not.toContainText('Upload proof of payment');
   await expect(pay).not.toContainText('DuitNow');
-  // Fee support is a note inside step 1, with a mailto link built from CONTACT_EMAIL.
-  const note = pay.locator('#fee-support');
+  // Fee support is a closed <details> inside step 3, with a mailto link built from CONTACT_EMAIL.
+  const note = pay.locator('details#fee-support');
   await expect(note).toHaveCount(1);
-  await expect(note).toContainText("Can't afford USD 10? Ask for fee support before you pay and you'll pay USD 5.");
+  await expect(note.locator('summary')).toHaveText("Can't afford USD 10? Ask for fee support");
+  await expect(note).toContainText("Ask for fee support before you pay and you'll pay USD 5.");
   await expect(note).toContainText("with your full name and school. You don't need to explain why.");
   await expect(note).toContainText('Requests close 5 days before the deadline; we reply within 72 hours with a code for the form.');
-  await expect(note.getByRole('link', { name: CONTACT_EMAIL })).toHaveAttribute('href', `mailto:${CONTACT_EMAIL}`);
+  // (the details is closed, so look the link up by its href: role lookups skip hidden content)
+  await expect(note.locator(`a[href="mailto:${CONTACT_EMAIL}"]`)).toHaveText(CONTACT_EMAIL);
   await expect(page.getByText('[fee support details]')).toHaveCount(0);
   // The Enter section keeps the consent line and the Privacy link right next to the button.
   const enter = page.locator('li.hte__enter');

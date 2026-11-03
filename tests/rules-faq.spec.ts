@@ -354,6 +354,9 @@ test.describe('links to Rules and FAQ', () => {
     await page.goto(`${OPEN}/register/`);
     await expect(page.getByRole('link', { name: 'Read the full rules' })).toHaveAttribute('href', '/rules/');
     await expect(page.getByRole('link', { name: 'Questions? Read the FAQ' })).toHaveAttribute('href', '/faq/');
+    // the fee-support details is closed until opened, so find its link by href (role lookups skip hidden content)
+    await expect(page.locator('#fee-support a[href="/faq/#fee-support-how"]')).toHaveText('fee support');
+    await page.locator('#fee-support summary').click();
     await expect(page.locator('#fee-support').getByRole('link', { name: 'fee support' })).toHaveAttribute('href', '/faq/#fee-support-how');
     await expect(page.getByText('[full rules link]')).toHaveCount(0);
     await expect(page.locator('.pill', { hasText: 'Placeholder' })).toHaveCount(0);
