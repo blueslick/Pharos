@@ -17,7 +17,7 @@ test.describe('Key dates', () => {
     await expect(stops).toHaveCount(4);
     await expect(stops.locator('h3')).toHaveText(['Entries open', 'Deadline', 'Judging', 'Results']);
     await expect(stops.nth(0).locator('.stop__when')).toHaveText(ENTRIES_OPEN_DAY);
-    await expect(stops.nth(1).locator('.stop__when')).toHaveText(`${DEADLINE_DAY}, 23:59 Malaysia time`);
+    await expect(stops.nth(1).locator('.stop__when')).toHaveText(`${DEADLINE_DAY}, 15:59 UTC`);
     await expect(stops.nth(2).locator('.stop__when')).toHaveText('Late January');
     await expect(stops.nth(3).locator('.stop__when')).toHaveText(RESULTS_DAY);
     await expect(stops.nth(3)).toContainText('On pharosprize.org and Instagram. Winners are also emailed.');

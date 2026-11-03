@@ -194,6 +194,9 @@ export const PAYMENT_GRACE_DAYS_AFTER_DEADLINE = 7;
 export const DEADLINE_TIME_PLAIN = '23:59 Malaysia time'; // the Rules page wording
 export const DEADLINE_TIME = `${DEADLINE_TIME_PLAIN} (MYT)`;
 export const DEADLINE_TIME_SHORT = '23:59 MYT';
+// The same moment in UTC (Malaysia is UTC+8, so 23:59 on the deadline date is 15:59 UTC on that same date).
+// Used by the Key dates timeline on the Competition page. If DEADLINE_TIME_PLAIN ever changes, change this too.
+export const DEADLINE_TIME_UTC = '15:59 UTC';
 export const deadlineWithTime = () => `${formatDate(DATES.deadline)}, ${DEADLINE_TIME}`;
 
 // The waitlist form (Tally). Swap forms by changing this one line: the share link

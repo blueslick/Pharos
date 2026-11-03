@@ -11,7 +11,7 @@ import EditionCover from '../components/EditionCover.astro';
 import WaitlistAndFooter from '../components/WaitlistAndFooter.astro';
 import SoupKitchenCard from '../components/SoupKitchenCard.astro';
 import {
-  SITE_NAME, SOUP_KITCHEN_NAME, CONTACT_EMAIL, DATES, formatDate, formatDateDay, DEADLINE_TIME_PLAIN, deadlineWithTime, CATEGORIES, PRIZES_NOTE,
+  SITE_NAME, SOUP_KITCHEN_NAME, CONTACT_EMAIL, DATES, formatDate, formatDateDay, DEADLINE_TIME_UTC, deadlineWithTime, CATEGORIES, PRIZES_NOTE,
   ENTRY_FEE, ENTRY_FEE_HALF, PROOF_OF_PAYMENT_INLINE, MEALS_PER_ENTRY, DEADLINE_TIME_SHORT, RULES_URL, FAQ_URL,
   PROMPTS, PROMPTS_INTRO, RUBRIC, RUBRIC_CLOSING, RUBRIC_TOTAL, JUDGING_PDF_URL, JUDGING_PDF_PAGES,
 } from '../site';
@@ -29,7 +29,7 @@ const facts = [
 // The Key dates timeline. Every date comes from DATES; judging has no fixed date, so it says "Late January".
 const keyDates: { label: string; when: string; time?: string; note?: string }[] = [
   { label: 'Entries open', when: formatDateDay(DATES.entriesOpen) },
-  { label: 'Deadline', when: formatDateDay(DATES.deadline), time: DEADLINE_TIME_PLAIN },
+  { label: 'Deadline', when: formatDateDay(DATES.deadline), time: DEADLINE_TIME_UTC },
   { label: 'Judging', when: 'Late January' },
   { label: 'Results', when: formatDateDay(DATES.results), note: 'On pharosprize.org and Instagram. Winners are also emailed.' },
 ];
