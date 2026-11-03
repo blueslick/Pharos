@@ -38,7 +38,7 @@ const faqAnswers: Record<string, string> = {
   'poster-says-any-age': 'The Open category is for students aged 25 and under (as at 17 January 2027). Some early posters and listings show an older version; the Rules page is always the one that counts.',
   'enter-more-than-once': 'No, one essay per person.',
   'under-18': 'A parent or guardian has to agree to you entering and to us handling your details. The entry form asks for a second email address; we suggest theirs.',
-  'open-and-close': `Entries open on ${ENTRIES_OPEN_DAY} and close on Sunday 17 January 2027 at 23:59 Malaysia time (MYT). Late entries aren't judged.`,
+  'open-and-close': `Entries open on ${ENTRIES_OPEN_DAY} and close on Sunday 17 January 2027 at 23:59 Malaysia time (MYT). Late entries aren't judged. See all key dates`,
   'fix-a-mistake': "Yes, until entries close (17 January 2027, 23:59 Malaysia time). Email pharosprize@gmail.com with your full name, the email address you entered with, and what needs fixing. If it's your essay, attach the corrected PDF. After the deadline we can't accept changes.",
   'word-count': "Everything from the first word of your essay to the last, including footnotes. Your title and your reference list don't count. Essays over 800 words aren't judged.",
   'references': "If you use someone else's words, ideas or numbers, credit them. Any clear, consistent style is fine.",

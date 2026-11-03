@@ -11,7 +11,7 @@ import EditionCover from '../components/EditionCover.astro';
 import WaitlistAndFooter from '../components/WaitlistAndFooter.astro';
 import SoupKitchenCard from '../components/SoupKitchenCard.astro';
 import {
-  SITE_NAME, SOUP_KITCHEN_NAME, CONTACT_EMAIL, DATES, formatDate, deadlineWithTime, CATEGORIES, PRIZES_NOTE,
+  SITE_NAME, SOUP_KITCHEN_NAME, CONTACT_EMAIL, DATES, formatDate, formatDateDay, DEADLINE_TIME_UTC, deadlineWithTime, CATEGORIES, PRIZES_NOTE,
   ENTRY_FEE, ENTRY_FEE_HALF, PROOF_OF_PAYMENT_INLINE, MEALS_PER_ENTRY, DEADLINE_TIME_SHORT, RULES_URL, FAQ_URL,
   PROMPTS, PROMPTS_INTRO, RUBRIC, RUBRIC_CLOSING, RUBRIC_TOTAL, JUDGING_PDF_URL, JUDGING_PDF_PAGES,
 } from '../site';
@@ -24,6 +24,14 @@ const facts = [
   { label: 'Who', value: 'Students, in two categories' },
   { label: 'Length', value: 'Up to 800 words' },
   { label: 'AI', value: 'No AI-written essays' },
+];
+
+// The Key dates timeline. Every date comes from DATES; judging has no fixed date, so it says "Late January".
+const keyDates: { label: string; when: string; time?: string; note?: string }[] = [
+  { label: 'Entries open', when: formatDateDay(DATES.entriesOpen) },
+  { label: 'Deadline', when: formatDateDay(DATES.deadline), time: DEADLINE_TIME_UTC },
+  { label: 'Judging', when: 'Late January' },
+  { label: 'Results', when: formatDateDay(DATES.results), note: 'On pharosprize.org and Instagram. Winners are also emailed.' },
 ];
 
 // One sentence for the judging section, built from RUBRIC so the names and marks cannot drift:
@@ -85,6 +93,19 @@ const steps = [
           </div>
         ))}
       </dl>
+    </section>
+
+    <section class="dates" id="dates" aria-labelledby="dates-title">
+      <h2 id="dates-title" class="t-heading">Key dates</h2>
+      <ol class="dates__list">
+        {keyDates.map((d) => (
+          <li class="stop">
+            <h3 class="stop__label">{d.label}</h3>
+            <p class="stop__when">{d.when}{d.time && <span class="stop__time">, {d.time}</span>}</p>
+            {d.note && <p class="stop__note">{d.note}</p>}
+          </li>
+        ))}
+      </ol>
     </section>
 
     <section class="cats" aria-labelledby="cats-title">
@@ -240,6 +261,19 @@ const steps = [
   .fact dt { font-size: 18px; font-weight: 600; }
   .fact dd { margin: 0; font-family: var(--font-display); font-size: 32px; line-height: 1.05; }
 
+  /* Key dates: a vertical line down the left on phones, a horizontal line with four dots from 960px. */
+  .dates { padding: 40px var(--gutter) 0; display: flex; flex-direction: column; gap: 16px; scroll-margin-top: 16px; }
+  .dates__list { list-style: none; padding: 0; margin: 0; }
+  .stop { position: relative; padding: 0 0 28px 36px; display: flex; flex-direction: column; gap: 4px; }
+  .stop:last-child { padding-bottom: 0; }
+  .stop::before { content: ''; position: absolute; left: 7px; top: 12px; bottom: -12px; width: 2px; background: var(--c-plum); }
+  .stop:last-child::before { display: none; }
+  .stop::after { content: ''; position: absolute; left: 0; top: 4px; width: 16px; height: 16px; box-sizing: border-box; border-radius: 50%; background: var(--c-coral); border: 2px solid var(--c-plum); }
+  .stop__label { font-size: 18px; font-weight: 600; line-height: 1.3; }
+  .stop__when { font-family: var(--font-display); font-size: 26px; line-height: 1.1; overflow-wrap: anywhere; }
+  .stop__time { font-family: var(--font-sans); font-size: 18px; font-weight: 600; }
+  .stop__note { font-size: 16px; line-height: 1.4; margin-top: 4px; }
+
   /* Categories */
   .cats { padding: 40px var(--gutter) 0; display: flex; flex-direction: column; gap: 16px; }
   .cats__list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 14px; }
@@ -353,6 +387,16 @@ const steps = [
     .fact:nth-last-child(-n + 2) { border-bottom: 2px solid var(--c-plum); }
     .fact dt { font-size: 20px; }
     .fact dd { font-size: clamp(44px, 4.17vw, 60px); line-height: 1; }
+
+    .dates { padding: 0 var(--gutter) 16px; gap: 28px; }
+    .dates__list { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .stop { padding: 36px 24px 0 0; gap: 8px; }
+    .stop:last-child { padding-right: 0; }
+    .stop::before { left: 16px; right: 0; top: 7px; bottom: auto; width: auto; height: 2px; }
+    .stop::after { top: 0; }
+    .stop__label { font-size: 20px; }
+    .stop__when { font-size: 28px; }
+    .stop__time { font-size: 18px; }
 
     .cats { padding: 24px var(--gutter) 40px; gap: 24px; }
     .cats__list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; max-width: 900px; }
