@@ -1,6 +1,6 @@
 # Weekly social run (scheduled task prompt)
 
-Paste everything below the line into a Claude scheduled task. Suggested schedule: Sundays 19:47 Malaysia time (`CRON_TZ=Asia/Kuala_Lumpur 47 19 * * 0`). It needs the sdg-website repo (push access, to open a PR), the Pharos Command Centre sheet and the Pharos · Instagram queue sheet (`1wVnCMnsDABpt4PsR51Asck4DXKKXIkhLxUG3onVQpmY`).
+Paste everything below the line into a Claude scheduled task. Suggested schedule: Sundays 19:47 Malaysia time (`CRON_TZ=Asia/Kuala_Lumpur 47 19 * * 0`). It needs the blueslick/Pharos repo (push access, to open a PR), the Pharos Command Centre sheet and the Pharos · Instagram queue sheet (`1wVnCMnsDABpt4PsR51Asck4DXKKXIkhLxUG3onVQpmY`).
 
 ---
 
