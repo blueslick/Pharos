@@ -103,7 +103,7 @@ test('entries-open preview: /register/ links to the prompts instead of repeating
     await expect(main).not.toContainText(gone);
   }
   await expect(main).toContainText('Open to students only: Junior is 14 and under, Open is 25 and under (your age on 17 January 2027).');
-  await expect(main).toContainText('Deadline: 17 January 2027, 23:59 Malaysia time (MYT).');
+  await expect(main).toContainText('Deadline: 17 January 2027, 15:59 UTC.');
   // The anchor it points to exists on the Competition page of the same build.
   await page.goto(`${OPEN}/competition/#prompts`);
   await expect(page.locator('#prompts')).toBeVisible();
@@ -129,7 +129,7 @@ test('entries-open preview: on desktop the plum title block spans the page and i
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto(`${OPEN}/register/`);
   await expect(page.locator('.glance')).toContainText('USD 10');
-  await expect(page.locator('.glance')).toContainText('17 January 2027, 23:59 Malaysia time (MYT)');
+  await expect(page.locator('.glance')).toContainText('17 January 2027, 15:59 UTC');
   await expect(page.locator('.glance')).toContainText('Students only, two categories');
   await expect(page.locator('.reg__summary').getByRole('link', { name: 'Enter now' })).toHaveCount(0);
   const box = await page.locator('.reg__summary').boundingBox();

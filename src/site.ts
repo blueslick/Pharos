@@ -159,7 +159,7 @@ export const JUDGING_PDF_PAGES = 1;
 // Every date on the site, as YYYY-MM-DD. Pages show them through formatDate().
 export const DATES = {
   entriesOpen: '2026-11-05',
-  deadline: '2027-01-17', // 23:59 Malaysia time (DEADLINE_TIME); also the date entrants' ages are counted on
+  deadline: '2027-01-17', // 15:59 UTC, which is the end of the day in Malaysia (DEADLINE_TIME); also the date entrants' ages are counted on
   results: '2027-02-03', // winners are announced on this date
   entryDataDeleted: '2027-08-03', // by this date entry data we no longer need is deleted (see the Privacy page)
   privacyUpdated: '2026-11-02', // "Last updated" on the Privacy page (and its Malay version): change it whenever either notice changes
@@ -190,13 +190,12 @@ export const addDays = (iso: string, days: number) =>
 export const FEE_SUPPORT_DAYS_BEFORE_DEADLINE = 5;
 export const PAYMENT_GRACE_DAYS_AFTER_DEADLINE = 7;
 
-// The deadline is the end of the day in Malaysia.
-export const DEADLINE_TIME_PLAIN = '23:59 Malaysia time'; // the Rules page wording
-export const DEADLINE_TIME = `${DEADLINE_TIME_PLAIN} (MYT)`;
-export const DEADLINE_TIME_SHORT = '23:59 MYT';
-// The same moment in UTC (Malaysia is UTC+8, so 23:59 on the deadline date is 15:59 UTC on that same date).
-// Used by the Key dates timeline on the Competition page. If DEADLINE_TIME_PLAIN ever changes, change this too.
-export const DEADLINE_TIME_UTC = '15:59 UTC';
+// The deadline is 15:59 UTC (the end of the day in Malaysia, which is UTC+8, so 23:59 there is 15:59 UTC on the same date).
+// Public text always shows it in UTC, never in Malaysia time. These are the one source for every page and post.
+export const DEADLINE_TIME_PLAIN = '15:59 UTC'; // the Rules page wording
+export const DEADLINE_TIME = DEADLINE_TIME_PLAIN;
+export const DEADLINE_TIME_SHORT = DEADLINE_TIME_PLAIN;
+export const DEADLINE_TIME_UTC = DEADLINE_TIME_PLAIN; // kept as an alias: the Key dates timeline on the Competition page uses it
 export const deadlineWithTime = () => `${formatDate(DATES.deadline)}, ${DEADLINE_TIME}`;
 
 // The waitlist form (Tally). Swap forms by changing this one line: the share link
