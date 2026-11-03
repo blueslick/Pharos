@@ -37,7 +37,7 @@ test('Competition shows both categories, the prizes and where the money goes', a
   await expect(page.getByText('Pharos never handles the money.')).toBeVisible();
   await expect(page.locator('.fact', { hasText: 'Deadline' })).toContainText('17 January 2027');
   await expect(page.getByText('23:59 Malaysia time (MYT)').first()).toBeVisible();
-  await expect(page.getByText('Winners are announced by 3 February 2027.')).toBeVisible();
+  await expect(page.getByText('Winners announced by 3 February 2027.')).toBeVisible();
 });
 
 test('Competition fits a phone and passes the accessibility check', async ({ page }) => {
