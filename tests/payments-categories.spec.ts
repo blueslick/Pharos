@@ -25,11 +25,11 @@ test('Competition shows both categories, the prizes and where the money goes', a
   const junior = page.locator('.cat--junior');
   await expect(junior).toContainText('Junior');
   await expect(junior).toContainText('14 and under');
-  await expect(junior).toContainText('USD 50');
+  await expect(junior).toContainText('USD 75');
   const open = page.locator('.cat--open');
   await expect(open).toContainText('Open');
   await expect(open).toContainText('25 and under');
-  await expect(open).toContainText('USD 100');
+  await expect(open).toContainText('USD 125');
   await expect(page.getByText('Prizes are funded separately, not from entry fees.')).toBeVisible();
   await expect(page.getByText('Your age is your age on 17 January 2027.')).toBeVisible();
   await expect(page.getByText('Every USD 10 entry funds about 3 meals at T.A.S.K.')).toBeVisible();

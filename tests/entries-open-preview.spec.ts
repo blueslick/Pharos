@@ -19,6 +19,7 @@ const BANK = {
 };
 
 const CONTACT_EMAIL = siteSource.match(/export const CONTACT_EMAIL = '([^']+)'/)![1];
+const REGISTRATION_URL = siteSource.match(/export const REGISTRATION_URL = '([^']+)'/)![1];
 
 const OPEN = 'http://localhost:4332';
 const NORMAL = 'http://localhost:4331';
@@ -31,23 +32,34 @@ test('entries-open preview: /register/ shows the bank account name, bank and acc
   await expect(page.getByText(BANK.reference).first()).toBeVisible();
 });
 
-test('entries-open preview: /register/ is three steps: pay, fill in the form, we confirm', async ({ page }) => {
+test('entries-open preview: /register/ is one version only: the six steps, and the old sections are gone', async ({ page }) => {
   await page.goto(`${OPEN}/register/`);
   await expect(page.getByRole('heading', { name: 'How to enter', level: 1 })).toBeVisible();
-  await expect(page.getByText('Three steps: pay, fill in the form, and we confirm.')).toBeVisible();
+  await expect(page.getByText('Six steps: check you can enter, write, pay, screenshot, fill in the form, and we confirm.')).toBeVisible();
   const main = page.locator('main');
-  await expect(main.getByRole('heading', { level: 2 })).toHaveText([
-    'At a glance',
-    'Before you start',
-    'Step 1: Pay USD 10 to The Assembly Soup Kitchen (T.A.S.K)',
-    'Step 2: Fill in the entry form',
-    'Step 3: We confirm',
+  await expect(main.getByRole('heading', { level: 2 })).toHaveText(['At a glance', 'How to enter, step by step']);
+  await expect(main.getByRole('heading', { level: 3 })).toHaveText([
+    'Check you can enter',
+    'Write your essay',
+    'Pay USD 10 in US dollars',
+    'Screenshot your payment',
+    'Fill in the entry form',
+    'We confirm',
   ]);
+  // the old "Before you start" section and the old three step sections are gone
+  for (const gone of ['Before you start', 'Three steps', 'Step 1:', 'Step 2:', 'Step 3:', 'Pay USD 10 to The Assembly Soup Kitchen']) {
+    await expect(main).not.toContainText(gone);
+  }
+  await expect(main.locator('section')).toHaveCount(1);
+  await expect(main.locator('.step, .before, .step__n')).toHaveCount(0);
+  const html = await page.content();
+  expect(html).not.toContain('three steps');
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /six steps/);
 });
 
 test('entries-open preview: /register/ shows the bank number, reference, fee support note, consent line and Enter now', async ({ page }) => {
   await page.goto(`${OPEN}/register/`);
-  const pay = page.locator('section#how-to-pay');
+  const pay = page.locator('#how-to-pay');
   await expect(page.locator('#how-to-pay')).toHaveCount(1);
   await expect(pay.getByText(BANK.accountNumber)).toHaveCount(1);
   await expect(pay.getByText(BANK.reference)).toHaveCount(1);
@@ -55,21 +67,26 @@ test('entries-open preview: /register/ shows the bank number, reference, fee sup
   await expect(pay.locator('dl.bank div', { hasText: 'Currency' })).toContainText('US dollars (USD)');
   // the Currency row sits directly under Amount
   await expect(pay.locator('dl.bank > div > dt')).toHaveText(['Amount', 'Currency', 'Account name', 'Bank', 'Account number', 'Reference']);
-  await expect(pay).toContainText('Transfer the fee in US dollars (USD). Any method is fine as long as the full amount arrives in US dollars; transfer fees are yours. Upload proof of payment on the form.');
+  await expect(pay).toContainText('Transfer the fee in US dollars (USD). Any method is fine as long as the full amount arrives in US dollars; transfer fees are yours.');
+  // the proof of payment is asked for once, in step 5, where it is uploaded
+  await expect(pay).not.toContainText('Upload proof of payment');
   await expect(pay).not.toContainText('DuitNow');
-  // Fee support is a note inside step 1, with a mailto link built from CONTACT_EMAIL.
-  const note = pay.locator('#fee-support');
+  // Fee support is a closed <details> inside step 3, with a mailto link built from CONTACT_EMAIL.
+  const note = pay.locator('details#fee-support');
   await expect(note).toHaveCount(1);
-  await expect(note).toContainText("Can't afford USD 10? Ask for fee support before you pay and you'll pay USD 5.");
+  await expect(note.locator('summary')).toHaveText("Can't afford USD 10? Ask for fee support");
+  await expect(note).toContainText("Ask for fee support before you pay and you'll pay USD 5.");
   await expect(note).toContainText("with your full name and school. You don't need to explain why.");
   await expect(note).toContainText('Requests close 5 days before the deadline; we reply within 72 hours with a code for the form.');
-  await expect(note.getByRole('link', { name: CONTACT_EMAIL })).toHaveAttribute('href', `mailto:${CONTACT_EMAIL}`);
+  // (the details is closed, so look the link up by its href: role lookups skip hidden content)
+  await expect(note.locator(`a[href="mailto:${CONTACT_EMAIL}"]`)).toHaveText(CONTACT_EMAIL);
   await expect(page.getByText('[fee support details]')).toHaveCount(0);
   // The Enter section keeps the consent line and the Privacy link right next to the button.
-  const enter = page.locator('section.enter');
+  const enter = page.locator('li.hte__enter');
   await expect(enter).toContainText("The form asks for your consent to how we handle your details (and a parent or guardian's if you're under 18).");
   await expect(enter.getByRole('link', { name: 'Privacy notice' })).toHaveAttribute('href', '/privacy/');
   await expect(enter.getByRole('link', { name: 'Enter now' })).toBeVisible();
+  await expect(enter.getByRole('link', { name: 'Enter now' })).toHaveAttribute('href', REGISTRATION_URL);
   await expect(page.getByText('We check payments with The Assembly Soup Kitchen (T.A.S.K) once a week and email you within a week of entering.')).toBeVisible();
 });
 
@@ -101,25 +118,23 @@ test('entries-open preview: the account number and reference are selectable text
   expect(style.fs).toBeGreaterThanOrEqual(20);
 });
 
-test('entries-open preview: the three steps are numbered, and the page is short with no sideways scroll on a phone', async ({ page }) => {
+test('entries-open preview: the six steps are numbered, and there is no sideways scroll on a phone', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 800 });
   await page.goto(`${OPEN}/register/`);
-  await expect(page.locator('.step__n')).toHaveText(['1', '2', '3']);
+  await expect(page.locator('.hte__n')).toHaveText(['1', '2', '3', '4', '5', '6']);
   expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
-  expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBeLessThan(2600);
 });
 
-test('entries-open preview: on desktop the plum summary panel stays in view while the steps scroll', async ({ page }) => {
+test('entries-open preview: on desktop the plum title block spans the page and its "At a glance" facts are shown', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto(`${OPEN}/register/`);
   await expect(page.locator('.glance')).toContainText('USD 10');
   await expect(page.locator('.glance')).toContainText('17 January 2027, 23:59 Malaysia time (MYT)');
   await expect(page.locator('.glance')).toContainText('Students only, two categories');
   await expect(page.locator('.reg__summary').getByRole('link', { name: 'Enter now' })).toHaveCount(0);
-  await page.evaluate(() => window.scrollTo(0, 600));
-  const top = await page.locator('.reg__summary').evaluate((el) => el.getBoundingClientRect().top);
-  expect(top).toBeGreaterThanOrEqual(0);
-  expect(top).toBeLessThanOrEqual(1);
+  const box = await page.locator('.reg__summary').boundingBox();
+  expect(box!.x).toBeLessThanOrEqual(1);
+  expect(box!.width).toBeGreaterThanOrEqual(1438);
 });
 
 test('entries-open preview: every page is noindex; the normal build has no bank details and Home stays indexable', async ({ request }) => {

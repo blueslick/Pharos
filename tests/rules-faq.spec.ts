@@ -27,7 +27,7 @@ const rulesText = [
   'Under 18? A parent or guardian must agree to you entering. On the form, tick the box saying they agree and give their email address; we may email them to check.',
   'Submit by Sunday 17 January 2027, 23:59 Malaysia time. No extensions.',
   "Essays are read and judged by people, against the published judging criteria. The judges' decisions are final.",
-  'Winners and shortlisted entrants may be named (name only) on pharosprize.org and Instagram. Prizes: USD 50 (Junior) and USD 100 (Open).',
+  'Winners and shortlisted entrants may be named (name only) on pharosprize.org and Instagram. Prizes: USD 75 (Junior) and USD 125 (Open).',
   "Before prizes are paid, winners must confirm their age and that they're a student (see the FAQ). If a winner can't, the prize goes to the next-ranked entry.",
 ];
 
@@ -354,6 +354,9 @@ test.describe('links to Rules and FAQ', () => {
     await page.goto(`${OPEN}/register/`);
     await expect(page.getByRole('link', { name: 'Read the full rules' })).toHaveAttribute('href', '/rules/');
     await expect(page.getByRole('link', { name: 'Questions? Read the FAQ' })).toHaveAttribute('href', '/faq/');
+    // the fee-support details is closed until opened, so find its link by href (role lookups skip hidden content)
+    await expect(page.locator('#fee-support a[href="/faq/#fee-support-how"]')).toHaveText('fee support');
+    await page.locator('#fee-support summary').click();
     await expect(page.locator('#fee-support').getByRole('link', { name: 'fee support' })).toHaveAttribute('href', '/faq/#fee-support-how');
     await expect(page.getByText('[full rules link]')).toHaveCount(0);
     await expect(page.locator('.pill', { hasText: 'Placeholder' })).toHaveCount(0);
