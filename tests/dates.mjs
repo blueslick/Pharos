@@ -3,9 +3,15 @@
 // Same wording as formatDate() / formatDateDay() in src/site.ts.
 import { readFileSync } from 'node:fs';
 
-const iso = readFileSync('src/site.ts', 'utf8').match(/entriesOpen:\s*'(\d{4}-\d{2}-\d{2})'/)[1];
-const d = new Date(`${iso}T00:00:00Z`);
-const fmt = (opts) => d.toLocaleDateString('en-GB', { ...opts, timeZone: 'UTC' });
+const src = readFileSync('src/site.ts', 'utf8');
+const day = (key) => {
+  const d = new Date(`${src.match(new RegExp(`${key}:\\s*'(\\d{4}-\\d{2}-\\d{2})'`))[1]}T00:00:00Z`);
+  const fmt = (opts) => d.toLocaleDateString('en-GB', { ...opts, timeZone: 'UTC' });
+  const date = fmt({ day: 'numeric', month: 'long', year: 'numeric' });
+  return { date, dayDate: `${fmt({ weekday: 'long' })} ${date}` };
+};
 
-export const ENTRIES_OPEN = fmt({ day: 'numeric', month: 'long', year: 'numeric' }); // 5 November 2026
-export const ENTRIES_OPEN_DAY = `${fmt({ weekday: 'long' })} ${ENTRIES_OPEN}`; // Thursday 5 November 2026
+export const ENTRIES_OPEN = day('entriesOpen').date; // 5 November 2026
+export const ENTRIES_OPEN_DAY = day('entriesOpen').dayDate; // Thursday 5 November 2026
+export const DEADLINE_DAY = day('deadline').dayDate; // Sunday 17 January 2027
+export const RESULTS_DAY = day('results').dayDate; // Wednesday 3 February 2027
