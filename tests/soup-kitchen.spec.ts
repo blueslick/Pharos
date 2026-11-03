@@ -60,9 +60,12 @@ for (const path of pages) {
   });
 }
 
-test('the logo appears only on Competition and About', async ({ page }) => {
-  for (const path of ['/', '/contact/', '/privacy/', '/blog/']) {
+// Competition and About (tested above) and the edition section on Home (tests/home-layout.spec.ts).
+test('the logo appears only on Home, Competition and About', async ({ page }) => {
+  for (const path of ['/contact/', '/privacy/', '/blog/']) {
     await page.goto(path);
     await expect(page.locator('img[src*="task-logo"]')).toHaveCount(0);
   }
+  await page.goto('/');
+  await expect(page.locator('img[src*="task-logo"]')).toHaveCount(1);
 });

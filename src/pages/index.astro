@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
 import EditionCover from '../components/EditionCover.astro';
 import WaitlistAndFooter from '../components/WaitlistAndFooter.astro';
+import SoupKitchenCard from '../components/SoupKitchenCard.astro';
 import { SITE_NAME, SOUP_KITCHEN_NAME, SOUP_KITCHEN_INSTAGRAM_URL, FAQ_URL, DATES, CATEGORIES, formatDate } from '../site';
 
 const junior = CATEGORIES.find((c) => c.id === 'junior')!;
@@ -21,7 +22,7 @@ const intro = `${SITE_NAME} is an essay competition for students, with a Junior 
       <section class="who">
         <span class="who__dot" aria-hidden="true"></span>
         <h2 class="t-heading">Who we are</h2>
-        <p class="t-body-lg who__text">
+        <p class="t-lead who__text">
           We're student volunteers who think young people should have a say on the world's biggest problems, and that
           writing about them can do some real good. Each edition takes one goal, asks three questions, and is a
           fundraiser for {SOUP_KITCHEN_NAME}.
@@ -62,6 +63,10 @@ const intro = `${SITE_NAME} is an essay competition for students, with a Junior 
         <p class="t-label edition__label desktop-only">Inaugural edition: Goal 2, Zero Hunger</p>
         <h2 id="edition-title" class="t-display">Your essay can feed someone.</h2>
         <p class="edition__line">This edition is a fundraiser for {SOUP_KITCHEN_NAME}. Opens {formatDate(DATES.entriesOpen)}.</p>
+        <div class="edition__partner">
+          <p class="t-label edition__partner-label">Inaugural Edition partner</p>
+          <SoupKitchenCard />
+        </div>
         <a class="btn btn--cream desktop-only" href="/competition/">See the competition</a>
         <p class="faq-link desktop-only">Questions? <a href={FAQ_URL}>Read the FAQ</a></p>
       </div>
@@ -94,7 +99,7 @@ const intro = `${SITE_NAME} is an essay competition for students, with a Junior 
     border-radius: 50%;
     background: var(--c-pink);
   }
-  .who__text { max-width: 300px; }
+  .who__text { max-width: none; }
 
   /* What we do */
   .doings { padding: 0 var(--gutter) 52px; display: flex; flex-direction: column; gap: 20px; }
@@ -142,6 +147,8 @@ const intro = `${SITE_NAME} is an essay competition for students, with a Junior 
   .edition__cover { display: flex; justify-content: center; width: 100%; }
   .edition__text { align-self: stretch; display: flex; flex-direction: column; gap: 10px; }
   .edition__line { font-size: 17px; line-height: 1.45; }
+  .edition__partner { display: flex; flex-direction: column; gap: 10px; margin-top: 6px; }
+  .edition__partner-label { color: var(--c-peach); }
 
   /* The small FAQ link under the call to action (a text link, not a button; padded to a 44px+ tap target) */
   .faq-link { font-size: 16px; line-height: 1.4; }
@@ -161,7 +168,7 @@ const intro = `${SITE_NAME} is an essay competition for students, with a Junior 
       overflow: visible;
     }
     .who .t-heading { grid-column: 1; grid-row: 1 / span 2; }
-    .who__text { grid-column: 2; max-width: 620px; }
+    .who__text { grid-column: 2; max-width: 32em; }
     .who .btn { grid-column: 2; justify-self: start; }
     .who__dot { left: -130px; right: auto; top: -70px; width: 160px; height: 160px; }
     
