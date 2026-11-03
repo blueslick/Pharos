@@ -131,7 +131,7 @@ test('entries-open: step 5 has the consent line, the Privacy link and an Enter n
   await expect(enter).toHaveAttribute('href', REGISTRATION_URL);
   await expect(enter).toHaveAttribute('target', '_blank');
   await expect(enter).toHaveAttribute('rel', /noopener/);
-  await expect(step).toContainText('Deadline: 17 January 2027, 23:59 Malaysia time (MYT).');
+  await expect(step).toContainText('Deadline: 17 January 2027, 15:59 UTC.');
   await expect(step).toContainText('upload proof of payment on the form');
 });
 
