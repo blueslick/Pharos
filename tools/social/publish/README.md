@@ -39,7 +39,7 @@ In the Instagram app, sign in as @pharosprize, then go to **Settings → Account
 6. Optional but worth it: in the sheet, **Data → Protect sheets and ranges** on column E (Status), allowing only Daniel and the service account to edit it. Then only Daniel can approve.
 
 ### 4. Add the four secrets to GitHub (5 min)
-In github.com/blueslick/sdg-website go to **Settings → Secrets and variables → Actions → New repository secret** and add:
+In github.com/blueslick/Pharos go to **Settings → Secrets and variables → Actions → New repository secret** and add:
 
 | Name | Value |
 |---|---|
