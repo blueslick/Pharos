@@ -1,13 +1,16 @@
 ---
 // How to enter: one short information page. While REGISTRATION_OPEN is false
 // (src/site.ts) only an "Opening soon" notice is built: no fees, no payment
-// details, no entry-form link. When it is open the page is three steps: pay, fill in
-// the entry form, we confirm. It does not repeat the Competition page (categories, prizes,
+// details, no entry-form link. When it is open the page starts with a six-step "How to enter, step by
+// step" strip (components/HowToEnter.astro), a summary only. Below it the detailed sections stay in
+// full: Before you start, then three steps (pay, with the bank details; fill in the entry form; we confirm).
+// It does not repeat the Competition page (categories, prizes,
 // prompts, rules): it links there. Everything entrants do (age check, consent ticks, the
 // PDF essay, the proof of payment) happens in the external entry form (REGISTRATION_URL).
 // It has no scripts and collects and stores nothing. Money never passes through this site.
 import Base from '../../layouts/Base.astro';
 import ExternalAction from '../../components/ExternalAction.astro';
+import HowToEnter from '../../components/HowToEnter.astro';
 import {
   SITE_NAME, REGISTRATION_OPEN, REGISTRATION_URL, RULES_URL, FAQ_URL, FEE_SUPPORT_DAYS_BEFORE_DEADLINE, ENTRY_FEE, ENTRY_FEE_HALF, PAY_IN_USD, PROOF_OF_PAYMENT,
   FEE_SUPPORT, CONTACT_EMAIL, SOUP_KITCHEN_NAME, BANK, CATEGORIES, DATES, formatDate, deadlineWithTime, isPlaceholder,
@@ -59,6 +62,9 @@ const supportHasEmail = supportAfter.length > 0;
 
     <div class="reg__main">
       <a class="reg__back desktop-only" href="/competition/">← Back to the competition</a>
+
+      {/* Summary strip: the detailed sections below stay as they are. */}
+      <HowToEnter />
 
       <section class="before" aria-labelledby="before-title">
         <h2 id="before-title" class="sec__title">Before you start</h2>

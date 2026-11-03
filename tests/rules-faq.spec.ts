@@ -27,7 +27,7 @@ const rulesText = [
   'Under 18? A parent or guardian must agree to you entering. On the form, tick the box saying they agree and give their email address; we may email them to check.',
   'Submit by Sunday 17 January 2027, 23:59 Malaysia time. No extensions.',
   "Essays are read and judged by people, against the published judging criteria. The judges' decisions are final.",
-  'Winners and shortlisted entrants may be named (name only) on pharosprize.org and Instagram. Prizes: USD 50 (Junior) and USD 100 (Open).',
+  'Winners and shortlisted entrants may be named (name only) on pharosprize.org and Instagram. Prizes: USD 75 (Junior) and USD 125 (Open).',
   "Before prizes are paid, winners must confirm their age and that they're a student (see the FAQ). If a winner can't, the prize goes to the next-ranked entry.",
 ];
 

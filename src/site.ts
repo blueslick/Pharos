@@ -63,8 +63,8 @@ export const BANK = {
 // The two prize categories: the one source every page reads. Age is the entrant's age on DATES.deadline
 // (Junior: 14 and under; Open: 25 and under). Both are for students only. Prizes are funded separately, not from entry fees.
 export const CATEGORIES = [
-  { id: 'junior', name: 'Junior', who: '14 and under', prize: 'USD 50' },
-  { id: 'open', name: 'Open', who: '25 and under', prize: 'USD 100' },
+  { id: 'junior', name: 'Junior', who: '14 and under', prize: 'USD 75' },
+  { id: 'open', name: 'Open', who: '25 and under', prize: 'USD 125' },
 ] as const;
 export const PRIZES_NOTE = 'Prizes are funded separately, not from entry fees.';
 

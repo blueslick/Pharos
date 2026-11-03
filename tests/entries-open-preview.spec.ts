@@ -38,6 +38,7 @@ test('entries-open preview: /register/ is three steps: pay, fill in the form, we
   const main = page.locator('main');
   await expect(main.getByRole('heading', { level: 2 })).toHaveText([
     'At a glance',
+    'How to enter, step by step',
     'Before you start',
     'Step 1: Pay USD 10 to The Assembly Soup Kitchen (T.A.S.K)',
     'Step 2: Fill in the entry form',
@@ -106,7 +107,7 @@ test('entries-open preview: the three steps are numbered, and the page is short 
   await page.goto(`${OPEN}/register/`);
   await expect(page.locator('.step__n')).toHaveText(['1', '2', '3']);
   expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
-  expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBeLessThan(2600);
+  expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBeLessThan(3100); // was 2600 before the six-step "How to enter" strip was added on top
 });
 
 test('entries-open preview: on desktop the plum summary panel stays in view while the steps scroll', async ({ page }) => {

@@ -1,0 +1,126 @@
+---
+// "How to enter, step by step": a six-step summary strip at the top of the Register page
+// (only built when REGISTRATION_OPEN is true; the page decides). It is a summary on top of the
+// detailed Pay / Fill in the form / We confirm sections below it, which stay as they are.
+// Every value comes from src/site.ts. Plain HTML and CSS (no image, no script): an ordered
+// list, so screen readers announce "list, 6 items" and the step order. The big numbers are
+// decoration (aria-hidden) because the list already numbers the items.
+// Phones: a vertical list with a connecting line. Wider screens: a 3 + 3 grid of cards.
+import {
+  REGISTRATION_URL, RULES_URL, ENTRY_FEE, SOUP_KITCHEN_NAME, BANK, CATEGORIES, DATES, formatDate, isPlaceholder,
+} from '../site';
+
+const junior = CATEGORIES.find((c) => c.id === 'junior')!;
+const open = CATEGORIES.find((c) => c.id === 'open')!;
+---
+
+<section class="hte" aria-labelledby="hte-title">
+  <h2 id="hte-title" class="hte__title">How to enter, step by step</h2>
+  <ol class="hte__list" role="list">
+    <li>
+      <span class="hte__n" aria-hidden="true">1</span>
+      <div class="hte__text">
+        <p class="hte__step">Check you can enter</p>
+        <p class="hte__line">
+          Students only. Junior is {junior.who}, Open is {open.who} (age on {formatDate(DATES.deadline)}).
+          {isPlaceholder(RULES_URL) ? <>Rules: {RULES_URL}</> : <a href={RULES_URL}>Rules</a>}
+        </p>
+      </div>
+    </li>
+    <li>
+      <span class="hte__n" aria-hidden="true">2</span>
+      <div class="hte__text">
+        <p class="hte__step">Write your essay</p>
+        <p class="hte__line">Up to 800 words on one prompt, saved as a PDF. Don't put your name or school in the PDF.</p>
+      </div>
+    </li>
+    <li>
+      <span class="hte__n" aria-hidden="true">3</span>
+      <div class="hte__text">
+        <p class="hte__step">Pay {ENTRY_FEE} in US dollars</p>
+        <p class="hte__line">
+          Straight to {SOUP_KITCHEN_NAME}, reference “{BANK.reference}”. <a href="#how-to-pay">See the bank details</a>
+        </p>
+      </div>
+    </li>
+    <li>
+      <span class="hte__n" aria-hidden="true">4</span>
+      <div class="hte__text">
+        <p class="hte__step">Screenshot your payment</p>
+        <p class="hte__line">The confirmation from your bank or app.</p>
+      </div>
+    </li>
+    <li>
+      <span class="hte__n" aria-hidden="true">5</span>
+      <div class="hte__text">
+        <p class="hte__step">Fill in the entry form</p>
+        <p class="hte__line">
+          Upload your essay, then upload proof of payment on the form.
+          {
+            isPlaceholder(REGISTRATION_URL) ? (
+              <>Entry form: {REGISTRATION_URL}</>
+            ) : (
+              <a class="hte__form-link" href={REGISTRATION_URL} target="_blank" rel="noopener noreferrer">
+                Open the entry form<span class="visually-hidden"> (opens in a new tab)</span>
+              </a>
+            )
+          }
+        </p>
+      </div>
+    </li>
+    <li>
+      <span class="hte__n" aria-hidden="true">6</span>
+      <div class="hte__text">
+        <p class="hte__step">We confirm</p>
+        <p class="hte__line">We email you within a week.</p>
+      </div>
+    </li>
+  </ol>
+</section>
+
+<style>
+  .hte { display: flex; flex-direction: column; gap: var(--space-2); }
+  .hte__title { font-family: var(--font-display); font-weight: 400; font-size: var(--fs-heading-sm); line-height: 1.1; }
+
+  .hte__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+
+  /* Phone: number badge on the left, a line running down to the next badge */
+  .hte__list > li { position: relative; display: grid; grid-template-columns: 40px minmax(0, 1fr); column-gap: var(--space-2); padding-bottom: var(--space-3); }
+  .hte__list > li:last-child { padding-bottom: 0; }
+  .hte__list > li:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: 19px;
+    top: 44px;
+    bottom: 4px;
+    width: 2px;
+    background: var(--c-plum);
+  }
+  /* Coral is a fill: the number sits on it in plum-deep, never coral on the page ground. */
+  .hte__n {
+    display: flex; align-items: center; justify-content: center;
+    width: 40px; height: 40px; border-radius: var(--radius-round);
+    background: var(--c-coral); color: var(--c-plum-deep);
+    font-family: var(--font-display); font-size: 22px; line-height: 1;
+  }
+  .hte__text { min-width: 0; display: flex; flex-direction: column; gap: 2px; padding-top: 6px; }
+  .hte__step { margin: 0; font-weight: 700; font-size: var(--fs-body-lg); line-height: 1.25; }
+  .hte__line { margin: 0; font-size: var(--fs-body); line-height: var(--lh-body); }
+  .hte__line a { display: block; width: fit-content; padding: 4px 0; font-weight: 600; }
+
+  /* Wider screens: 3 + 3 cards, no connecting line */
+  @media (min-width: 640px) {
+    .hte__list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-2); }
+    .hte__list > li {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: var(--space-1);
+      align-content: start;
+      padding: var(--space-2);
+      background: var(--c-cream);
+      border-radius: var(--radius-card);
+    }
+    .hte__list > li:last-child { padding-bottom: var(--space-2); }
+    .hte__list > li:not(:last-child)::before { content: none; }
+    .hte__text { padding-top: 0; }
+  }
+</style>
