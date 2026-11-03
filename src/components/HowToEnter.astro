@@ -1,93 +1,128 @@
 ---
-// "How to enter, step by step": a six-step summary strip at the top of the Register page
-// (only built when REGISTRATION_OPEN is true; the page decides). It is a summary on top of the
-// detailed Pay / Fill in the form / We confirm sections below it, which stay as they are.
-// Every value comes from src/site.ts. Plain HTML and CSS (no image, no script): an ordered
-// list, so screen readers announce "list, 6 items" and the step order. The big numbers are
+// "How to enter, step by step": the ONE how-to-enter content on the Register page (built only when
+// REGISTRATION_OPEN is true; the page decides). Six steps in an ordered list. Everything an entrant
+// needs is inside the steps: who can enter (1), the essay rules (2), the bank details and fee support
+// (3, id="how-to-pay": the Tally form and the FAQ link to /register/#how-to-pay), the proof of payment
+// (4), the entry form with the consent line and the Enter now button (5), and what happens next (6).
+// Every value comes from src/site.ts. Plain HTML and CSS (no image, no script). The step numbers are
 // decoration (aria-hidden) because the list already numbers the items.
-// Phones: a vertical list with a connecting line. Wider screens: a 3 + 3 grid of cards.
+// Layout: phone = one column with a connecting line; tablet (640px) = 2 columns; desktop (1024px) =
+// step 1 and 2 side by side, step 3 (the long one) across the full row, then steps 4, 5 and 6.
+import ExternalAction from './ExternalAction.astro';
 import {
-  REGISTRATION_URL, RULES_URL, ENTRY_FEE, SOUP_KITCHEN_NAME, BANK, CATEGORIES, DATES, formatDate, isPlaceholder,
+  SITE_NAME, REGISTRATION_URL, RULES_URL, FAQ_URL, FEE_SUPPORT_DAYS_BEFORE_DEADLINE, ENTRY_FEE, ENTRY_FEE_HALF, PAY_IN_USD,
+  PROOF_OF_PAYMENT, PROOF_OF_PAYMENT_INLINE, FEE_SUPPORT, CONTACT_EMAIL, SOUP_KITCHEN_NAME, BANK, CATEGORIES, DATES,
+  formatDate, deadlineWithTime, isPlaceholder,
 } from '../site';
 
 const junior = CATEGORIES.find((c) => c.id === 'junior')!;
 const open = CATEGORIES.find((c) => c.id === 'open')!;
+
+// FEE_SUPPORT contains CONTACT_EMAIL; the page shows that address as a mailto link.
+const [supportBefore, ...supportAfter] = FEE_SUPPORT.split(CONTACT_EMAIL);
+const supportHasEmail = supportAfter.length > 0;
 ---
 
 <section class="hte" aria-labelledby="hte-title">
   <h2 id="hte-title" class="hte__title">How to enter, step by step</h2>
   <ol class="hte__list" role="list">
-    <li>
+    <li class="hte__item hte__check">
       <span class="hte__n" aria-hidden="true">1</span>
       <div class="hte__text">
-        <p class="hte__step">Check you can enter</p>
+        <h3 class="hte__step">Check you can enter</h3>
         <p class="hte__line">
-          Students only. Junior is {junior.who}, Open is {open.who} (age on {formatDate(DATES.deadline)}).
-          {isPlaceholder(RULES_URL) ? <>Rules: {RULES_URL}</> : <a href={RULES_URL}>Rules</a>}
+          Open to students only: Junior is {junior.who}, Open is {open.who} (your age on {formatDate(DATES.deadline)}).
+        </p>
+        {/* RULES_URL and FAQ_URL in src/site.ts are the Rules and FAQ pages. */}
+        <p class="hte__links">
+          {isPlaceholder(RULES_URL) ? <span><span class="pill">Placeholder</span> Rules: {RULES_URL}</span> : <a href={RULES_URL}>Read the full rules</a>}
+          <a href={FAQ_URL}>Questions? Read the FAQ</a>
         </p>
       </div>
     </li>
-    <li>
+
+    <li class="hte__item hte__write">
       <span class="hte__n" aria-hidden="true">2</span>
       <div class="hte__text">
-        <p class="hte__step">Write your essay</p>
-        <p class="hte__line">Up to 800 words on one prompt, saved as a PDF. Don't put your name or school in the PDF.</p>
+        <h3 class="hte__step">Write your essay</h3>
+        <p class="hte__line">
+          One essay of up to 800 words on one of the three prompts, as a PDF, written without AI tools.
+          Don't put your name or school in the PDF.
+        </p>
+        <p class="hte__links"><a href="/competition/#prompts">See the prompts</a></p>
       </div>
     </li>
-    <li>
+
+    {/* ONE money section: the fee is paid here. The entry form links to #how-to-pay. */}
+    <li class="hte__item hte__pay" id="how-to-pay">
       <span class="hte__n" aria-hidden="true">3</span>
       <div class="hte__text">
-        <p class="hte__step">Pay {ENTRY_FEE} in US dollars</p>
-        <p class="hte__line">
-          Straight to {SOUP_KITCHEN_NAME}, reference “{BANK.reference}”. <a href="#how-to-pay">See the bank details</a>
-        </p>
+        <h3 class="hte__step">Pay {ENTRY_FEE} in US dollars</h3>
+        <div class="hte__pay-grid">
+          <p class="hte__line">Pay {ENTRY_FEE} straight to {SOUP_KITCHEN_NAME}. {SITE_NAME} never handles the money.</p>
+          <dl class="bank">
+            <div><dt>Amount</dt><dd>{ENTRY_FEE} ({ENTRY_FEE_HALF} with an approved fee support code)</dd></div>
+            <div><dt>Currency</dt><dd>{BANK.currency}</dd></div>
+            <div><dt>Account name</dt><dd>{BANK.accountName} ({BANK.accountNote})</dd></div>
+            <div><dt>Bank</dt><dd>{BANK.bank}</dd></div>
+            <div class="bank__copy"><dt>Account number</dt><dd><span class="bank__value bank__value--number">{BANK.accountNumber}</span></dd></div>
+            <div class="bank__copy"><dt>Reference</dt><dd><span class="bank__value">{BANK.reference}</span></dd></div>
+          </dl>
+          <p class="hte__line">
+            {PAY_IN_USD} Any method is fine as long as the full amount arrives in US dollars; transfer fees are yours. {PROOF_OF_PAYMENT}
+          </p>
+          {/* FEE SUPPORT SLOT: FEE_SUPPORT in src/site.ts says how to ask; its email address becomes a mailto link. */}
+          <p class="hte__note" id="fee-support">
+            Can't afford {ENTRY_FEE}? Ask for <a href={`${FAQ_URL}#fee-support-how`}>fee support</a> before you pay and you'll pay {ENTRY_FEE_HALF}.{' '}
+            {supportHasEmail ? <>{supportBefore}<a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>{supportAfter.join(CONTACT_EMAIL)}</> : FEE_SUPPORT}{' '}
+            Requests close {FEE_SUPPORT_DAYS_BEFORE_DEADLINE} days before the deadline; we reply within 72 hours with a code for the form.
+          </p>
+        </div>
       </div>
     </li>
-    <li>
+
+    <li class="hte__item hte__shot">
       <span class="hte__n" aria-hidden="true">4</span>
       <div class="hte__text">
-        <p class="hte__step">Screenshot your payment</p>
-        <p class="hte__line">The confirmation from your bank or app.</p>
-      </div>
-    </li>
-    <li>
-      <span class="hte__n" aria-hidden="true">5</span>
-      <div class="hte__text">
-        <p class="hte__step">Fill in the entry form</p>
+        <h3 class="hte__step">Screenshot your payment</h3>
         <p class="hte__line">
-          Upload your essay, then upload proof of payment on the form.
-          {
-            isPlaceholder(REGISTRATION_URL) ? (
-              <>Entry form: {REGISTRATION_URL}</>
-            ) : (
-              <a class="hte__form-link" href={REGISTRATION_URL} target="_blank" rel="noopener noreferrer">
-                Open the entry form<span class="visually-hidden"> (opens in a new tab)</span>
-              </a>
-            )
-          }
+          Take a screenshot of the confirmation from your bank or app. You can crop out everything except the amount, date, recipient and transaction ID.
         </p>
       </div>
     </li>
-    <li>
+
+    <li class="hte__item hte__enter">
+      <span class="hte__n" aria-hidden="true">5</span>
+      <div class="hte__text">
+        <h3 class="hte__step">Fill in the entry form</h3>
+        <p class="hte__line">Upload your essay, then {PROOF_OF_PAYMENT_INLINE}. Deadline: {deadlineWithTime()}.</p>
+        {/* CONSENT: keep this line and the Privacy link right next to the Enter now button.
+            Entrants may be under 18 and Malaysia's PDPA applies. */}
+        <p class="hte__line hte__consent">The form asks for your consent to how we handle your details (and a parent or guardian's if you're under 18). See our <a href="/privacy/">Privacy notice</a>.</p>
+        <ExternalAction href={REGISTRATION_URL} label="Enter now" tone="coral" />
+      </div>
+    </li>
+
+    <li class="hte__item hte__confirm">
       <span class="hte__n" aria-hidden="true">6</span>
       <div class="hte__text">
-        <p class="hte__step">We confirm</p>
-        <p class="hte__line">We email you within a week.</p>
+        <h3 class="hte__step">We confirm</h3>
+        <p class="hte__line">We check payments with {SOUP_KITCHEN_NAME} once a week and email you within a week of entering.</p>
       </div>
     </li>
   </ol>
 </section>
 
 <style>
-  .hte { display: flex; flex-direction: column; gap: var(--space-2); }
+  .hte { display: flex; flex-direction: column; gap: var(--space-3); }
   .hte__title { font-family: var(--font-display); font-weight: 400; font-size: var(--fs-heading-sm); line-height: 1.1; }
 
   .hte__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
 
   /* Phone: number badge on the left, a line running down to the next badge */
-  .hte__list > li { position: relative; display: grid; grid-template-columns: 40px minmax(0, 1fr); column-gap: var(--space-2); padding-bottom: var(--space-3); }
-  .hte__list > li:last-child { padding-bottom: 0; }
-  .hte__list > li:not(:last-child)::before {
+  .hte__item { position: relative; display: grid; grid-template-columns: 40px minmax(0, 1fr); column-gap: var(--space-2); padding-bottom: var(--space-4); }
+  .hte__item:last-child { padding-bottom: 0; }
+  .hte__item:not(:last-child)::before {
     content: '';
     position: absolute;
     left: 19px;
@@ -103,24 +138,64 @@ const open = CATEGORIES.find((c) => c.id === 'open')!;
     background: var(--c-coral); color: var(--c-plum-deep);
     font-family: var(--font-display); font-size: 22px; line-height: 1;
   }
-  .hte__text { min-width: 0; display: flex; flex-direction: column; gap: 2px; padding-top: 6px; }
-  .hte__step { margin: 0; font-weight: 700; font-size: var(--fs-body-lg); line-height: 1.25; }
+  .hte__text { min-width: 0; display: flex; flex-direction: column; gap: var(--space-1); padding-top: 6px; }
+  .hte__step { margin: 0; font-family: var(--font-sans); font-weight: 700; font-size: var(--fs-body-lg); line-height: 1.25; }
   .hte__line { margin: 0; font-size: var(--fs-body); line-height: var(--lh-body); }
-  .hte__line a { display: block; width: fit-content; padding: 4px 0; font-weight: 600; }
+  .hte__links { margin: 0; display: flex; flex-wrap: wrap; column-gap: var(--space-3); row-gap: 0; font-size: var(--fs-body); line-height: var(--lh-body); }
+  .hte a { font-weight: 600; overflow-wrap: anywhere; }
+  .hte__links > a, .hte__links > span { display: inline-block; padding: 6px 0; }
+  .hte :global(:focus-visible) { outline-color: var(--c-plum); }
 
-  /* Wider screens: 3 + 3 cards, no connecting line */
+  .hte__pay-grid { display: flex; flex-direction: column; gap: var(--space-2); }
+  .hte__note { margin: 0; font-size: var(--fs-body); line-height: 1.45; border-left: 4px solid var(--c-plum); padding-left: var(--space-2); }
+
+  /* Bank details: account number and reference are big, selectable text (tap to select all of it) */
+  .bank { margin: 0; display: flex; flex-direction: column; border-bottom: 1.5px solid var(--c-plum); }
+  .bank > div { border-top: 1.5px solid var(--c-plum); padding: 10px 0; display: flex; flex-direction: column; gap: 2px; }
+  .bank dt { font-size: var(--fs-body); font-weight: 600; }
+  .bank dd { margin: 0; overflow-wrap: anywhere; font-size: var(--fs-body); line-height: var(--lh-body); }
+  .bank__value { font-size: 24px; font-weight: 600; line-height: 1.25; user-select: all; -webkit-user-select: all; }
+  .bank__value--number { white-space: nowrap; font-variant-numeric: tabular-nums; letter-spacing: 0.01em; }
+
+  .hte__enter :global(.btn) { align-self: stretch; justify-content: center; min-height: 72px; font-size: var(--fs-heading-sm); font-family: var(--font-display); font-weight: 400; margin-top: var(--space-1); }
+  .hte__enter :global(.placeholder-card) { margin-top: var(--space-1); }
+
+  /* Tablet: 2 columns of cards, no connecting line. The long step (3) and the last one take a full row. */
   @media (min-width: 640px) {
-    .hte__list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-2); }
-    .hte__list > li {
+    .hte__list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2); }
+    .hte__item {
       grid-template-columns: minmax(0, 1fr);
       row-gap: var(--space-1);
       align-content: start;
-      padding: var(--space-2);
+      padding: var(--space-3);
       background: var(--c-cream);
       border-radius: var(--radius-card);
     }
-    .hte__list > li:last-child { padding-bottom: var(--space-2); }
-    .hte__list > li:not(:last-child)::before { content: none; }
+    .hte__item:last-child { padding-bottom: var(--space-3); }
+    .hte__item:not(:last-child)::before { content: none; }
     .hte__text { padding-top: 0; }
+    .hte__pay, .hte__confirm { grid-column: 1 / -1; }
+  }
+
+  /* Desktop: a 6-column grid. Steps 1 and 2 are halves, step 3 is the full row (its bank details sit
+     beside its text), steps 4, 5 and 6 are thirds. Cards in a row are the same height. */
+  @media (min-width: 1024px) {
+    .hte__list { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--space-3); }
+    .hte__item { padding: var(--space-4); }
+    .hte__item:last-child { padding-bottom: var(--space-4); }
+    .hte__check, .hte__write { grid-column: span 3; }
+    .hte__pay { grid-column: 1 / -1; }
+    .hte__shot, .hte__enter, .hte__confirm { grid-column: span 2; }
+
+    /* The bank list sits in the right column across all rows; the text stays together in the left one
+       (the last, flexible row soaks up the extra height so the text rows don't stretch). */
+    .hte__pay-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: auto auto auto 1fr; column-gap: var(--space-6); row-gap: var(--space-2); align-items: start; }
+    .hte__pay-grid > .bank { grid-column: 2; grid-row: 1 / span 4; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-3); align-content: start; border-bottom: 0; }
+    .hte__pay-grid > .bank > div { border-bottom: 0; }
+    .hte__pay-grid > .bank > div:nth-last-child(-n + 2) { border-bottom: 1.5px solid var(--c-plum); }
+    .hte__pay-grid > :nth-child(1) { grid-column: 1; grid-row: 1; }
+    .hte__pay-grid > :nth-child(3) { grid-column: 1; grid-row: 2; }
+    .hte__pay-grid > :nth-child(4) { grid-column: 1; grid-row: 3; }
+    .hte__enter .hte__consent { flex: 1; }
   }
 </style>

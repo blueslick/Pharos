@@ -1,31 +1,21 @@
 ---
-// How to enter: one short information page. While REGISTRATION_OPEN is false
-// (src/site.ts) only an "Opening soon" notice is built: no fees, no payment
-// details, no entry-form link. When it is open the page starts with a six-step "How to enter, step by
-// step" strip (components/HowToEnter.astro), a summary only. Below it the detailed sections stay in
-// full: Before you start, then three steps (pay, with the bank details; fill in the entry form; we confirm).
-// It does not repeat the Competition page (categories, prizes,
-// prompts, rules): it links there. Everything entrants do (age check, consent ticks, the
-// PDF essay, the proof of payment) happens in the external entry form (REGISTRATION_URL).
-// It has no scripts and collects and stores nothing. Money never passes through this site.
+// How to enter: one short page. While REGISTRATION_OPEN is false (src/site.ts) only an "Opening soon"
+// notice is built: no fees, no payment details, no entry-form link. When it is open the page is the
+// title block plus ONE version of the instructions: the six-step "How to enter, step by step" list
+// (components/HowToEnter.astro). The older "Before you start" and three-step sections are gone; everything
+// they said now lives inside the six steps (the bank details and fee support in step 3, which keeps
+// id="how-to-pay" and id="fee-support"; the consent line and Enter now button in step 5).
+// It does not repeat the Competition page (categories, prizes, prompts, rules): it links there.
+// Everything entrants do (age check, consent ticks, the PDF essay, the proof of payment) happens in the
+// external entry form (REGISTRATION_URL). It has no scripts and collects and stores nothing.
+// Money never passes through this site.
 import Base from '../../layouts/Base.astro';
-import ExternalAction from '../../components/ExternalAction.astro';
 import HowToEnter from '../../components/HowToEnter.astro';
-import {
-  SITE_NAME, REGISTRATION_OPEN, REGISTRATION_URL, RULES_URL, FAQ_URL, FEE_SUPPORT_DAYS_BEFORE_DEADLINE, ENTRY_FEE, ENTRY_FEE_HALF, PAY_IN_USD, PROOF_OF_PAYMENT,
-  FEE_SUPPORT, CONTACT_EMAIL, SOUP_KITCHEN_NAME, BANK, CATEGORIES, DATES, formatDate, deadlineWithTime, isPlaceholder,
-} from '../../site';
+import { SITE_NAME, REGISTRATION_OPEN, ENTRY_FEE, DATES, formatDate, deadlineWithTime } from '../../site';
 
 const description = REGISTRATION_OPEN
-  ? `How to enter the ${SITE_NAME} essay competition in three steps: pay, fill in the entry form, and we confirm.`
+  ? `How to enter the ${SITE_NAME} essay competition in six steps: check you can enter, write your essay, pay, screenshot your payment, fill in the entry form, and we confirm.`
   : `How to enter the ${SITE_NAME} essay competition. Entries open soon.`;
-
-const junior = CATEGORIES.find((c) => c.id === 'junior')!;
-const open = CATEGORIES.find((c) => c.id === 'open')!;
-
-// FEE_SUPPORT contains CONTACT_EMAIL; the page shows that address as a mailto link.
-const [supportBefore, ...supportAfter] = FEE_SUPPORT.split(CONTACT_EMAIL);
-const supportHasEmail = supportAfter.length > 0;
 ---
 
 <Base title="How to enter" description={description} noindex={!REGISTRATION_OPEN}>
@@ -49,7 +39,7 @@ const supportHasEmail = supportAfter.length > 0;
       <a class="reg__wordmark desktop-only" href="/" aria-label={`${SITE_NAME}, home`}>{SITE_NAME}</a>
       <a class="reg__back mobile-only" href="/competition/">← Competition</a>
       <h1 class="reg__title">How to enter</h1>
-      <p class="reg__lead">Three steps: pay, fill in the form, and we confirm.</p>
+      <p class="reg__lead">Six steps: check you can enter, write, pay, screenshot, fill in the form, and we confirm.</p>
       <div class="glance desktop-only">
         <h2 class="glance__title">At a glance</h2>
         <dl class="glance__list">
@@ -62,75 +52,7 @@ const supportHasEmail = supportAfter.length > 0;
 
     <div class="reg__main">
       <a class="reg__back desktop-only" href="/competition/">← Back to the competition</a>
-
-      {/* Summary strip: the detailed sections below stay as they are. */}
       <HowToEnter />
-
-      <section class="before" aria-labelledby="before-title">
-        <h2 id="before-title" class="sec__title">Before you start</h2>
-        <p class="t-body-lg">
-          Open to students only: Junior is {junior.who}, Open is {open.who} (your age on {formatDate(DATES.deadline)}).
-          One essay of up to 800 words on one of the three prompts, as a PDF, written without AI tools.
-          Deadline: {deadlineWithTime()}.
-        </p>
-        {/* RULES_URL and FAQ_URL in src/site.ts are the Rules and FAQ pages. */}
-        <p class="before__links">
-          <a href="/competition/#prompts">See the prompts</a>
-          {
-            isPlaceholder(RULES_URL) ? (
-              <span class="before__placeholder"><span class="pill">Placeholder</span> Full rules: {RULES_URL}</span>
-            ) : (
-              <a href={RULES_URL}>Read the full rules</a>
-            )
-          }
-          <a href={FAQ_URL}>Questions? Read the FAQ</a>
-        </p>
-      </section>
-
-      {/* ONE money section: the fee is paid here. The entry form links to #how-to-pay. */}
-      <section class="step" id="how-to-pay" aria-labelledby="pay-title">
-        <span class="step__n" aria-hidden="true">1</span>
-        <div class="step__body">
-          <h2 id="pay-title" class="sec__title"><span class="visually-hidden">Step 1: </span>Pay {ENTRY_FEE} to {SOUP_KITCHEN_NAME}</h2>
-          <p class="t-body-lg">Pay {ENTRY_FEE} straight to the soup kitchen. {SITE_NAME} never handles the money.</p>
-          <dl class="bank">
-            <div><dt>Amount</dt><dd>{ENTRY_FEE} ({ENTRY_FEE_HALF} with an approved fee support code)</dd></div>
-            <div><dt>Currency</dt><dd>{BANK.currency}</dd></div>
-            <div><dt>Account name</dt><dd>{BANK.accountName} ({BANK.accountNote})</dd></div>
-            <div><dt>Bank</dt><dd>{BANK.bank}</dd></div>
-            <div class="bank__copy"><dt>Account number</dt><dd><span class="bank__value bank__value--number">{BANK.accountNumber}</span></dd></div>
-            <div class="bank__copy"><dt>Reference</dt><dd><span class="bank__value">{BANK.reference}</span></dd></div>
-          </dl>
-          <p class="t-body-lg">
-            {PAY_IN_USD} Any method is fine as long as the full amount arrives in US dollars; transfer fees are yours. {PROOF_OF_PAYMENT}
-          </p>
-          {/* FEE SUPPORT SLOT: FEE_SUPPORT in src/site.ts says how to ask; its email address becomes a mailto link. */}
-          <p class="note" id="fee-support">
-            Can't afford {ENTRY_FEE}? Ask for <a href={`${FAQ_URL}#fee-support-how`}>fee support</a> before you pay and you'll pay {ENTRY_FEE_HALF}.{' '}
-            {supportHasEmail ? <>{supportBefore}<a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>{supportAfter.join(CONTACT_EMAIL)}</> : FEE_SUPPORT}{' '}
-            Requests close {FEE_SUPPORT_DAYS_BEFORE_DEADLINE} days before the deadline; we reply within 72 hours with a code for the form.
-          </p>
-        </div>
-      </section>
-
-      <section class="step enter" aria-labelledby="enter-title">
-        <span class="step__n" aria-hidden="true">2</span>
-        <div class="step__body">
-          <h2 id="enter-title" class="sec__title"><span class="visually-hidden">Step 2: </span>Fill in the entry form</h2>
-          {/* CONSENT: keep this line and the Privacy link right next to the Enter now button.
-              Entrants may be under 18 and Malaysia's PDPA applies. */}
-          <p class="consent">The form asks for your consent to how we handle your details (and a parent or guardian's if you're under 18). See our <a href="/privacy/">Privacy notice</a>.</p>
-          <ExternalAction href={REGISTRATION_URL} label="Enter now" tone="coral" />
-        </div>
-      </section>
-
-      <section class="step" aria-labelledby="confirm-title">
-        <span class="step__n" aria-hidden="true">3</span>
-        <div class="step__body">
-          <h2 id="confirm-title" class="sec__title"><span class="visually-hidden">Step 3: </span>We confirm</h2>
-          <p class="t-body-lg">We check payments with {SOUP_KITCHEN_NAME} once a week and email you within a week of entering.</p>
-        </div>
-      </section>
     </div>
   </main>
     )
@@ -143,75 +65,41 @@ const supportHasEmail = supportAfter.length > 0;
   .reg :global(.btn) { font-weight: 600; }
   .reg :global(:focus-visible) { outline-color: var(--c-plum); }
 
-  /* Title block: sits on the page on mobile, becomes the plum slab on desktop. */
+  /* Title block: sits on the page on mobile, becomes a full-width plum slab on desktop. */
   .reg__summary { position: relative; display: flex; flex-direction: column; padding: 0 var(--gutter); }
   .reg__back { font-weight: 600; padding: var(--space-1) 0; align-self: flex-start; min-height: 56px; display: flex; align-items: center; }
   .reg__title { font-family: var(--font-display); font-weight: 400; font-size: var(--fs-heading); line-height: var(--lh-display); padding-top: var(--space-1); }
   .reg__lead { padding-top: 6px; font-size: var(--fs-body); line-height: var(--lh-body); }
   .reg__rings { --ring: var(--c-pink); }
 
+  /* The content area has no width cap: the steps use the page's full width between the gutters. */
   .reg__main { padding: var(--space-3) var(--gutter) 0; display: flex; flex-direction: column; gap: var(--space-4); font-size: var(--fs-body-lg); line-height: var(--lh-body-lg); }
 
-  .sec__title { font-family: var(--font-display); font-weight: 400; font-size: var(--fs-heading-sm); line-height: 1.1; }
-
-  /* Before you start: plain text, no box */
-  .before { display: flex; flex-direction: column; gap: var(--space-1); }
-  .before__links { display: flex; flex-wrap: wrap; column-gap: var(--space-3); row-gap: 4px; font-size: var(--fs-body); line-height: var(--lh-body); }
-  .before__links > a { padding: 6px 0; }
-  .before__placeholder { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 6px 0; }
-
-  /* The three numbered steps: big display numerals, like "How it works" on the Competition page */
-  .step { display: grid; grid-template-columns: 44px minmax(0, 1fr); column-gap: 16px; align-items: start; }
-  .step__n { font-family: var(--font-display); font-size: 48px; line-height: 0.9; }
-  .step__body { display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; padding-bottom: var(--space-4); border-bottom: 1.5px solid var(--c-plum); }
-  .step:last-child .step__body { border-bottom: 0; padding-bottom: 0; }
-
-  /* Bank details: account number and reference are big, selectable text (tap to select all of it) */
-  .bank { margin: 0; display: flex; flex-direction: column; border-bottom: 1.5px solid var(--c-plum); }
-  .bank > div { border-top: 1.5px solid var(--c-plum); padding: 10px 0; display: flex; flex-direction: column; gap: 2px; }
-  .bank dt { font-size: var(--fs-body); font-weight: 600; }
-  .bank dd { margin: 0; overflow-wrap: anywhere; }
-  .bank__value { font-size: 24px; font-weight: 600; line-height: 1.25; user-select: all; -webkit-user-select: all; }
-  .bank__value--number { white-space: nowrap; font-variant-numeric: tabular-nums; letter-spacing: 0.01em; }
-
-  .note { font-size: var(--fs-body); line-height: 1.45; border-left: 4px solid var(--c-plum); padding-left: var(--space-2); }
-
-  .consent { font-size: var(--fs-body); line-height: 1.45; }
-  .enter :global(.btn) { align-self: stretch; justify-content: center; min-height: 72px; font-size: var(--fs-heading-sm); font-family: var(--font-display); font-weight: 400; }
-
   @media (min-width: 960px) {
-    .reg { display: grid; grid-template-columns: clamp(480px, 41.67%, 760px) minmax(0, 1fr); align-items: start; padding-bottom: var(--space-12); }
-    /* The plum panel stays in view while the steps scroll past. position: sticky does not work
-       inside overflow: hidden, so on this page the page wrapper clips instead (same look, no scroll box). */
-    :global(.page) { overflow: clip; }
+    .reg { padding-bottom: var(--space-12); }
     .reg__summary {
-      position: sticky;
-      top: 0;
       background: var(--c-plum);
       color: var(--c-cream);
-      border-radius: 0 0 clamp(190px, 20.8vw, 340px) 0;
-      padding: var(--space-4) var(--gutter) var(--space-12);
-      gap: var(--space-3);
+      border-radius: 0 0 clamp(120px, 14vw, 220px) 0;
+      padding: var(--space-4) var(--gutter) var(--space-6);
+      gap: var(--space-2);
       overflow: hidden;
     }
     .reg__summary > :not(.rings) { position: relative; }
     .reg__summary :global(:focus-visible) { outline-color: var(--c-cream); }
-    .reg__rings { --ring-gap: 11px; --s: clamp(300px, 29vw, 420px); width: var(--s); height: var(--s); right: calc(var(--s) * -0.38); bottom: calc(var(--s) * -0.38); }
+    .reg__rings { --ring-gap: 11px; --s: clamp(260px, 26vw, 380px); width: var(--s); height: var(--s); right: calc(var(--s) * -0.3); bottom: calc(var(--s) * -0.4); }
     .reg__wordmark { font-family: var(--font-script); font-size: var(--fs-wordmark); line-height: var(--lh-wordmark); color: var(--c-peach); text-decoration: none; align-self: flex-start; }
-    .reg__title { font-size: var(--fs-display); line-height: 1; margin-top: var(--space-3); }
-    .reg__lead { font-size: var(--fs-lead); line-height: var(--lh-lead); max-width: 70%; }
+    .reg__title { font-size: var(--fs-display); line-height: 1; margin-top: var(--space-1); }
+    .reg__lead { font-size: var(--fs-lead); line-height: var(--lh-lead); max-width: 40em; }
 
-    .glance { display: flex; flex-direction: column; gap: var(--space-1); max-width: 70%; }
+    .glance { display: flex; flex-direction: column; gap: var(--space-1); max-width: 760px; margin-top: var(--space-1); }
     .glance__title { font-family: var(--font-display); font-weight: 400; font-size: var(--fs-heading-sm); line-height: 1.1; color: var(--c-peach); }
-    .glance__list { margin: 0; display: flex; flex-direction: column; font-size: var(--fs-body); line-height: var(--lh-body); }
+    .glance__list { margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: var(--space-3); font-size: var(--fs-body); line-height: var(--lh-body); }
     .glance__list > div { border-top: 1.5px solid var(--c-pink); padding: 8px 0; display: flex; flex-direction: column; gap: 2px; }
     .glance__list dt { font-weight: 600; }
     .glance__list dd { margin: 0; }
 
-    .reg__main { padding: var(--space-12) var(--space-12) 0 var(--space-6); gap: var(--space-6); max-width: 760px; width: 100%; }
+    .reg__main { padding: var(--space-6) var(--gutter) 0; gap: var(--space-4); }
     .reg__back { font-size: var(--fs-body-lg); min-height: 0; padding: 0; }
-    .step { grid-template-columns: 72px minmax(0, 1fr); }
-    .step__n { font-size: 80px; }
-    .step__body { padding-bottom: var(--space-6); }
   }
 </style>

@@ -39,7 +39,7 @@ const pdfMeta = `PDF, ${JUDGING_PDF_PAGES} ${JUDGING_PDF_PAGES === 1 ? 'page' : 
 const steps = [
   { title: 'Enter', text: "Check you're eligible, agree to the rules, and register." },
   { title: 'Write', text: `Write up to 800 words on one prompt, in your own words, and submit it by ${deadlineWithTime()}.` },
-  { title: 'Judged against the rubric', text: 'People score every essay against the published rubric. AI never scores essays.' },
+  { title: 'Read and scored by people', text: `Every essay is read by a person. Shortlisted essays are scored out of ${RUBRIC_TOTAL} against the ${NUMBER_WORDS[RUBRIC.length]} published criteria, and a second reader checks a sample of the rest. AI is never used to judge or score essays.` },
   { title: 'Results', text: `Winners are announced by ${formatDate(DATES.results)}.` },
 ];
 ---

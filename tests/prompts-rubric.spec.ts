@@ -117,3 +117,16 @@ test('the judging section has no accessibility problems', async ({ page }) => {
   const results = await new AxeBuilder({ page }).include('#judging').analyze();
   expect(results.violations.map((v) => v.id)).toEqual([]);
 });
+
+// Competition, "How it works", step 3: written out here on purpose (owner-approved wording). The
+// numbers come from the rubric above, so this also fails if the criteria or marks change without it.
+test('How it works, step 3, says every essay is read by a person, with the marks and the number of criteria', async ({ page }) => {
+  await page.goto('/competition/');
+  const total = rubric.reduce((sum, c) => sum + c.marks, 0);
+  const words = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
+  const step = page.locator('.steps li.step').nth(2);
+  await expect(step.getByRole('heading', { name: 'Read and scored by people', level: 3 })).toBeVisible();
+  await expect(step).toContainText(
+    `Every essay is read by a person. Shortlisted essays are scored out of ${total} against the ${words[rubric.length]} published criteria, and a second reader checks a sample of the rest. AI is never used to judge or score essays.`);
+  await expect(page.locator('.steps')).not.toContainText('Judged against the rubric');
+});
