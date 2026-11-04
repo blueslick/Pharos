@@ -4,7 +4,7 @@ Read this at the start of every session. It sets the rules for this repo.
 
 ## What this is
 
-The website for an independently run online essay competition for students, in two prize categories (Junior: 14 and under, USD 50; Open: 25 and under, USD 100; age counted on the deadline), built around the UN Sustainable Development Goals with a social-justice focus. Each edition features one SDG. The Inaugural Edition is SDG 2 (Zero Hunger) and is a fundraiser for a local soup kitchen.
+The website for an independently run online essay competition for students, in two prize categories (Junior: 14 and under, USD 50; Open: 25 and under, USD 100; age counted on the deadline), built around the Sustainable Development Goals (SDGs) with a social-justice focus. Each edition features one SDG. The Inaugural Edition is SDG 2 (Zero Hunger) and is a fundraiser for a local soup kitchen.
 
 The site owner is a student. Explain technical steps in plain language and don't assume prior setup knowledge.
 
@@ -59,7 +59,7 @@ Not yet: rules, payment wording changes, "raised so far" counter, results. Leave
 - The beneficiary is The Assembly Soup Kitchen (T.A.S.K), named with written permission (24 Oct 2026). Use SOUP_KITCHEN_NAME; never hard-code or re-spell it.
 - No invented team members, testimonials, past editions, judges, statistics or partner logos.
 - No public fundraising target.
-- Don't use "UN", "United Nations" or "Global Goals" in the site name or branding. Name SDGs in text only. Don't use official SDG icons or the colour wheel.
+- Don't use "UN", "United Nations" or "Global Goals" in the site name or branding, and don't add "UN" or "United Nations" to any new text (the footer disclaimer and the About page's source link to sdgs.un.org stay as they are). Name SDGs in text only. On each page a visitor can land on first (Home, Competition, About, Blog index) the first mention reads "the Sustainable Development Goals (SDGs)" (Competition: "Sustainable Development Goal 2 (SDG 2)"); later mentions use "SDGs". Don't use official SDG icons or the colour wheel.
 - No photos of people in poverty or being served. Typography, shapes, food, hands and students only.
 - Don't write blog post content that states facts or numbers unless the owner supplies the source. Placeholder text is fine.
 
