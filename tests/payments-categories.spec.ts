@@ -91,7 +91,8 @@ test('the Privacy page covers the entry form, payments, publishing, under-18s an
   }
   await expect(main).toContainText('directly to the bank account of The Assembly Soup Kitchen (T.A.S.K)');
   await expect(main).toContainText('shares a list of incoming transfers (date, amount and reference)');
-  await expect(main).toContainText('your pen name only (not your full name, school, country or age)');
+  await expect(main).toContainText('your pen name only (not your school, country or age)');
+  await expect(main).toContainText('You may use your real name as your pen name.');
   await expect(main).toContainText('@pharosprize');
   await expect(main).toContainText('stay published after the competition ends');
   await expect(main).toContainText('A parent or guardian must agree to you entering');

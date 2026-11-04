@@ -148,3 +148,12 @@ for (const [name, viewport] of [['390px', phone], ['1440px', desktop]] as const)
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   });
 }
+
+test('"If you win" says the pen name can be the real name, in both languages', async ({ page }) => {
+  await page.goto('/privacy/');
+  await expect(page.locator('main')).toContainText('your pen name only (not your school, country or age)');
+  await expect(page.locator('main')).toContainText('You may use your real name as your pen name.');
+  await page.goto('/ms/privacy/');
+  await expect(page.locator('main')).toContainText('hanya nama pena anda (bukan sekolah, negara atau umur anda)');
+  await expect(page.locator('main')).toContainText('Anda boleh menggunakan nama sebenar anda sebagai nama pena.');
+});
