@@ -168,7 +168,7 @@ test.describe('Rules page', () => {
     await page.goto('/rules/');
     const note = page.locator('main p.rules__after', { hasText: 'All amounts are set and paid in Malaysian ringgit (MYR).' });
     await expect(note).toHaveCount(1);
-    await expect(note).toHaveText('All amounts are set and paid in Malaysian ringgit (MYR). US dollar (USD) figures are a guide only and may change with foreign exchange (FOREX) rates; the entry fee is always MYR 40.');
+    await expect(note).toHaveText('All amounts are set and paid in Malaysian ringgit (MYR). US dollar (USD) figures are a guide only, based on foreign exchange (FOREX) rates as of 5 November 2026, and may change; the entry fee is always MYR 40.');
   });
 
   test('says the Open category is 25 and under, and the rules themselves never say "any age"', async ({ page }) => {
@@ -287,7 +287,7 @@ test.describe('FAQ page', () => {
     await page.goto('/faq/');
     const answer = page.locator('div#pay-how');
     await expect(answer).toHaveText(
-      `The fee is MYR 40 (about USD 10 at current FOREX rates), paid by bank transfer to T.A.S.K's account. All amounts are set and paid in Malaysian ringgit (MYR). US dollar (USD) figures are a guide only and may change with foreign exchange (FOREX) rates; the entry fee is always MYR 40. The details go up on the How to enter page when entries open on ${ENTRIES_OPEN}. Use the reference "PHAROS + your full name". Upload proof of payment on the form.`,
+      `The fee is MYR 40 (about USD 10 at current FOREX rates), paid by bank transfer to T.A.S.K's account. All amounts are set and paid in Malaysian ringgit (MYR). US dollar (USD) figures are a guide only, based on foreign exchange (FOREX) rates as of 5 November 2026, and may change; the entry fee is always MYR 40. The details go up on the How to enter page when entries open on ${ENTRIES_OPEN}. Use the reference "PHAROS + your full name". Upload proof of payment on the form.`,
     );
     await expect(answer.locator('a')).toHaveCount(0);
     await expect(page.locator('main a[href^="/register"]')).toHaveCount(0);
@@ -297,7 +297,7 @@ test.describe('FAQ page', () => {
     await page.goto(`${OPEN}/faq/`);
     const answer = page.locator('div#pay-how');
     await expect(answer).toHaveText(
-      `The fee is MYR 40 (about USD 10 at current FOREX rates), paid by bank transfer to T.A.S.K's account. All amounts are set and paid in Malaysian ringgit (MYR). US dollar (USD) figures are a guide only and may change with foreign exchange (FOREX) rates; the entry fee is always MYR 40. The details are on the How to enter page. Use the reference "PHAROS + your full name". Upload proof of payment on the form.`,
+      `The fee is MYR 40 (about USD 10 at current FOREX rates), paid by bank transfer to T.A.S.K's account. All amounts are set and paid in Malaysian ringgit (MYR). US dollar (USD) figures are a guide only, based on foreign exchange (FOREX) rates as of 5 November 2026, and may change; the entry fee is always MYR 40. The details are on the How to enter page. Use the reference "PHAROS + your full name". Upload proof of payment on the form.`,
     );
     await expect(answer.locator('a', { hasText: 'How to enter page' })).toHaveAttribute('href', '/register/#how-to-pay');
     expect(await page.content()).not.toContain(accountNumber);

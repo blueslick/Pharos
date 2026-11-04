@@ -244,7 +244,7 @@ export function loadPost(dirArg, { today = new Date() } = {}) {
 
 // The fixed currency note (CURRENCY_NOTE in src/site.ts). It ends every caption that mentions money, word for word,
 // so it does not count towards the "about 45 words" length guide below.
-const CURRENCY_NOTE = 'All amounts are set and paid in Malaysian ringgit (MYR). US dollar (USD) figures are a guide only and may change with foreign exchange (FOREX) rates; the entry fee is always MYR 40.';
+const CURRENCY_NOTE = 'All amounts are set and paid in Malaysian ringgit (MYR). US dollar (USD) figures are a guide only, based on foreign exchange (FOREX) rates as of 5 November 2026, and may change; the entry fee is always MYR 40.';
 
 export function buildCaption(raw, { sourceLine, imageCredit, warn, addText, fill = (s) => s }) {
   let paras = raw.caption;

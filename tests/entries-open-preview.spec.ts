@@ -68,7 +68,7 @@ test('entries-open preview: /register/ shows the bank number, reference, consent
   await expect(pay.locator('dl.bank div', { hasText: 'Currency' })).toContainText('Malaysian ringgit (MYR)');
   // the Currency row sits directly under Amount
   await expect(pay.locator('dl.bank > div > dt')).toHaveText(['Amount', 'Currency', 'Account name', 'Bank', 'Account number', 'SWIFT code', 'Reference']);
-  await expect(pay).toContainText('Transfer exactly MYR 40 (Malaysian ringgit). All amounts are set and paid in Malaysian ringgit (MYR). US dollar (USD) figures are a guide only and may change with foreign exchange (FOREX) rates; the entry fee is always MYR 40. Any method may be used, provided the full MYR 40 arrives. You pay any transfer fees.');
+  await expect(pay).toContainText('Transfer exactly MYR 40 (Malaysian ringgit). All amounts are set and paid in Malaysian ringgit (MYR). US dollar (USD) figures are a guide only, based on foreign exchange (FOREX) rates as of 5 November 2026, and may change; the entry fee is always MYR 40. Any method may be used, provided the full MYR 40 arrives. You pay any transfer fees.');
   // the proof of payment is asked for once, in step 5, where it is uploaded
   await expect(pay).not.toContainText('Upload proof of payment');
   await expect(pay).not.toContainText('DuitNow');

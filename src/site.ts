@@ -43,8 +43,12 @@ export const ENTRY_FEE = 'MYR 40';
 export const ENTRY_FEE_USD_GUIDE = 'about USD 10'; // the US-dollar guide; always written with "about"
 export const ENTRY_FEE_FULL = `${ENTRY_FEE} (${ENTRY_FEE_USD_GUIDE} at current FOREX rates)`; // full form: running text
 export const ENTRY_FEE_SHORT = `${ENTRY_FEE} (${ENTRY_FEE_USD_GUIDE})`; // short form: cards, headings, the facts grid
-// The note that goes once on any page that shows money (not after every number).
-export const CURRENCY_NOTE = `All amounts are set and paid in Malaysian ringgit (MYR). US dollar (USD) figures are a guide only and may change with foreign exchange (FOREX) rates; the entry fee is always ${ENTRY_FEE}.`;
+// The date the "about USD" figures are based on: the one place to change it. Change it whenever the guide is re-checked.
+export const FX_DATE = '5 November 2026';
+// The short dated line for the Instagram slides (typed into each slide's HTML; a test checks they match this).
+export const FX_DATED_LINE = `USD figures are approximate, based on FOREX rates as of ${FX_DATE}.`;
+// The note that goes once on any page that shows money (not after every number), and ends every caption that mentions money.
+export const CURRENCY_NOTE = `All amounts are set and paid in Malaysian ringgit (MYR). US dollar (USD) figures are a guide only, based on foreign exchange (FOREX) rates as of ${FX_DATE}, and may change; the entry fee is always ${ENTRY_FEE}.`;
 // The standard "how to pay" sentence. No US dollars in it.
 export const PAY_IN_MYR = `Transfer exactly ${ENTRY_FEE} (Malaysian ringgit).`;
 export const PROOF_OF_PAYMENT = 'Upload proof of payment on the form.';

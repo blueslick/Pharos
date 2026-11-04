@@ -38,7 +38,7 @@ test('Competition shows both categories, the prizes and where the money goes', a
   await expect(page.getByText('Entry fee: MYR 40 (about USD 10 at current FOREX rates). You pay The Assembly Soup Kitchen (T.A.S.K) directly by bank transfer, and upload proof of payment on the form.')).toBeVisible();
   await expect(page.getByText('Pharos never handles the money.')).toBeVisible();
   // the currency note: once on the page, small, under the fee paragraph
-  await expect(page.getByText('All amounts are set and paid in Malaysian ringgit (MYR). US dollar (USD) figures are a guide only and may change with foreign exchange (FOREX) rates; the entry fee is always MYR 40.')).toHaveCount(1);
+  await expect(page.getByText('All amounts are set and paid in Malaysian ringgit (MYR). US dollar (USD) figures are a guide only, based on foreign exchange (FOREX) rates as of 5 November 2026, and may change; the entry fee is always MYR 40.')).toHaveCount(1);
   await expect(page.locator('.fact', { hasText: 'Deadline' })).toContainText('17 January 2027');
   await expect(page.getByText('15:59 UTC').first()).toBeVisible();
   await expect(page.getByText('Winners announced by 3 February 2027.')).toBeVisible();

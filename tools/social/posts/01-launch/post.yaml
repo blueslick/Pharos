@@ -5,7 +5,7 @@
 type: html
 caption:
   - "Pharos is an essay competition for students, run by student volunteers. The Inaugural Edition is on Sustainable Development Goal 2: Zero Hunger. Two categories: Junior (MYR 200 prize) and Open (MYR 400 prize)."
-  - "It's a fundraiser for The Assembly Soup Kitchen (T.A.S.K): your entry fee goes straight to them. Entries close 17 January 2027, 15:59 UTC. Prompts and details: pharosprize.org. All amounts are set and paid in Malaysian ringgit (MYR). US dollar (USD) figures are a guide only and may change with foreign exchange (FOREX) rates; the entry fee is always MYR 40."
+  - "It's a fundraiser for The Assembly Soup Kitchen (T.A.S.K): your entry fee goes straight to them. Entries close 17 January 2027, 15:59 UTC. Prompts and details: pharosprize.org. All amounts are set and paid in Malaysian ringgit (MYR). US dollar (USD) figures are a guide only, based on foreign exchange (FOREX) rates as of 5 November 2026, and may change; the entry fee is always MYR 40."
 hashtags: [EssayCompetition, ZeroHunger, StudentWriting]
 slides:
   - file: slide-01.html
@@ -13,6 +13,6 @@ slides:
   - file: slide-02.html
     alt: "Pick one prompt. Up to 800 words, in English. Systemic: why do people still go hungry when the world produces enough food? Personal: a meal you will never forget, and who gets to eat. Policy: who is responsible when someone goes hungry? Full prompts at pharosprize.org/competition."
   - file: slide-03.html
-    alt: "Two prizes. Junior, for students 14 and under: MYR 200, about USD 50. Open, for students 25 and under: MYR 400, about USD 100. Age is counted on 17 January 2027. Results on 3 February 2027."
+    alt: "Two prizes. Junior, for students 14 and under: MYR 200, about USD 50. Open, for students 25 and under: MYR 400, about USD 100. Age is counted on 17 January 2027. Results on 3 February 2027. USD figures are approximate, based on FOREX rates as of 5 November 2026."
   - file: slide-04.html
-    alt: "How to enter, in three steps. 1: pay the MYR 40 fee (about USD 10) by bank transfer straight to The Assembly Soup Kitchen (T.A.S.K), reference PHAROS plus your full name. 2: write up to 800 words and save it as a PDF with no name or school inside the essay. 3: upload the essay and proof of payment at pharosprize.org. Deadline 17 Jan 2027, 15:59 UTC, no extensions."
+    alt: "How to enter, in three steps. 1: pay the MYR 40 fee (about USD 10) by bank transfer straight to The Assembly Soup Kitchen (T.A.S.K), reference PHAROS plus your full name. 2: write up to 800 words and save it as a PDF with no name or school inside the essay. 3: upload the essay and proof of payment at pharosprize.org. Deadline 17 Jan 2027, 15:59 UTC, no extensions. USD figures are approximate, based on FOREX rates as of 5 November 2026."

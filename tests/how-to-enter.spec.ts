@@ -69,7 +69,7 @@ test('entries-open: step 3 is #how-to-pay with the account number and the paymen
   await expect(pay.getByText(ACCOUNT_NUMBER)).toHaveCount(1);
   await expect(pay.locator('dl.bank > div > dt')).toHaveText(['Amount', 'Currency', 'Account name', 'Bank', 'Account number', 'SWIFT code', 'Reference']);
   await expect(pay).toContainText('The Assembly Soup Kitchen (T.A.S.K)');
-  await expect(pay).toContainText('Transfer exactly MYR 40 (Malaysian ringgit). All amounts are set and paid in Malaysian ringgit (MYR). US dollar (USD) figures are a guide only and may change with foreign exchange (FOREX) rates; the entry fee is always MYR 40. Any method may be used, provided the full MYR 40 arrives. You pay any transfer fees.');
+  await expect(pay).toContainText('Transfer exactly MYR 40 (Malaysian ringgit). All amounts are set and paid in Malaysian ringgit (MYR). US dollar (USD) figures are a guide only, based on foreign exchange (FOREX) rates as of 5 November 2026, and may change; the entry fee is always MYR 40. Any method may be used, provided the full MYR 40 arrives. You pay any transfer fees.');
   await expect(pay).not.toContainText('proof of payment');
   await expect(page.locator('section.hte ol > li').nth(4)).toContainText('upload proof of payment on the form');
 });
