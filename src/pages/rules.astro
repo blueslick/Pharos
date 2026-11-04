@@ -8,7 +8,7 @@ import Hero from '../components/Hero.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import {
   SITE_NAME, CONTACT_EMAIL, FAQ_URL, JUDGING_PDF_URL, SOUP_KITCHEN_NAME, CATEGORIES, DATES,
-  ENTRY_FEE, ENTRY_FEE_HALF, PROOF_OF_PAYMENT_INLINE, DEADLINE_TIME_PLAIN, formatDate, formatDateDay, FAQ_URL_WINNER_AGE,
+  ENTRY_FEE, PROOF_OF_PAYMENT_INLINE, DEADLINE_TIME_PLAIN, formatDate, formatDateDay, FAQ_URL_WINNER_AGE,
 } from '../site';
 
 const junior = CATEGORIES.find((c) => c.id === 'junior')!;
@@ -36,7 +36,7 @@ const intro = 'Ten rules. The FAQ explains the details.';
         It must be your own work. Don't use AI tools to write, rewrite, expand or translate any of it, and don't enter an essay that's been published or entered somewhere else.
       </li>
       <li>
-        Pay the entry fee, {ENTRY_FEE} (or {ENTRY_FEE_HALF} with approved fee support), in US dollars, straight to {SOUP_KITCHEN_NAME} before you submit, and {PROOF_OF_PAYMENT_INLINE}.
+        Pay the entry fee, {ENTRY_FEE}, in US dollars, straight to {SOUP_KITCHEN_NAME} before you submit, and {PROOF_OF_PAYMENT_INLINE}.
       </li>
       <li>
         Under 18? A parent or guardian must agree to you entering. On the form, tick the box saying they agree and give their email address; we may email them to check.
@@ -60,7 +60,7 @@ const intro = 'Ten rules. The FAQ explains the details.';
 
     <p class="rules__small">If a poster, listing or post says something different, these rules apply.</p>
     <p class="rules__small" data-rules-updated>
-      Last updated {formatDate(DATES.rulesUpdated)}: the Open category is now for students aged {open.who} (previously any age).
+      Last updated {formatDate(DATES.rulesUpdated)}: fee support removed.
     </p>
   </main>
 

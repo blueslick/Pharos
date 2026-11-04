@@ -106,7 +106,7 @@ test('shows no square brackets, the date in Malay, and the right links', async (
   await page.goto('/ms/privacy/');
   const text = await page.locator('main').innerText();
   expect(text).not.toMatch(/[\[\]]/);
-  expect(text).toContain('Kemas kini terakhir: 2 November 2026');
+  expect(text).toContain('Kemas kini terakhir: 4 November 2026');
   expect(text).toContain('Menjelang 3 Ogos 2027, kami memadamkan');
 
   const mailtos = page.locator('main a[href^="mailto:"]');

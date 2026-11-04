@@ -33,7 +33,7 @@ test('Competition shows both categories, the prizes and where the money goes', a
   await expect(page.getByText('Prizes are funded separately, not from entry fees.')).toBeVisible();
   await expect(page.getByText('Your age is your age on 17 January 2027.')).toBeVisible();
   await expect(page.getByText('Every USD 10 entry funds about 3 meals at T.A.S.K.')).toBeVisible();
-  await expect(page.getByText('Entry fee: USD 10. Fee support at 50%: USD 5. You pay The Assembly Soup Kitchen (T.A.S.K) directly by bank transfer in US dollars, and upload proof of payment on the form.')).toBeVisible();
+  await expect(page.getByText('Entry fee: USD 10. You pay The Assembly Soup Kitchen (T.A.S.K) directly by bank transfer in US dollars, and upload proof of payment on the form.')).toBeVisible();
   await expect(page.getByText('Pharos never handles the money.')).toBeVisible();
   await expect(page.locator('.fact', { hasText: 'Deadline' })).toContainText('17 January 2027');
   await expect(page.getByText('15:59 UTC').first()).toBeVisible();
@@ -77,11 +77,11 @@ test('the Register page is only an "Opening soon" notice while closed', async ({
 test('the Privacy page covers the entry form, payments, publishing, under-18s and retention', async ({ page }) => {
   await page.goto('/privacy/');
   const main = page.locator('main');
-  await expect(main).toContainText('Last updated 2 November 2026.');
+  await expect(main).toContainText('Last updated 4 November 2026.');
   await expect(main).not.toContainText('Draft');
   for (const item of [
     'your full name, email and country', 'your school (optional) and your age', 'your essay (a PDF)',
-    'fee support code', 'the transfer reference and the name on the account you paid from', 'a second email address',
+    'the transfer reference and the name on the account you paid from', 'a second email address',
   ]) {
     await expect(main).toContainText(item);
   }

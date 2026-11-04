@@ -36,12 +36,8 @@ export const REGISTRATION_URL = 'https://tally.so/r/Ar7QeB'; // the entry form: 
 export const RULES_URL = '/rules/';
 export const FAQ_URL = '/faq/';
 export const FAQ_URL_WINNER_AGE = '/faq/#winner-age-check'; // the FAQ answer rule 10 points to; the id is set in faq.astro
-// How to ask for fee support. Built from CONTACT_EMAIL; the Register page turns the address into a mailto link.
-export const FEE_SUPPORT = `Email ${CONTACT_EMAIL} with your full name and school. You don't need to explain why.`;
-
 // Entry fee. One wording, used everywhere a fee is mentioned.
 export const ENTRY_FEE = 'USD 10'; // US dollars only: entrants transfer the fee in US dollars
-export const ENTRY_FEE_HALF = 'USD 5'; // the fee at 50% fee support
 // The two standard payment sentences. Use these words every time we say how to pay.
 export const PAY_IN_USD = 'Transfer the fee in US dollars (USD).';
 export const PROOF_OF_PAYMENT = 'Upload proof of payment on the form.';
@@ -162,8 +158,8 @@ export const DATES = {
   deadline: '2027-01-17', // 15:59 UTC, which is the end of the day in Malaysia (DEADLINE_TIME); also the date entrants' ages are counted on
   results: '2027-02-03', // winners are announced on this date
   entryDataDeleted: '2027-08-03', // by this date entry data we no longer need is deleted (see the Privacy page)
-  privacyUpdated: '2026-11-02', // "Last updated" on the Privacy page (and its Malay version): change it whenever either notice changes
-  rulesUpdated: '2026-11-02', // "Last updated" line under the Rules list: change it whenever a rule changes
+  privacyUpdated: '2026-11-04', // "Last updated" on the Privacy page (and its Malay version): change it whenever either notice changes
+  rulesUpdated: '2026-11-04', // "Last updated" line under the Rules list: change it whenever a rule changes
 } as const;
 
 // '2026-12-01' -> '1 December 2026'
@@ -185,9 +181,7 @@ export const formatDateDay = (iso: string) =>
 export const addDays = (iso: string, days: number) =>
   new Date(Date.parse(`${iso}T00:00:00Z`) + days * 86_400_000).toISOString().slice(0, 10);
 
-// Fee support requests close this many days before the deadline (Register and the FAQ both say so),
-// and a payment we can't find must be sorted out this many days after it (the FAQ).
-export const FEE_SUPPORT_DAYS_BEFORE_DEADLINE = 5;
+// A payment we can't find must be sorted out this many days after the deadline (Rules and FAQ).
 export const PAYMENT_GRACE_DAYS_AFTER_DEADLINE = 7;
 
 // The deadline is 15:59 UTC (the end of the day in Malaysia, which is UTC+8, so 23:59 there is 15:59 UTC on the same date).

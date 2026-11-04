@@ -74,37 +74,11 @@ test('entries-open: step 3 is #how-to-pay with the account number and the paymen
   await expect(page.locator('section.hte ol > li').nth(4)).toContainText('upload proof of payment on the form');
 });
 
-test('entries-open: fee support is a closed <details id="fee-support"> with the text and the mailto link inside', async ({ page }) => {
+test('entries-open: fee support is gone from the Register page', async ({ page }) => {
   await page.goto(`${OPEN}/register/`);
-  const fee = page.locator('#fee-support');
-  await expect(fee).toHaveCount(1);
-  expect(await fee.evaluate((el) => el.tagName)).toBe('DETAILS');
-  await expect(page.locator('#how-to-pay #fee-support')).toHaveCount(1);
-  expect(await fee.evaluate((el: HTMLDetailsElement) => el.open)).toBe(false);
-  await expect(fee.locator('summary')).toHaveText("Can't afford USD 10? Ask for fee support");
-  // the text is in the page for anyone (and anything) that reads it, and shows when the summary is opened
-  await expect(fee).toContainText('Requests close 5 days before the deadline; we reply within 72 hours with a code for the form.');
-  await expect(fee).toContainText("with your full name and school. You don't need to explain why.");
-  await expect(fee.locator('a[href^="mailto:"]')).toHaveCount(1);
-  await expect(fee.getByText('Requests close 5 days')).toBeHidden();
-  await fee.locator('summary').click();
-  expect(await fee.evaluate((el: HTMLDetailsElement) => el.open)).toBe(true);
-  await expect(fee.getByText('Requests close 5 days')).toBeVisible();
-  await expect(fee.getByRole('link', { name: 'fee support' })).toHaveAttribute('href', `${FAQ_URL}#fee-support-how`);
-  await fee.locator('summary').click();
-  await expect(fee.getByText('Requests close 5 days')).toBeHidden();
-});
-
-test('entries-open: /register/#fee-support opens the fee-support details on load', async ({ page }) => {
-  await page.goto(`${OPEN}/register/#fee-support`);
-  const fee = page.locator('#fee-support');
-  await expect(fee.getByText('Requests close 5 days')).toBeVisible();
-  expect(await fee.evaluate((el: HTMLDetailsElement) => el.open)).toBe(true);
-  // and when the hash changes on the page itself
-  await page.goto(`${OPEN}/register/`);
-  expect(await fee.evaluate((el: HTMLDetailsElement) => el.open)).toBe(false);
-  await page.evaluate(() => { location.hash = '#fee-support'; });
-  await expect(fee.getByText('Requests close 5 days')).toBeVisible();
+  await expect(page.locator('#fee-support')).toHaveCount(0);
+  await expect(page.locator('main')).not.toContainText(/fee support|USD 5\b/i);
+  await expect(page.locator('dl.bank div', { hasText: 'Amount' })).toHaveText('AmountUSD 10');
 });
 
 test('entries-open: /register/#how-to-pay (the link the entry form and FAQ use) scrolls to the bank details', async ({ page }) => {

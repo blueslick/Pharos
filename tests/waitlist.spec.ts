@@ -88,7 +88,7 @@ test('the dates and soup kitchen name come from site.ts', async ({ page }) => {
 
 test('the Privacy page covers the waitlist', async ({ page }) => {
   await page.goto('/privacy/');
-  await expect(page.getByText('Last updated 2 November 2026.')).toBeVisible();
+  await expect(page.getByText('Last updated 4 November 2026.')).toBeVisible();
   await expect(page.getByRole('link', { name: "Tally's privacy policy" }).first()).toHaveAttribute('href', 'https://tally.so/help/privacy-policy');
   await expect(page.getByText('12 months after our last reply')).toBeVisible();
   await expect(page.getByText('Nothing that we can see')).toHaveCount(0);

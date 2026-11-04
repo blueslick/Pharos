@@ -5,7 +5,6 @@
 csv       = "tally-export.csv"   # the Tally export
 files     = "downloads"         # folder of downloaded essays / proofs
 tracker   = "output/tracker.xlsx"
-codes     = "codes.xlsx"
 templates = "../templates"
 emails    = "output/emails"
 judging   = "output/judging"           # judging/key.xlsx lives here: keep it PRIVATE
@@ -15,18 +14,14 @@ id_prefix = "ZH"          # entry IDs look like ZH-001
 id_digits = 3
 word_limit = 800          # flag essays with MORE words than this
 min_words_for_text = 20   # fewer words than this in a PDF = treated as a scan
+open_max_age = 25         # the Open category is for 25 and under (age on 17 January 2027): older entries get flagged for a manual check
+adult_age = 18            # under this age, the entry needs a parent or guardian's email (the form's "Secondary email")
 
-# !! WARNING !! These two lines must match the fee options on the Tally form WORD FOR WORD
-# (only capital letters and extra spaces are ignored). If you ever change the wording or the
-# price of a fee option in Tally, change it here too, or EVERY entry will be flagged
-# "Fee code problem: Unclear" until you do.
+# There is one entry fee, for everyone. If the Tally form still asks for the fee, this line must
+# match its answer WORD FOR WORD (only capital letters and extra spaces are ignored), or EVERY entry
+# will be flagged "Fee problem: Unclear" until you change it. If the form no longer asks, nothing is checked.
 [fees]
 full = "USD 10"
-half = "Fee support at 50%: USD 5"
-
-[codes]
-length = 8                # characters per code (shown in groups)
-group = 4                 # "ABCD-EFGH"
 
 # What goes into the email drafts. Placeholders stay in [brackets] until you know them.
 [email]
@@ -50,10 +45,10 @@ email           = "Email"
 country         = "Country"
 school          = "School"
 age             = "Age on 17 January 2027"
+secondary_email = "Secondary email"    # only shown on the form to under-18s; the form suggests a parent or guardian's address
 prompt          = "Which prompt are you answering?"
 essay           = "Your essay (PDF)"
 fee             = "Your entry fee"
-fee_code        = "Fee support code"
 proof           = "Proof of payment"
 transfer_ref    = "Transfer reference or transaction ID"
 payer_name      = "Name on the account you paid from"

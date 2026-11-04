@@ -64,7 +64,7 @@ Entries go through an external Tally form, linked from the site by `REGISTRATION
 | `src/lib/nasiLemak.ts` | Draws the edition cover mosaic at build time. |
 | `src/data/` | The encrypted certificate records for the Verify page (see its `README.md`). |
 | `tests/` | The site's Playwright tests (`npm test`). |
-| `tools/entry-admin/` | Weekly entry checks: turns the Tally export into a tracker, email drafts, fee-support codes and an anonymous judging folder. Its fee lines in `config.toml` must match the Tally form word for word, or every entry gets flagged. |
+| `tools/entry-admin/` | Weekly entry checks: turns the Tally export into a tracker, email drafts and an anonymous judging folder. Its fee line in `config.toml` must match the Tally form word for word (if the form still asks for the fee), or every entry gets flagged. |
 | `tools/judging/` | Scoring sheet, ranking and certificates for after entries close. |
 | `tools/social/` | Instagram posts built from plain text files in the Pharos look, plus the publisher (`tools/social/publish/`) that posts approved ones on schedule. |
 | `public/` | Files served as they are: the judging criteria PDF, the share image (`og-image.png`), the icons and favicons, `robots.txt`, and `images/` (the lighthouse mosaics and the soup kitchen logo). |

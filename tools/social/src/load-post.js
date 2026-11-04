@@ -15,7 +15,7 @@ export class PostError extends Error {
 }
 
 const TYPES = ['report', 'artwork', 'announcement', 'html'];
-const KIND_TAGS = { 'entries-open': 'Entries open', deadline: 'Deadline', 'fee-support': 'Fee support' };
+const KIND_TAGS = { 'entries-open': 'Entries open', deadline: 'Deadline' };
 const pad2 = (n) => String(n).padStart(2, '0');
 const isObj = (v) => v && typeof v === 'object' && !Array.isArray(v);
 const isNum = (v) => typeof v === 'number' && Number.isFinite(v);
@@ -202,7 +202,7 @@ export function loadPost(dirArg, { today = new Date() } = {}) {
       curSlide = i + 1;
       const where = `slide ${curSlide}`;
       const kind = s.kind;
-      if (kind && !KIND_TAGS[kind]) warn(`${where}: unknown kind "${kind}". Use entries-open, deadline or fee-support.`);
+      if (kind && !KIND_TAGS[kind]) warn(`${where}: unknown kind "${kind}". Use entries-open or deadline.`);
       const deadline = s.deadline ?? deadlineTop;
       const f = (t, w) => fillDeadline(t, deadline, today, (m) => warn(m), `${where} ${w}`);
       const hook = f(s.hook ?? raw.hook, 'hook');

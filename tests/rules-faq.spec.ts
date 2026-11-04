@@ -23,7 +23,7 @@ const rulesText = [
   'One essay per person, answering one of the three prompts.',
   "Up to 800 words, in English, uploaded as a PDF. Don't put your name or school in the file.",
   "It must be your own work. Don't use AI tools to write, rewrite, expand or translate any of it, and don't enter an essay that's been published or entered somewhere else.",
-  'Pay the entry fee, USD 10 (or USD 5 with approved fee support), in US dollars, straight to The Assembly Soup Kitchen (T.A.S.K) before you submit, and upload proof of payment on the form.',
+  'Pay the entry fee, USD 10, in US dollars, straight to The Assembly Soup Kitchen (T.A.S.K) before you submit, and upload proof of payment on the form.',
   'Under 18? A parent or guardian must agree to you entering. On the form, tick the box saying they agree and give their email address; we may email them to check.',
   'Submit by Sunday 17 January 2027, 15:59 UTC. No extensions.',
   "Essays are read and judged by people, against the published judging criteria. The judges' decisions are final.",
@@ -50,10 +50,6 @@ const faqAnswers: Record<string, string> = {
   'where-the-fee-goes': 'Straight to The Assembly Soup Kitchen (T.A.S.K). Pharos never handles the money. T.A.S.K tells us every USD 10 is about 3 meals.',
   'pay-from-abroad': "Use your bank's international transfer or a service such as Wise, Remitly or Western Union, and send the fee in US dollars. Any method is fine as long as the full amount arrives. Transfer fees are yours.",
   'payment-arrived': "We check payments with T.A.S.K once a week and email you within a week of your entry. If we can't find your payment, we'll email you. You have until Sunday 24 January 2027 to sort it out. If we still can't find it by then, your entry is disqualified.",
-  'fee-support-what': 'If USD 10 is hard for you to afford, you can pay half: USD 5.',
-  'fee-support-who': "Any student who finds the fee hard to afford. You don't need to explain why, and we don't ask for proof.",
-  'fee-support-how': "Before you pay, email pharosprize@gmail.com with your full name and school. You don't need to explain why. We reply within 72 hours with a code. Pay USD 5 in US dollars, then choose fee support on the entry form, type in your code and upload proof of payment on the form.",
-  'fee-support-deadline': 'Yes: ask at least 5 days before entries close, so by Tuesday 12 January 2027.',
   'who-judges': 'The Pharos organisers, against the published judging criteria: response to the prompt (30), insight and understanding (30), clarity and structure (20) and voice and originality (20). You can download the criteria from the Competition page. AI is never used to score, rank or shortlist essays.',
   'feedback': "No. We can't give individual scores or feedback.",
   'results': 'Wednesday 3 February 2027, on pharosprize.org and Instagram (@pharosprize). Winners are also told by email.',
@@ -75,7 +71,6 @@ const faqQuestions = [
   "Why can't I put my name in the PDF?", 'How do I make a PDF?',
   'Can I use AI at all?', 'What happens if you think an essay used AI?',
   'Where does my fee go?', 'How do I pay?', "I'm not in Malaysia. How do I pay?", 'How do I know my payment arrived?',
-  'What is fee support?', 'Who can ask for it?', 'How do I ask?', 'Is there a deadline?',
   'Who judges the essays?', 'Will I get feedback or a score?', 'When are the results?', 'How are prizes paid?', 'How do winners confirm their age?', 'Do I get a certificate?',
   'Who owns my essay?', 'Will my essay be published?', 'What do you publish about me?', 'How do you handle my data?',
   'Do I have to follow or tag Pharos to enter?', 'Who runs Pharos?',
@@ -170,8 +165,7 @@ test.describe('Rules page', () => {
     const list = page.locator('main ol');
     await expect(list).toContainText('Open is 25 and under');
     await expect(list).not.toContainText(/any age|no upper (age )?limit|of any age/i);
-    // The one place the old wording may appear is the "previously any age" note under the list.
-    const rest = (await page.locator('main').innerText()).replace('(previously any age)', '');
+    const rest = await page.locator('main').innerText();
     expect(rest).toContain('25 and under');
     expect(rest).not.toMatch(/any age|no upper (age )?limit/i);
   });
@@ -181,7 +175,7 @@ test.describe('Rules page', () => {
     const small = page.locator('main p.rules__small');
     await expect(small).toHaveText([
       'If a poster, listing or post says something different, these rules apply.',
-      'Last updated 2 November 2026: the Open category is now for students aged 25 and under (previously any age).',
+      'Last updated 4 November 2026: fee support removed.',
     ]);
     // Both come after the list, and are smaller than the rules but not under 16px.
     const [list, line, rule] = await Promise.all([
@@ -212,10 +206,10 @@ test.describe('Rules page', () => {
 });
 
 test.describe('FAQ page', () => {
-  test('has the seven groups as h2 headings and every question as a closed <details>', async ({ page }) => {
+  test('has the six groups as h2 headings and every question as a closed <details>', async ({ page }) => {
     await page.goto('/faq/');
     await expect(page.getByRole('heading', { level: 1, name: 'Questions' })).toBeVisible();
-    await expect(page.locator('main h2')).toHaveText(['Entering', 'The essay', 'AI', 'Paying', 'Fee support', 'Judging and results', 'Your details and your essay']);
+    await expect(page.locator('main h2')).toHaveText(['Entering', 'The essay', 'AI', 'Paying', 'Judging and results', 'Your details and your essay']);
     const rows = page.locator('main details');
     await expect(rows).toHaveCount(faqQuestions.length);
     await expect(rows.locator('> summary')).toHaveText(faqQuestions);
@@ -229,7 +223,7 @@ test.describe('FAQ page', () => {
     const ids = await page.locator('main details > div').evaluateAll((els) => els.map((el) => el.id));
     expect(ids.every(Boolean)).toBe(true);
     expect(new Set(ids).size).toBe(ids.length);
-    expect(ids).toContain('fee-support-how');
+    expect(ids).not.toContain('fee-support-how');
     expect(ids.sort()).toEqual([...Object.keys(faqAnswers), 'pay-how'].sort());
   });
 
@@ -249,10 +243,10 @@ test.describe('FAQ page', () => {
     await expect(row.locator('> div')).toBeVisible();
     await row.locator('> summary').click();
     await expect(row).not.toHaveAttribute('open', '');
-    // The ids are on the answers, so following #fee-support-how opens the row (no script needed).
-    await page.goto('/faq/#fee-support-how');
-    await expect(page.locator('details:has(> div#fee-support-how)')).toHaveAttribute('open', '');
-    await expect(page.locator('div#fee-support-how')).toBeInViewport();
+    // The ids are on the answers, so following #winner-age-check opens the row (no script needed).
+    await page.goto('/faq/#winner-age-check');
+    await expect(page.locator('details:has(> div#winner-age-check)')).toHaveAttribute('open', '');
+    await expect(page.locator('div#winner-age-check')).toBeInViewport();
   });
 
   test('has a visible focus ring and tap targets of at least 44px', async ({ page }) => {
@@ -298,10 +292,11 @@ test.describe('FAQ page', () => {
     expect(await page.content()).not.toContain(accountNumber);
   });
 
-  test('the fee support answer links the email, and other FAQ links go where they say', async ({ page }) => {
+  test('FAQ links go where they say, and there is no fee support section', async ({ page }) => {
     await page.goto('/faq/');
     // The rows are closed, so check the links by attribute rather than by what is visible.
-    await expect(page.locator('div#fee-support-how a')).toHaveAttribute('href', 'mailto:pharosprize@gmail.com');
+    await expect(page.locator('[id^="fee-support"]')).toHaveCount(0);
+    await expect(page.locator('main')).not.toContainText(/fee support/i);
     await expect(page.locator('div#who-judges a')).toHaveAttribute('href', '/competition/#judging');
     await expect(page.locator('div#certificate a')).toHaveAttribute('href', '/verify/');
     await expect(page.locator('div#your-data a')).toHaveAttribute('href', '/privacy/');
@@ -350,14 +345,10 @@ test.describe('links to Rules and FAQ', () => {
     await expect(page.getByRole('navigation', { name: 'Main' }).first().getByRole('link')).toHaveText(['About', 'Competition', 'Blog']);
   });
 
-  test('Register (entries-open build): the rules link goes to /rules/, with a FAQ link and a fee support link to the FAQ answer', async ({ page }) => {
+  test('Register (entries-open build): the rules link goes to /rules/, with a FAQ link', async ({ page }) => {
     await page.goto(`${OPEN}/register/`);
     await expect(page.getByRole('link', { name: 'Read the full rules' })).toHaveAttribute('href', '/rules/');
     await expect(page.getByRole('link', { name: 'Questions? Read the FAQ' })).toHaveAttribute('href', '/faq/');
-    // the fee-support details is closed until opened, so find its link by href (role lookups skip hidden content)
-    await expect(page.locator('#fee-support a[href="/faq/#fee-support-how"]')).toHaveText('fee support');
-    await page.locator('#fee-support summary').click();
-    await expect(page.locator('#fee-support').getByRole('link', { name: 'fee support' })).toHaveAttribute('href', '/faq/#fee-support-how');
     await expect(page.getByText('[full rules link]')).toHaveCount(0);
     await expect(page.locator('.pill', { hasText: 'Placeholder' })).toHaveCount(0);
   });
@@ -381,7 +372,7 @@ test.describe('Privacy page fixes', () => {
     await expect(m).not.toContainText('Draft');
     await expect(m).not.toContainText('waiting for review');
     await expect(page.locator('.pill')).toHaveCount(0);
-    await expect(m).toContainText('Last updated 2 November 2026.');
+    await expect(m).toContainText('Last updated 4 November 2026.');
   });
 
   test('the three new lines are in the right sections', async ({ page }) => {
@@ -396,9 +387,7 @@ test.describe('Privacy page fixes', () => {
     await expect(section('If you are shortlisted or win')).toContainText(
       "We'll only publish a winning essay if its writer (and a parent or guardian, if under 18) gives separate permission after the results.",
     );
-    await expect(section('If you email us')).toContainText(
-      "If you ask for fee support, we use your email only to send you a code, and we don't ask why you need it.",
-    );
+    await expect(section('If you email us')).not.toContainText('fee support');
   });
 
   test('the missing space after "Tally\'s privacy policy" is fixed, and the payments sentence reads the new way', async ({ page, request }) => {

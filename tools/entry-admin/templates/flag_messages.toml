@@ -24,10 +24,6 @@ age_over_open = "The Open category is for students aged {open_max_age} and under
 
 parent_email = "You told us you are under 18, so we need a parent or guardian's email address. Please reply with it, so we can check they agree to you entering."
 
-"fee_code.unclear" = "We could not tell which entry fee option you chose. Please tell us whether you chose the full fee or the half fee."
-"fee_code.missing" = "You chose the half-fee option but did not enter a fee support code. Please send us your code, or tell us if you meant to pay the full fee."
-"fee_code.invalid" = "We could not recognise the fee support code you entered. Please check it and send it to us again."
-"fee_code.used" = "The fee support code you entered has already been used. Please check you have the right code, or tell us if you meant to pay the full fee."
 
 no_proof = "We have not received proof of your payment. Please reply with a screenshot of your bank transfer confirmation."
 

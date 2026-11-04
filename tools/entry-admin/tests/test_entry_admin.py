@@ -21,7 +21,7 @@ sys.path.insert(0, str(ROOT / "sample"))
 
 import make_sample  # noqa: E402
 from entry_admin import run  # noqa: E402
-from entryadmin import codes, config, emails, pack, tracker  # noqa: E402
+from entryadmin import config, emails, pack, tracker  # noqa: E402
 from entryadmin.config import ConfigError  # noqa: E402
 from entryadmin.xlsxutil import read_table  # noqa: E402
 
@@ -52,6 +52,10 @@ class Base(unittest.TestCase):
     def flags(self):
         return {k: {key for key, _ in tracker.raised_flags(r)} for k, r in self.by_key().items()}
 
+    def eid(self, key):
+        """The Entry ID the tracker gave a sample entry, e.g. eid('over') -> 'ZH-002'."""
+        return self.by_key()[key]["Entry ID"]
+
     def csv_rows(self):
         with (self.dir / "tally-export.csv").open(encoding="utf-8-sig", newline="") as f:
             return list(csv.DictReader(f))
@@ -81,17 +85,16 @@ class TestFlags(Base):
         self.process()
         f = self.flags()
         expected = {
-            "clean": set(), "limit800": set(), "age20": set(), "half_ok": set(), "half_spaces": set(),
+            "clean": set(), "limit800": set(), "age20": set(), "named_essay": set(),
             "over": {"over_word_limit"}, "limit801": {"over_word_limit"},
             "scanned": {"pdf_problem"}, "corrupt": {"pdf_problem"}, "nofile": {"pdf_problem"},
             "dupemail": {"duplicate_entrant"},
             "dupname_a": {"duplicate_entrant"}, "dupname_b": {"duplicate_entrant"},
             "old": set(),
-            "half_reuse": {"fee_code"}, "half_bad": {"fee_code"}, "half_none": {"fee_code"},
             "noproof": {"no_proof"},
             "txn_a": {"duplicate_transfer"}, "txn_b": {"duplicate_transfer"},
             "multi": {"over_word_limit", "age_unclear", "no_proof"},
-            "fee_other": {"fee_code"}, "nonlatin": {"name_not_latin"}, "accents": set(),
+            "fee_other": {"fee"}, "nonlatin": {"name_not_latin"}, "accents": set(),
             "gdoc": {"pdf_problem"}, "other_url": {"pdf_problem"}, "few_words": {"pdf_problem"},
             "docx": {"pdf_problem"}, "nonlatin_multi": {"name_not_latin", "age_unclear"},
             "age25": set(), "age18": set(),
@@ -108,12 +111,8 @@ class TestFlags(Base):
         self.assertTrue(r["scanned"]["PDF problem"].startswith("Scanned"))
         self.assertTrue(r["corrupt"]["PDF problem"].startswith("Unreadable"))
         self.assertTrue(r["nofile"]["PDF problem"].startswith("Missing"))
-        self.assertTrue(r["half_reuse"]["Fee code problem"].startswith("Used"))
-        self.assertIn("ZH-013", r["half_reuse"]["Fee code problem"])  # first user of the code
-        self.assertTrue(r["half_bad"]["Fee code problem"].startswith("Invalid"))
-        self.assertTrue(r["half_none"]["Fee code problem"].startswith("Missing"))
         self.assertTrue(r["multi"]["Age unclear"].startswith("Unclear"))
-        self.assertTrue(r["fee_other"]["Fee code problem"].startswith("Unclear"))
+        self.assertTrue(r["fee_other"]["Fee problem"].startswith("Unclear"))
         self.assertIn("李明", r["nonlatin"]["Non-Latin name"])
         for k in ("gdoc", "other_url", "few_words", "docx"):  # anything that isn't a PDF upload
             self.assertTrue(r[k]["PDF problem"].startswith("Not a PDF"), k)
@@ -159,23 +158,6 @@ class TestFlags(Base):
     def test_unreadable_pdf_gets_no_word_count(self):
         self.process()
         self.assertEqual(self.by_key()["corrupt"]["Word count"], "")
-
-    def test_code_usage_written_to_codes_file(self):
-        self.process()
-        used = {r["Code"]: r["Used by submission"] for r in read_table(self.cfg.path("codes"))}
-        self.assertEqual(used[self.info["codes"][0]], "ZH-013")
-        self.assertEqual(used[self.info["codes"][1]], "ZH-017")
-        self.assertEqual(used[self.info["codes"][2]], "")
-
-    def test_code_marked_used_by_hand_flags_new_users(self):
-        wb = load_workbook(self.cfg.path("codes"))
-        ws = wb.active
-        for row in ws.iter_rows(min_row=2):
-            if row[0].value == self.info["codes"][1]:
-                row[4].value = "ZH-099"  # redeemed some other way
-        wb.save(self.cfg.path("codes"))
-        self.process()
-        self.assertEqual(self.flags()["half_spaces"], {"fee_code"})
 
     def test_two_entries_pointing_at_same_file_are_flagged(self):
         src = self.dir / "tally-export.csv"
@@ -236,21 +218,30 @@ class TestFlags(Base):
         self.assertEqual(non_latin_chars("محمد Ali"), "محمد")
         self.assertEqual(non_latin_chars("김민수"), "김민수")
 
-    def test_fee_answers_match_exactly_but_ignore_case_and_spacing(self):
+    def test_fee_answer_must_be_the_one_fee_but_ignores_case_and_spacing(self):
         rows = self.csv_rows()
         rows[0]["Your entry fee"] = "  usd 10 "
-        rows[1]["Your entry fee"] = "Half fee"            # not the exact option text
+        rows[1]["Your entry fee"] = "Fee support at 50%: USD 5"  # the old half-fee option no longer exists
         self.write_csv_rows(rows)
         self.process()
         f = self.flags()
-        self.assertNotIn("fee_code", f["clean"])
-        self.assertIn("fee_code", f["over"])
+        self.assertNotIn("fee", f["clean"])
+        self.assertIn("fee", f["over"])
 
-    def test_missing_codes_file_is_reported(self):
-        self.cfg.path("codes").unlink()
-        r = self.process()
-        self.assertTrue(any("No codes file" in n for n in r["notes"]))
-        self.assertEqual(self.flags()["half_ok"], {"fee_code"})
+    def test_a_csv_without_the_fee_column_flags_nobody_but_says_so(self):
+        rows = self.csv_rows()
+        for row in rows:
+            del row["Your entry fee"]
+        self.write_csv_rows(rows)
+        result = self.process()
+        self.assertFalse(any("fee" in f for f in self.flags().values()))
+        self.assertTrue(any("Your entry fee" in n and "NOT checked" in n for n in result["notes"]))
+
+    def test_there_is_no_fee_support_anywhere_in_the_toolkit(self):
+        self.assertEqual(list(self.cfg["fees"]), ["full"])
+        self.assertNotIn("fee_code", self.cfg["columns"])
+        for h in tracker.HEADERS:
+            self.assertNotIn("support", h.lower())
 
 
 class TestColumnMapping(Base):
@@ -362,42 +353,6 @@ class TestRerun(Base):
         self.assertEqual(dup.fill.start_color.rgb[-6:], "FFE699")
 
 
-class TestCodes(Base):
-    def test_generate_unique_readable_and_appended(self):
-        path = self.dir / "fresh-codes.xlsx"
-        first = codes.generate(path, 500)
-        more = codes.generate(path, 500)
-        everything = first + more
-        self.assertEqual(len(set(everything)), 1000)
-        for c in everything:
-            self.assertRegex(c, r"^[A-HJKMNP-Z2-9]{4}-[A-HJKMNP-Z2-9]{4}$")
-            for bad in "0O1IL":
-                self.assertNotIn(bad, c)
-        rows = read_table(path)
-        self.assertEqual(len(rows), 1000)
-        self.assertEqual(list(rows[0]), ["Code", "Issued to", "Email", "Date issued", "Used by submission"])
-
-    def test_generate_keeps_owner_typing(self):
-        path = self.dir / "fresh-codes.xlsx"
-        codes.generate(path, 3)
-        wb = load_workbook(path)
-        wb.active["B2"] = "Mr Example"
-        wb.active["C2"] = "x@example.com"
-        wb.save(path)
-        codes.generate(path, 2)
-        rows = read_table(path)
-        self.assertEqual((rows[0]["Issued to"], rows[0]["Email"]), ("Mr Example", "x@example.com"))
-        self.assertEqual(len(rows), 5)
-
-    def test_cli_generate(self):
-        rc = run(["--config", str(self.dir / "config.toml"), "codes", "generate", "4"])
-        self.assertEqual(rc, 0)
-        self.assertEqual(len(read_table(self.cfg.path("codes"))), 9)  # 5 from the sample + 4
-
-    def test_cli_rejects_zero(self):
-        self.assertEqual(run(["--config", str(self.dir / "config.toml"), "codes", "generate", "0"]), 1)
-
-
 class TestEmails(Base):
     def setUp(self):
         super().setUp()
@@ -417,51 +372,49 @@ class TestEmails(Base):
         self.assertIn("ZH-001", text)
         combined = (self.cfg.path("emails") / "received_ALL.txt").read_text(encoding="utf-8")
         self.assertIn(f"[ZH-{self.n:03d}]", combined)
-        for eid in ("ZH-001", "ZH-013"):
+        for eid in ("ZH-001", self.eid("named_essay")):
             body = self.draft("received", eid)
             self.assertNotRegex(body.replace("[contact email]", ""), r"[{}]")
 
     def test_problem_drafts_use_the_entrants_flags(self):
         r = emails.make_drafts(self.cfg, "problem")
-        self.assertNotIn("ZH-003", r["made"])  # exactly 800 words, nothing wrong
-        self.assertNotIn("ZH-012", r["made"])
+        self.assertNotIn(self.eid("limit800"), r["made"])  # exactly 800 words, nothing wrong
+        self.assertNotIn(self.eid("old"), r["made"])
         self.assertIn("ZH-002", r["made"])
         self.assertIn("850 words", self.draft("problem", "ZH-002"))
-        self.assertIn("scan or photo", self.draft("problem", "ZH-005"))
-        self.assertIn("already been used", self.draft("problem", "ZH-014"))
-        self.assertIn("could not recognise", self.draft("problem", "ZH-015"))
-        self.assertIn("did not enter a fee support code", self.draft("problem", "ZH-016"))
-        for eid in ("ZH-024", "ZH-025", "ZH-026", "ZH-028"):  # link, other link, text, .docx
-            self.assertIn("isn't a PDF", self.draft("problem", eid))
-            self.assertIn("attached as a PDF", self.draft("problem", eid))
-        self.assertIn("could not find an essay file", self.draft("problem", "ZH-007"))
-        self.assertIn("which entry fee option", self.draft("problem", "ZH-022"))
-        multi = self.draft("problem", "ZH-021")
+        self.assertIn("scan or photo", self.draft("problem", self.eid("scanned")))
+        for key in ("gdoc", "other_url", "few_words", "docx"):  # link, other link, text, .docx
+            self.assertIn("isn't a PDF", self.draft("problem", self.eid(key)))
+            self.assertIn("attached as a PDF", self.draft("problem", self.eid(key)))
+        self.assertIn("could not find an essay file", self.draft("problem", self.eid("nofile")))
+        multi = self.draft("problem", self.eid("multi"))
         for phrase in ("900 words", "could not read the age", "proof of your payment"):
             self.assertIn(phrase, multi)
         # nothing about other entrants leaks into an email
-        self.assertNotRegex(self.draft("problem", "ZH-001"), r"ZH-008")
-        self.assertNotRegex(self.draft("problem", "ZH-019"), r"ZH-020")
+        self.assertNotRegex(self.draft("problem", "ZH-001"), self.eid("dupemail"))
+        self.assertNotRegex(self.draft("problem", self.eid("txn_a")), self.eid("txn_b"))
 
     def test_non_latin_name_email_says_entry_is_still_in_only_when_it_is_the_only_flag(self):
         asked = ("We print names on certificates in English letters, so could you send your name as you'd like "
                  "it to appear in English letters?")
         still_in = "Your entry is still in."
         emails.make_drafts(self.cfg, "problem")
-        only = self.draft("problem", "ZH-023")        # non-Latin name and nothing else
+        only = self.draft("problem", self.eid("nonlatin"))        # non-Latin name and nothing else
         self.assertIn(asked + " " + still_in, only)
-        others = self.draft("problem", "ZH-029")      # non-Latin name AND unreadable age
+        multi_id = self.eid("nonlatin_multi")
+        others = self.draft("problem", multi_id)      # non-Latin name AND unreadable age
         self.assertIn(asked, others)
         self.assertNotIn(still_in, others)
         self.assertIn("age on your entry form", others)
         # fixing the other problem later flips the wording back
         rows = self.csv_rows()
-        rows[28]["Age on 17 January 2027"] = "17"
-        rows[28]["Secondary email"] = "parent.anna@example.com"  # an under-18 now, so they need a parent's email too
+        row = next(r for r in rows if r["Full name"].endswith("Test"))  # the Cyrillic-name entry
+        row["Age on 17 January 2027"] = "17"
+        row["Secondary email"] = "parent.anna@example.com"  # an under-18 now, so they need a parent's email too
         self.write_csv_rows(rows)
         self.process()
-        emails.make_drafts(self.cfg, "problem", only={"ZH-029"})
-        self.assertIn(still_in, self.draft("problem", "ZH-029"))
+        emails.make_drafts(self.cfg, "problem", only={multi_id})
+        self.assertIn(still_in, self.draft("problem", multi_id))
 
     def test_age_flags_have_problem_email_wording(self):
         self.process()
@@ -544,9 +497,6 @@ class TestSampleDataIsFake(unittest.TestCase):
             self.assertTrue(r["Email"].endswith("@example.com"), r["Email"])
             self.assertEqual(r["School"], "Fake Example School")
             self.assertTrue(r["Submission ID"].startswith("sub"))
-        for p in (sample / "codes.xlsx",):
-            for r in read_table(p):
-                self.assertEqual((r["Issued to"], r["Email"]), ("", ""))
 
     def test_real_data_locations_are_git_ignored(self):
         import subprocess
@@ -568,7 +518,7 @@ class TestPack(Base):
     def test_only_confirmed_and_verified_are_packed_with_anonymous_names(self):
         self.edit_tracker(clean={"Payment verified (Y/N)": "Y", "Status": "Confirmed"},
                           limit800={"Payment verified (Y/N)": "Y", "Status": "Confirmed"},
-                          half_ok={"Payment verified (Y/N)": "Y", "Status": "Confirmed"},
+                          named_essay={"Payment verified (Y/N)": "Y", "Status": "Confirmed"},
                           over={"Status": "Confirmed"},                       # not verified: skipped
                           old={"Payment verified (Y/N)": "Y", "Status": "Rejected"})
         r = pack.pack(self.cfg)
@@ -591,7 +541,7 @@ class TestPack(Base):
         self.assertEqual(len(out.pages[0].extract_text().split()) > 10, True)
 
     def test_warns_when_essay_text_names_the_author(self):
-        self.edit_tracker(half_ok={"Payment verified (Y/N)": "Y", "Status": "Confirmed"},
+        self.edit_tracker(named_essay={"Payment verified (Y/N)": "Y", "Status": "Confirmed"},
                           clean={"Payment verified (Y/N)": "Y", "Status": "Confirmed"})
         r = pack.pack(self.cfg)
         self.assertTrue(any("ZH-013.pdf" in w and "name" in w for w in r["warnings"]))
