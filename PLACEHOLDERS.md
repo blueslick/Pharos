@@ -86,7 +86,7 @@ The Inaugural Edition's three prompts and the judging rubric are live, whether o
 - [x] Rules and questions (FAQ: rules, who can enter). Done: the Competition page's "Rules and questions" section links to `/rules/` and `/faq/`. There is no refunds question yet; add one to `src/pages/faq.astro` once the owner decides the refund wording.
 - [x] **Malay privacy notice (T50).** `/ms/privacy/` is built from `src/pages/ms/privacy.astro` and linked both ways with `/privacy/`. **Keep the two pages in step:** whenever the English Privacy wording changes, the Malay page needs the matching change, and `DATES.privacyUpdated` in `src/site.ts` (shared by both) must be updated.
 - "Raised so far" (no target), "Donate without entering", and About's money timeline and transparency note
-- Whether a Junior-age entrant can also enter the Open category: the site doesn't say yet. Decide, then add one line to Competition and Register
+- [x] A Junior-eligible entrant may enter Open instead (decided 3 Nov 2026): said in Rules rule 1 and the FAQ's "Which category am I in?". One category, one essay. The Competition and Register pages do not repeat it
 - "Entries are open" with the Enter button, in place of the waitlist (switched by `REGISTRATION_OPEN`)
 
 ## The entry form (Tally, `Ar7QeB`)

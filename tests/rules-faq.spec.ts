@@ -19,7 +19,7 @@ const redLines = ['charity', 'non-profit', 'nonprofit', 'not-for-profit', 'ngo',
 const footerPages = ['/', '/competition/', '/about/', '/blog/', '/contact/', '/privacy/', '/verify/', '/rules/', '/faq/'];
 
 const rulesText = [
-  'Students only, from any country. Junior is 14 and under; Open is 25 and under. Your age is your age on 17 January 2027.',
+  'Students only, from any country. Junior is 14 and under; Open is 25 and under. Your age is your age on 17 January 2027. Junior-eligible entrants may enter Open instead.',
   'One essay per person, answering one of the three prompts.',
   "Up to 800 words, in English, uploaded as a PDF. Do not put your name or school in the file.",
   "It must be your own work. Do not use AI tools to write, rewrite, expand or translate any of it, and do not enter an essay that has been published or entered somewhere else.",
@@ -34,7 +34,7 @@ const rulesText = [
 // Every FAQ answer (the ones that differ between builds are checked separately).
 const faqAnswers: Record<string, string> = {
   'who-is-a-student': 'Anyone studying at a school, college or university on 17 January 2027. We may ask for proof, such as a student card or a letter from your school, before we award a prize.',
-  'which-category': "Your age on 17 January 2027. If you are 14 or under, you are Junior. Otherwise, if you are 25 or under, you are Open.",
+  'which-category': "Your age on 17 January 2027. If you are 14 or under, you are Junior. Otherwise, if you are 25 or under, you are Open. If you are eligible for Junior, you may choose to enter Open instead. You may enter only one category, with one essay.",
   'poster-says-any-age': 'The Open category is for students aged 25 and under (as at 17 January 2027). Some early posters and listings show an older version; the Rules page is always the one that counts.',
   'enter-more-than-once': 'No, one essay per person.',
   'under-18': 'A parent or guardian must agree to you entering and to us handling your details. The entry form asks for a second email address; we suggest theirs.',
@@ -175,7 +175,7 @@ test.describe('Rules page', () => {
     const small = page.locator('main p.rules__small');
     await expect(small).toHaveText([
       'If a poster, listing or post says something different, these rules apply.',
-      'Last updated 4 November 2026: fee support removed; the fee is paid as RM 40; rule 10 has a 14-day time limit; entries that break the rules are disqualified.',
+      'Last updated 4 November 2026: fee support removed; the fee is paid as RM 40; rule 10 has a 14-day time limit; Junior-eligible entrants may enter Open; entries that break the rules are disqualified.',
     ]);
     // Both come after the list, and are smaller than the rules but not under 16px.
     const [list, line, rule] = await Promise.all([
