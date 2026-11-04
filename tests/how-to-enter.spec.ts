@@ -14,14 +14,14 @@ const ENTRY_FEE = constant('ENTRY_FEE');
 const bankBlock = siteSource.match(/export const BANK = \{([\s\S]*?)\} as const;/)![1];
 const ACCOUNT_NUMBER = bankBlock.match(/accountNumber:\s*'([^']+)'/)![1];
 
-const MAX_PHONE_HEIGHT = 2150; // measured 2070 at 375px (1958 after the restyle, 2373 before): the RM 40 wording, the SWIFT row and the file-name sentence added height
+const MAX_PHONE_HEIGHT = 2150; // measured 2070 at 375px (1958 after the restyle, 2373 before): the MYR 40 wording, the SWIFT row and the file-name sentence added height
 const OPEN = 'http://localhost:4332';
 const NORMAL = 'http://localhost:4331';
 
 const TITLES = [
   'Check you can enter',
   'Write your essay',
-  `Pay ${ENTRY_FEE}, transferred as RM 40`,
+  `Pay ${ENTRY_FEE}, transferred as MYR 40`,
   'Screenshot your payment',
   'Fill in the entry form',
   'We confirm',
@@ -66,11 +66,11 @@ test('entries-open: step 3 is #how-to-pay with the account number and the paymen
   const pay = page.locator('#how-to-pay');
   await expect(pay).toHaveCount(1);
   await expect(page.locator('section.hte ol > li').nth(2)).toHaveAttribute('id', 'how-to-pay');
-  await expect(pay.getByRole('heading', { name: 'Pay USD 10, transferred as RM 40' })).toBeVisible();
+  await expect(pay.getByRole('heading', { name: 'Pay USD 10, transferred as MYR 40' })).toBeVisible();
   await expect(pay.getByText(ACCOUNT_NUMBER)).toHaveCount(1);
   await expect(pay.locator('dl.bank > div > dt')).toHaveText(['Amount', 'Currency', 'Account name', 'Bank', 'Account number', 'SWIFT code', 'Reference']);
   await expect(pay).toContainText('The Assembly Soup Kitchen (T.A.S.K)');
-  await expect(pay).toContainText('Transfer exactly RM 40 (the fee in ringgit, MYR). Any method may be used, provided the full RM 40 arrives. You pay any transfer fees.');
+  await expect(pay).toContainText('Transfer exactly MYR 40 (the fee in Malaysian Ringgit). Exchange rates change, but the amount you transfer is always MYR 40. Any method may be used, provided the full MYR 40 arrives. You pay any transfer fees.');
   await expect(pay).not.toContainText('proof of payment');
   await expect(page.locator('section.hte ol > li').nth(4)).toContainText('upload proof of payment on the form');
 });
@@ -79,7 +79,7 @@ test('entries-open: fee support is gone from the Register page', async ({ page }
   await page.goto(`${OPEN}/register/`);
   await expect(page.locator('#fee-support')).toHaveCount(0);
   await expect(page.locator('main')).not.toContainText(/fee support|USD 5\b/i);
-  await expect(page.locator('dl.bank div', { hasText: 'Amount' })).toHaveText('AmountRM 40 (the USD 10 fee)');
+  await expect(page.locator('dl.bank div', { hasText: 'Amount' })).toHaveText('AmountMYR 40 (the USD 10 fee)');
 });
 
 test('entries-open: /register/#how-to-pay (the link the entry form and FAQ use) scrolls to the bank details', async ({ page }) => {

@@ -36,7 +36,7 @@ contact_email = "pharosprize@gmail.com"
 soup_kitchen = "The Assembly Soup Kitchen (T.A.S.K)"
 # The payment email says what to transfer and by when. Keep in step with ENTRY_FEE_MYR in src/site.ts and with
 # the payment-fix day on the FAQ (the deadline plus PAYMENT_GRACE_DAYS_AFTER_DEADLINE, 7 days: 24 January 2027).
-fee_myr = "RM 40"
+fee_myr = "MYR 40"
 payment_fix_by = "24 January 2027"
 sign_off = "The student volunteers"
 

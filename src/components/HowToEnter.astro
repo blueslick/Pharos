@@ -13,7 +13,7 @@
 // the full row, then steps 4, 5 and 6.
 import ExternalAction from './ExternalAction.astro';
 import {
-  SITE_NAME, REGISTRATION_URL, RULES_URL, FAQ_URL, ENTRY_FEE, ENTRY_FEE_MYR, PAY_IN_MYR,
+  SITE_NAME, REGISTRATION_URL, RULES_URL, FAQ_URL, ENTRY_FEE, ENTRY_FEE_MYR, PAY_IN_MYR, FX_NOTE,
   PROOF_OF_PAYMENT_INLINE, SOUP_KITCHEN_NAME, BANK, CATEGORIES, DATES,
   formatDate, deadlineWithTime, isPlaceholder,
 } from '../site';
@@ -67,7 +67,7 @@ const open = CATEGORIES.find((c) => c.id === 'open')!;
             <div class="bank__copy"><dt>Reference</dt><dd><span class="bank__value">{BANK.reference}</span></dd></div>
           </dl>
           {/* The proof of payment is asked for once, in step 5, where it is uploaded. */}
-          <p class="hte__line">{PAY_IN_MYR} Any method may be used, provided the full {ENTRY_FEE_MYR} arrives. You pay any transfer fees.</p>
+          <p class="hte__line">{PAY_IN_MYR} {FX_NOTE} Any method may be used, provided the full {ENTRY_FEE_MYR} arrives. You pay any transfer fees.</p>
         </div>
       </div>
     </li>

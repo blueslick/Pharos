@@ -12,7 +12,7 @@ import FaqItem from '../components/FaqItem.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import {
   SITE_NAME, CONTACT_EMAIL, INSTAGRAM_HANDLE, CATEGORIES, RULES_URL, REGISTRATION_OPEN, SOUP_KITCHEN_NAME, BANK, DATES,
-  ENTRY_FEE, ENTRY_FEE_MYR, PROOF_OF_PAYMENT, PROOF_OF_PAYMENT_INLINE, MEALS_ESTIMATE, PRIZES_NOTE, RUBRIC, DEADLINE_TIME, DEADLINE_TIME_PLAIN,
+  ENTRY_FEE, ENTRY_FEE_MYR, FX_NOTE, PROOF_OF_PAYMENT, PROOF_OF_PAYMENT_INLINE, MEALS_ESTIMATE, PRIZES_NOTE, RUBRIC, DEADLINE_TIME, DEADLINE_TIME_PLAIN,
   PAYMENT_GRACE_DAYS_AFTER_DEADLINE, WINNER_CHECK_DAYS, ESSAY_REMOVAL_DAYS, formatDate, formatDateDay, addDays,
 } from '../site';
 
@@ -36,7 +36,7 @@ const paymentFixDay = formatDateDay(addDays(DATES.deadline, PAYMENT_GRACE_DAYS_A
 
 <Base title="FAQ" description={description}>
   <Hero padBottom={[90, 130]}>
-    <h1 class="t-display-xl faq-title">Questions</h1>
+    <h1 class="t-display-xl faq-title">FAQ</h1>
   </Hero>
 
   <main id="main" class="faq">
@@ -44,10 +44,10 @@ const paymentFixDay = formatDateDay(addDays(DATES.deadline, PAYMENT_GRACE_DAYS_A
       <h2 id="entering" class="t-heading-sm">Entering</h2>
       <div class="faq-group__items">
         <FaqItem id="who-is-a-student" question="Who counts as a student?">
-          <p>Anyone studying at a school, college or university on {deadlineDate}. We may ask for proof, such as a student card or a letter from your school, before we award a prize.</p>
+          <p>Anyone studying at a school, college or university on {deadlineDate}. We may ask for proof, such as a student card or a letter from your school, before we award the prize.</p>
         </FaqItem>
         <FaqItem id="which-category" question="Which category am I in?">
-          <p>Your age on {deadlineDate}. If you are {orUnder(junior.who)}, you are {junior.name}. Otherwise, if you are {orUnder(open.who)}, you are {open.name}. If you are eligible for {junior.name}, you may choose to enter {open.name} instead. You may enter only one category, with one essay.</p>
+          <p>Your age on {deadlineDate}. If you are {orUnder(junior.who)}, you are {junior.name}. Otherwise, if you are {orUnder(open.who)}, you are {open.name}. If you are eligible for {junior.name}, you can also choose to enter as {open.name}. You may enter only one category, with one essay.</p>
         </FaqItem>
         <FaqItem id="poster-says-any-age" question="I saw a poster that says Open is for any age. Which is right?">
           <p>
@@ -119,6 +119,7 @@ const paymentFixDay = formatDateDay(addDays(DATES.deadline, PAYMENT_GRACE_DAYS_A
           {/* Bank details are never on this page. Before launch the How to enter page has no details yet, so no link. */}
           <p>
             The fee is {ENTRY_FEE}, transferred as {ENTRY_FEE_MYR} to T.A.S.K's account by bank transfer.{' '}
+            USD is the United States Dollar and MYR is the Malaysian Ringgit. {FX_NOTE}{' '}
             {
               REGISTRATION_OPEN ? (
                 <>The details are on the <a href="/register/#how-to-pay">How to enter page</a>.</>
@@ -167,7 +168,7 @@ const paymentFixDay = formatDateDay(addDays(DATES.deadline, PAYMENT_GRACE_DAYS_A
         </FaqItem>
         <FaqItem id="winner-age-check" question="How do winners confirm their age?">
           <p>
-            Before we pay a prize, we check the winner's age and that they are a student. You can either show your ID on a short video call, or send a photo
+            Before we pay the prize, we check the winner's age and that they are a student. You can either show your ID on a short video call, or send a photo
             of it with the ID number partly covered (on a MyKad, cover the last six digits; the first six show your date of birth). A letter from your school
             is also accepted. If you are under 18, a parent or guardian joins the call or sends the photo. We do not keep a copy of your ID or its number; we only note
             that the check was done.
@@ -177,6 +178,7 @@ const paymentFixDay = formatDateDay(addDays(DATES.deadline, PAYMENT_GRACE_DAYS_A
           <p>
             There are three e-certificates: a participation certificate for every eligible entrant, a shortlist certificate for shortlisted entrants, and a top-3 certificate for the top three
             essays in each category. All are emailed by {formatDate(DATES.certificatesBy)}. Each has a code that anyone can check at <a href="/verify/">{domain}/verify/</a>.
+            Only the winner in each category receives prize money ({junior.prize} for {junior.name}, {open.prize} for {open.name}). The shortlist and top-3 certificates do not come with prize money.
           </p>
         </FaqItem>
       </div>
@@ -190,13 +192,13 @@ const paymentFixDay = formatDateDay(addDays(DATES.deadline, PAYMENT_GRACE_DAYS_A
         </FaqItem>
         <FaqItem id="essay-published" question="Will my essay be published?">
           <p>
-            Only with your permission. After the results, we may ask winners whether they would like their essay published on {domain}. If you are under 18, a parent or guardian must also agree.
+            Only with your permission, and only under your pen name. After the results, we may ask winners whether they would like their essay published on {domain} under the pen name they gave on the entry form. If you are under 18, a parent or guardian must also agree.
             You may decline; this does not affect your result, prize or certificate. If you agree and later change your mind, email <a href={mailto}>{CONTACT_EMAIL}</a> and we will remove it
             within {ESSAY_REMOVAL_DAYS} days.
           </p>
         </FaqItem>
         <FaqItem id="what-we-publish" question="What do you publish about me?">
-          <p>If you are shortlisted or win: your name only (no school, country or age), on {domain} and Instagram, as you agreed on the entry form.</p>
+          <p>If you win: your pen name only (not your full name, school, country or age), on {domain} and Instagram, as you agreed on the entry form. Shortlisted entrants are not named publicly; we tell them by email.</p>
         </FaqItem>
         <FaqItem id="your-data" question="How do you handle my data?">
           <p>See our Privacy notice: <a href="/privacy/">{domain}/privacy/</a>.</p>
@@ -205,7 +207,7 @@ const paymentFixDay = formatDateDay(addDays(DATES.deadline, PAYMENT_GRACE_DAYS_A
           <p>No.</p>
         </FaqItem>
         <FaqItem id="who-runs-it" question={`Who runs ${SITE_NAME}?`}>
-          <p>Student volunteers. This edition is a fundraiser for {SOUP_KITCHEN_NAME}.</p>
+          <p>Student volunteers who have also volunteered at {SOUP_KITCHEN_NAME}. This edition is a fundraiser for T.A.S.K.</p>
         </FaqItem>
       </div>
     </section>

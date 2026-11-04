@@ -41,7 +41,7 @@ test('entries-open preview: /register/ is one version only: the six steps, and t
   await expect(main.getByRole('heading', { level: 3 })).toHaveText([
     'Check you can enter',
     'Write your essay',
-    'Pay USD 10, transferred as RM 40',
+    'Pay USD 10, transferred as MYR 40',
     'Screenshot your payment',
     'Fill in the entry form',
     'We confirm',
@@ -64,11 +64,11 @@ test('entries-open preview: /register/ shows the bank number, reference, consent
   await expect(pay.getByText(BANK.accountNumber)).toHaveCount(1);
   await expect(pay.getByText(BANK.reference)).toHaveCount(1);
   await expect(pay.locator('dl.bank div', { hasText: 'SWIFT code' })).toContainText('RHBBMYKL');
-  await expect(pay.locator('dl.bank div', { hasText: 'Amount' })).toHaveText('AmountRM 40 (the USD 10 fee)');
-  await expect(pay.locator('dl.bank div', { hasText: 'Currency' })).toContainText('Malaysian ringgit (MYR)');
+  await expect(pay.locator('dl.bank div', { hasText: 'Amount' })).toHaveText('AmountMYR 40 (the USD 10 fee)');
+  await expect(pay.locator('dl.bank div', { hasText: 'Currency' })).toContainText('Malaysian Ringgit (MYR)');
   // the Currency row sits directly under Amount
   await expect(pay.locator('dl.bank > div > dt')).toHaveText(['Amount', 'Currency', 'Account name', 'Bank', 'Account number', 'SWIFT code', 'Reference']);
-  await expect(pay).toContainText('Transfer exactly RM 40 (the fee in ringgit, MYR). Any method may be used, provided the full RM 40 arrives. You pay any transfer fees.');
+  await expect(pay).toContainText('Transfer exactly MYR 40 (the fee in Malaysian Ringgit). Exchange rates change, but the amount you transfer is always MYR 40. Any method may be used, provided the full MYR 40 arrives. You pay any transfer fees.');
   // the proof of payment is asked for once, in step 5, where it is uploaded
   await expect(pay).not.toContainText('Upload proof of payment');
   await expect(pay).not.toContainText('DuitNow');
