@@ -56,7 +56,7 @@ test('entries-open: step 2 keeps the word limit, the PDF, no AI, no name or scho
   await page.goto(`${OPEN}/register/`);
   const step = page.locator('section.hte ol > li').nth(1);
   await expect(step).toContainText('One essay of up to 800 words on one of the three prompts, as a PDF, written without AI tools.');
-  await expect(step).toContainText("Don't put your name or school in the PDF.");
+  await expect(step).toContainText("Do not put your name or school in the PDF.");
   await expect(step.getByRole('link', { name: 'See the prompts' })).toHaveAttribute('href', '/competition/#prompts');
 });
 
@@ -69,7 +69,7 @@ test('entries-open: step 3 is #how-to-pay with the account number and the paymen
   await expect(pay.getByText(ACCOUNT_NUMBER)).toHaveCount(1);
   await expect(pay.locator('dl.bank > div > dt')).toHaveText(['Amount', 'Currency', 'Account name', 'Bank', 'Account number', 'SWIFT code', 'Reference']);
   await expect(pay).toContainText('The Assembly Soup Kitchen (T.A.S.K)');
-  await expect(pay).toContainText('Transfer exactly RM 40 (the fee in ringgit, MYR). Any method is fine as long as the full RM 40 arrives; transfer fees are yours.');
+  await expect(pay).toContainText('Transfer exactly RM 40 (the fee in ringgit, MYR). Any method may be used, provided the full RM 40 arrives. You pay any transfer fees.');
   await expect(pay).not.toContainText('proof of payment');
   await expect(page.locator('section.hte ol > li').nth(4)).toContainText('upload proof of payment on the form');
 });
@@ -99,7 +99,7 @@ test('entries-open: step 4 says what to screenshot and what can be cropped', asy
 test('entries-open: step 5 has the consent line, the Privacy link and an Enter now button to REGISTRATION_URL', async ({ page }) => {
   await page.goto(`${OPEN}/register/`);
   const step = page.locator('section.hte ol > li').nth(4);
-  await expect(step).toContainText("The form asks for your consent to how we handle your details (and a parent or guardian's if you're under 18).");
+  await expect(step).toContainText("The form asks for your consent to how we handle your details (and a parent or guardian's if you are under 18).");
   await expect(step.getByRole('link', { name: 'Privacy notice' })).toHaveAttribute('href', '/privacy/');
   const enter = step.getByRole('link', { name: 'Enter now' });
   await expect(enter).toHaveAttribute('href', REGISTRATION_URL);

@@ -30,7 +30,7 @@ for (const path of pages) {
       const consent = page.getByText('We will only email you once, when entries open.');
       await expect(consent).toBeVisible();
       await expect(consent.getByRole('link', { name: 'Privacy notice' })).toHaveAttribute('href', '/privacy/');
-      await expect(page.getByText("The form didn't load.")).toBeHidden();
+      await expect(page.getByText("The form did not load.")).toBeHidden();
     });
 
     test("shows a plain link if Tally's script fails to load", async ({ page }) => {

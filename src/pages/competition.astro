@@ -45,7 +45,7 @@ const pdfKb = Math.round(statSync(`public${JUDGING_PDF_URL}`).size / 1024);
 const pdfMeta = `PDF, ${JUDGING_PDF_PAGES} ${JUDGING_PDF_PAGES === 1 ? 'page' : 'pages'}, ${pdfKb} KB`;
 
 const steps = [
-  { title: 'Enter', text: "Check you're eligible and register." },
+  { title: 'Enter', text: 'Check that you are eligible, then register.' },
   { title: 'Write', text: `Up to 800 words on one prompt. Submit by ${deadlineWithTime()}.` },
   { title: 'Read and scored by people', text: 'Every essay is read by a person. AI never judges.' },
   { title: 'Results', text: `Winners announced by ${formatDate(DATES.results)}.` },

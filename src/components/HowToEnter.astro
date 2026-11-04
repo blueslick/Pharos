@@ -44,7 +44,7 @@ const open = CATEGORIES.find((c) => c.id === 'open')!;
       <div class="hte__text">
         <p class="hte__line">
           One essay of up to 800 words on one of the three prompts, as a PDF, written without AI tools.
-          Don't put your name or school in the PDF.
+          Do not put your name or school in the PDF.
         </p>
         <p class="hte__links"><a href="/competition/#prompts">See the prompts</a></p>
       </div>
@@ -66,7 +66,7 @@ const open = CATEGORIES.find((c) => c.id === 'open')!;
             <div class="bank__copy"><dt>Reference</dt><dd><span class="bank__value">{BANK.reference}</span></dd></div>
           </dl>
           {/* The proof of payment is asked for once, in step 5, where it is uploaded. */}
-          <p class="hte__line">{PAY_IN_MYR} Any method is fine as long as the full {ENTRY_FEE_MYR} arrives; transfer fees are yours.</p>
+          <p class="hte__line">{PAY_IN_MYR} Any method may be used, provided the full {ENTRY_FEE_MYR} arrives. You pay any transfer fees.</p>
         </div>
       </div>
     </li>
@@ -86,7 +86,7 @@ const open = CATEGORIES.find((c) => c.id === 'open')!;
         <p class="hte__line">Upload your essay, then {PROOF_OF_PAYMENT_INLINE}. Deadline: {deadlineWithTime()}.</p>
         {/* CONSENT: keep this line and the Privacy link right next to the Enter now button.
             Entrants may be under 18 and Malaysia's PDPA applies. */}
-        <p class="hte__line hte__consent">The form asks for your consent to how we handle your details (and a parent or guardian's if you're under 18). See our <a href="/privacy/">Privacy notice</a>.</p>
+        <p class="hte__line hte__consent">The form asks for your consent to how we handle your details (and a parent or guardian's if you are under 18). See our <a href="/privacy/">Privacy notice</a>.</p>
         <ExternalAction href={REGISTRATION_URL} label="Enter now" tone="coral" />
       </div>
     </li>

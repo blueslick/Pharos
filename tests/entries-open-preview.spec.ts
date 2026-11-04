@@ -68,7 +68,7 @@ test('entries-open preview: /register/ shows the bank number, reference, consent
   await expect(pay.locator('dl.bank div', { hasText: 'Currency' })).toContainText('Malaysian ringgit (MYR)');
   // the Currency row sits directly under Amount
   await expect(pay.locator('dl.bank > div > dt')).toHaveText(['Amount', 'Currency', 'Account name', 'Bank', 'Account number', 'SWIFT code', 'Reference']);
-  await expect(pay).toContainText('Transfer exactly RM 40 (the fee in ringgit, MYR). Any method is fine as long as the full RM 40 arrives; transfer fees are yours.');
+  await expect(pay).toContainText('Transfer exactly RM 40 (the fee in ringgit, MYR). Any method may be used, provided the full RM 40 arrives. You pay any transfer fees.');
   // the proof of payment is asked for once, in step 5, where it is uploaded
   await expect(pay).not.toContainText('Upload proof of payment');
   await expect(pay).not.toContainText('DuitNow');
@@ -77,7 +77,7 @@ test('entries-open preview: /register/ shows the bank number, reference, consent
   await expect(page.locator('main')).not.toContainText(/fee support/i);
   // The Enter section keeps the consent line and the Privacy link right next to the button.
   const enter = page.locator('li.hte__enter');
-  await expect(enter).toContainText("The form asks for your consent to how we handle your details (and a parent or guardian's if you're under 18).");
+  await expect(enter).toContainText("The form asks for your consent to how we handle your details (and a parent or guardian's if you are under 18).");
   await expect(enter.getByRole('link', { name: 'Privacy notice' })).toHaveAttribute('href', '/privacy/');
   await expect(enter.getByRole('link', { name: 'Enter now' })).toBeVisible();
   await expect(enter.getByRole('link', { name: 'Enter now' })).toHaveAttribute('href', REGISTRATION_URL);

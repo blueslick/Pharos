@@ -21,56 +21,56 @@ const footerPages = ['/', '/competition/', '/about/', '/blog/', '/contact/', '/p
 const rulesText = [
   'Students only, from any country. Junior is 14 and under; Open is 25 and under. Your age is your age on 17 January 2027.',
   'One essay per person, answering one of the three prompts.',
-  "Up to 800 words, in English, uploaded as a PDF. Don't put your name or school in the file.",
-  "It must be your own work. Don't use AI tools to write, rewrite, expand or translate any of it, and don't enter an essay that's been published or entered somewhere else.",
+  "Up to 800 words, in English, uploaded as a PDF. Do not put your name or school in the file.",
+  "It must be your own work. Do not use AI tools to write, rewrite, expand or translate any of it, and do not enter an essay that has been published or entered somewhere else.",
   'Pay the entry fee, USD 10, as exactly RM 40 straight to The Assembly Soup Kitchen (T.A.S.K) before you submit, and upload proof of payment on the form.',
   'Under 18? A parent or guardian must agree to you entering. On the form, tick the box saying they agree and give their email address; we may email them to check.',
   'Submit by Sunday 17 January 2027, 15:59 UTC. No extensions.',
   "Essays are read and judged by people, against the published judging criteria. The judges' decisions are final.",
   'Winners and shortlisted entrants may be named (name only) on pharosprize.org and Instagram. Prizes: USD 50 (Junior) and USD 100 (Open).',
-  "Before prizes are paid, winners must confirm their age and that they're a student (see the FAQ). If a winner can't, the prize goes to the next-ranked entry.",
+  "Before prizes are paid, winners must confirm their age and that they are a student (see the FAQ). If a winner cannot, the prize goes to the next-ranked entry.",
 ];
 
 // Every FAQ answer (the ones that differ between builds are checked separately).
 const faqAnswers: Record<string, string> = {
   'who-is-a-student': 'Anyone studying at a school, college or university on 17 January 2027. We may ask for proof, such as a student card or a letter from your school, before we award a prize.',
-  'which-category': "Your age on 17 January 2027. If you're 14 or under, you're Junior. Otherwise, if you're 25 or under, you're Open.",
+  'which-category': "Your age on 17 January 2027. If you are 14 or under, you are Junior. Otherwise, if you are 25 or under, you are Open.",
   'poster-says-any-age': 'The Open category is for students aged 25 and under (as at 17 January 2027). Some early posters and listings show an older version; the Rules page is always the one that counts.',
   'enter-more-than-once': 'No, one essay per person.',
-  'under-18': 'A parent or guardian has to agree to you entering and to us handling your details. The entry form asks for a second email address; we suggest theirs.',
-  'open-and-close': `Entries open on ${ENTRIES_OPEN_DAY} and close on Sunday 17 January 2027 at 15:59 UTC. Late entries aren't judged. See all key dates`,
-  'fix-a-mistake': "Yes, until entries close (17 January 2027, 15:59 UTC). Email pharosprize@gmail.com with your full name, the email address you entered with, and what needs fixing. If it's your essay, attach the corrected PDF. After the deadline we can't accept changes.",
-  'word-count': "Everything from the first word of your essay to the last, including footnotes. Your title and your reference list don't count. Essays over 800 words aren't judged.",
-  'references': "If you use someone else's words, ideas or numbers, credit them. Any clear, consistent style is fine.",
+  'under-18': 'A parent or guardian must agree to you entering and to us handling your details. The entry form asks for a second email address; we suggest theirs.',
+  'open-and-close': `Entries open on ${ENTRIES_OPEN_DAY} and close on Sunday 17 January 2027 at 15:59 UTC. Late entries are not judged. See all key dates`,
+  'fix-a-mistake': "Yes, until entries close (17 January 2027, 15:59 UTC). Email pharosprize@gmail.com with your full name, the email address you entered with, and what needs fixing. If it is your essay, attach the corrected PDF. After the deadline we cannot accept changes.",
+  'word-count': "Everything from the first word of your essay to the last, including footnotes. Your title and your reference list do not count. Essays over 800 words are not judged.",
+  'references': "If you use someone else's words, ideas or numbers, credit them. Any clear, consistent style is acceptable.",
   'other-languages': 'No, essays must be in English.',
   'name-in-the-pdf': 'So we can judge essays without knowing who wrote them. The form collects your name separately.',
   'make-a-pdf': 'In Google Docs or Word, use File, then Download (or Save as), then PDF. Open the file before you submit to check it works.',
-  'ai-use': 'Not to write, rewrite, expand or translate any part of your essay. Spelling and grammar checkers that only fix mistakes are fine. Using AI to find sources is fine, but read the sources yourself and write every word yourself.',
+  'ai-use': 'Not to write, rewrite, expand or translate any part of your essay. Spelling and grammar checkers that only fix mistakes are permitted. Using AI to find sources is permitted, but read the sources yourself and write every word yourself.',
   'ai-suspected': "We contact you first and may ask to see your notes or drafts. We never disqualify an essay because of a detection tool's result alone.",
   'where-the-fee-goes': 'Straight to The Assembly Soup Kitchen (T.A.S.K). Pharos never handles the money. T.A.S.K tells us every USD 10 is about 3 meals.',
   'pay-from-abroad': "Use your bank's international transfer or a service such as Wise, Remitly or Western Union, and send RM 40 to T.A.S.K's account (SWIFT code RHBBMYKL). Transfer fees and bank charges are paid by you, not by Pharos, and the full RM 40 must arrive. If less arrives, your entry is not complete.",
-  'payment-arrived': "We check payments with T.A.S.K once a week and email you within a week of your entry. If we can't find your payment, we'll email you. You have until Sunday 24 January 2027 to sort it out. If we still can't find it by then, your entry is disqualified.",
+  'payment-arrived': "We check payments with T.A.S.K once a week and email you within a week of your entry. If we cannot find your payment, we will email you. You have until Sunday 24 January 2027 to resolve it. If we still cannot find it by then, your entry is disqualified.",
   'who-judges': 'The Pharos organisers, against the published judging criteria: response to the prompt (30), insight and understanding (30), clarity and structure (20) and voice and originality (20). You can download the criteria from the Competition page. AI is never used to score, rank or shortlist essays.',
-  'feedback': "No. We can't give individual scores or feedback.",
+  'feedback': "No. We cannot give individual scores or feedback.",
   'results': 'Wednesday 3 February 2027, on pharosprize.org and Instagram (@pharosprize). Winners are also told by email.',
-  'prizes-paid': "By bank transfer or Wise to the winner, or to a parent or guardian if the winner is under 18, within 2 weeks of the results. Prizes are funded separately, not from entry fees. If we can't reach a winner within 14 days of the results, we may award the prize to the next-placed essay.",
-  'winner-age-check': "Before we pay a prize, we check the winner's age and that they're a student. You can either show your ID on a short video call, or send a photo of it with the ID number partly covered (on a MyKad, cover the last six digits; the first six show your date of birth). A letter from your school also works. If you're under 18, a parent or guardian joins the call or sends the photo. We don't keep a copy of your ID or its number; we only note that the check was done.",
+  'prizes-paid': "By bank transfer or Wise to the winner, or to a parent or guardian if the winner is under 18, within 2 weeks of the results. Prizes are funded separately, not from entry fees. If we cannot reach a winner within 14 days of the results, we may award the prize to the next-placed essay.",
+  'winner-age-check': "Before we pay a prize, we check the winner's age and that they are a student. You can either show your ID on a short video call, or send a photo of it with the ID number partly covered (on a MyKad, cover the last six digits; the first six show your date of birth). A letter from your school is also accepted. If you are under 18, a parent or guardian joins the call or sends the photo. We do not keep a copy of your ID or its number; we only note that the check was done.",
   'certificate': 'Winners and shortlisted entrants get a certificate with a code anyone can check at pharosprize.org/verify/.',
   'who-owns-my-essay': 'You do. You let us store and read it to run the competition.',
-  'essay-published': "Only if it wins and you (and a parent or guardian, if you're under 18) give separate permission after the results.",
-  'what-we-publish': "If you're shortlisted or win: your name only (no school, country or age), on pharosprize.org and Instagram, as you agreed on the entry form.",
+  'essay-published': "Only if it wins and you (and a parent or guardian, if you are under 18) give separate permission after the results.",
+  'what-we-publish': "If you are shortlisted or win: your name only (no school, country or age), on pharosprize.org and Instagram, as you agreed on the entry form.",
   'your-data': 'See our Privacy notice: pharosprize.org/privacy/.',
   'follow-or-tag': 'No.',
   'who-runs-it': 'Student volunteers. This edition is a fundraiser for The Assembly Soup Kitchen (T.A.S.K).',
 };
 
 const faqQuestions = [
-  'Who counts as a student?', 'Which category am I in?', 'I saw a poster that says Open is for any age. Which is right?', 'Can I enter more than once?', "I'm under 18. What do I need?",
+  'Who counts as a student?', 'Which category am I in?', 'I saw a poster that says Open is for any age. Which is right?', 'Can I enter more than once?', "I am under 18. What do I need?",
   'When do entries open and close?', 'I made a mistake in my entry. Can I fix it?',
   'What counts towards the 800 words?', 'Do I need references?', 'Can I write in another language?',
-  "Why can't I put my name in the PDF?", 'How do I make a PDF?',
+  "Why can I not put my name in the PDF?", 'How do I make a PDF?',
   'Can I use AI at all?', 'What happens if you think an essay used AI?',
-  'Where does my fee go?', 'How do I pay?', "I'm not in Malaysia. How do I pay?", 'How do I know my payment arrived?',
+  'Where does my fee go?', 'How do I pay?', "I am not in Malaysia. How do I pay?", 'How do I know my payment arrived?',
   'Who judges the essays?', 'Will I get feedback or a score?', 'When are the results?', 'How are prizes paid?', 'How do winners confirm their age?', 'Do I get a certificate?',
   'Who owns my essay?', 'Will my essay be published?', 'What do you publish about me?', 'How do you handle my data?',
   'Do I have to follow or tag Pharos to enter?', 'Who runs Pharos?',
@@ -142,7 +142,7 @@ test.describe('Rules page', () => {
     await expect(items).toHaveText(rulesText);
     await expect(page.locator('main ol')).toHaveCount(1);
     const main = page.locator('main');
-    await expect(main.getByText("An essay that breaks these rules isn't judged.", { exact: true })).toBeVisible();
+    await expect(main.getByText("An essay that breaks these rules is not judged.", { exact: true })).toBeVisible();
     await expect(main.getByText('Questions? Read the FAQ or email pharosprize@gmail.com.', { exact: true })).toBeVisible();
   });
 
@@ -215,7 +215,7 @@ test.describe('FAQ page', () => {
     await expect(rows.locator('> summary')).toHaveText(faqQuestions);
     const open = await rows.evaluateAll((els) => els.filter((el) => (el as HTMLDetailsElement).open).length);
     expect(open).toBe(0);
-    await expect(page.getByText('Still stuck? Email pharosprize@gmail.com.', { exact: true })).toBeVisible();
+    await expect(page.getByText('Another question? Email pharosprize@gmail.com.', { exact: true })).toBeVisible();
   });
 
   test('every question has a unique, stable id', async ({ page }) => {
@@ -379,13 +379,13 @@ test.describe('Privacy page fixes', () => {
     await main(page);
     const section = (title: string) => page.locator('main section', { has: page.getByRole('heading', { level: 2, name: title, exact: true }) });
     await expect(section('The entry form')).toContainText(
-      "If you win, we may ask for proof that you're a student, such as a student card or a school letter. We use it only to check eligibility and delete it once the prize is paid.",
+      "If you win, we may ask for proof that you are a student, such as a student card or a school letter. We use it only to check eligibility and delete it once the prize is paid.",
     );
     await expect(section('The entry form')).toContainText(
-      "Winners only: before prizes are paid, we look at an ID document or a school letter to confirm age and student status. We don't keep a copy or the ID number; we only record that the check was done.",
+      "Winners only: before prizes are paid, we look at an ID document or a school letter to confirm age and student status. We do not keep a copy or the ID number; we only record that the check was done.",
     );
     await expect(section('If you are shortlisted or win')).toContainText(
-      "We'll only publish a winning essay if its writer (and a parent or guardian, if under 18) gives separate permission after the results.",
+      "We will only publish a winning essay if its writer (and a parent or guardian, if under 18) gives separate permission after the results.",
     );
     await expect(section('If you email us')).not.toContainText('fee support');
   });

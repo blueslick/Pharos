@@ -8,7 +8,7 @@ const [first, second] = fakeCertificates;
 const codeField = (page: Page) => page.getByLabel('Certificate code');
 const checkButton = (page: Page) => page.getByRole('button', { name: 'Check' });
 const verified = (page: Page) => page.getByRole('heading', { name: 'Certificate verified' });
-const notFound = (page: Page) => page.getByRole('heading', { name: "We couldn't find that code" });
+const notFound = (page: Page) => page.getByRole('heading', { name: "We could not find that code" });
 
 async function check(page: Page, code: string) {
   await codeField(page).fill(code);
@@ -52,7 +52,7 @@ test.describe('Verify a certificate', () => {
     await expect(notFound(page)).toBeVisible();
     await expect(page.locator('#result-missing').getByRole('link', { name: CONTACT_EMAIL })).toHaveAttribute('href', `mailto:${CONTACT_EMAIL}`);
     await expect(verified(page)).toBeHidden();
-    await expect(page.locator('#result-missing')).toContainText(`email us at ${CONTACT_EMAIL} and we'll look into it`);
+    await expect(page.locator('#result-missing')).toContainText(`email us at ${CONTACT_EMAIL} and we will look into it`);
   });
 
   test('a near miss is not accepted', async ({ page }) => {
