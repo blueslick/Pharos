@@ -175,7 +175,7 @@ test.describe('Rules page', () => {
     const small = page.locator('main p.rules__small');
     await expect(small).toHaveText([
       'If a poster, listing or post says something different, these rules apply.',
-      'Last updated 4 November 2026: fee support removed; the fee is paid as RM 40; rule 10 has a 14-day time limit; copyright line added to rule 9; the PDF file name is the writer's name and title, with no name inside the essay; Junior-eligible entrants may enter Open; entries that break the rules are disqualified.',
+      'Last updated 4 November 2026: fee support removed; the fee is paid as RM 40; rule 10 has a 14-day time limit; rule 9 states copyright; Junior-eligible entrants may enter Open; entries that break the rules are disqualified; PDF file names use the full name and essay title.',
     ]);
     // Both come after the list, and are smaller than the rules but not under 16px.
     const [list, line, rule] = await Promise.all([
