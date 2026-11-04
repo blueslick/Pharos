@@ -4,7 +4,7 @@ Read this at the start of every session. It sets the rules for this repo.
 
 ## What this is
 
-The website for an independently run online essay competition for students, in two prize categories (Junior: 14 and under, USD 75; Open: 25 and under, USD 125; age counted on the deadline), built around the UN Sustainable Development Goals with a social-justice focus. Each edition features one SDG. The Inaugural Edition is SDG 2 (Zero Hunger) and is a fundraiser for a local soup kitchen.
+The website for an independently run online essay competition for students, in two prize categories (Junior: 14 and under, USD 50; Open: 25 and under, USD 100; age counted on the deadline), built around the UN Sustainable Development Goals with a social-justice focus. Each edition features one SDG. The Inaugural Edition is SDG 2 (Zero Hunger) and is a fundraiser for a local soup kitchen.
 
 The site owner is a student. Explain technical steps in plain language and don't assume prior setup knowledge.
 

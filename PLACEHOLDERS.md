@@ -55,7 +55,7 @@ One judge (the owner). Nothing is left as a placeholder in the code: the rubric 
 | Entry data deleted by | 3 August 2027 (emails, ages, essays, proof of payment, fee support emails; published names and certificate records are kept) | `DATES.entryDataDeleted` in `src/site.ts` (Privacy) |
 | Entry form | Tally form `Ar7QeB`, https://tally.so/r/Ar7QeB (shown nowhere while `REGISTRATION_OPEN` is `false`) | `REGISTRATION_URL` in `src/site.ts` (one value) |
 | Entry fee wording | USD 10; with 50% fee support USD 5. US dollars only: no other currency appears anywhere on the site | `ENTRY_FEE` and `ENTRY_FEE_HALF` in `src/site.ts`. The standard payment sentences ("Transfer the fee in US dollars (USD)." and "Upload proof of payment on the form.") are `PAY_IN_USD`, `PROOF_OF_PAYMENT` and `PROOF_OF_PAYMENT_INLINE`; the bank's currency is `BANK.currency` |
-| Categories and prizes | Junior: 14 and under, prize USD 75. Open: 25 and under, prize USD 125. Age is counted on 17 January 2027. Both are for students only. "Prizes are funded separately, not from entry fees." | `CATEGORIES`, `PRIZES_NOTE` in `src/site.ts` (Competition, Register) |
+| Categories and prizes | Junior: 14 and under, prize USD 50. Open: 25 and under, prize USD 100. Age is counted on 17 January 2027. Both are for students only. "Prizes are funded separately, not from entry fees." | `CATEGORIES`, `PRIZES_NOTE` in `src/site.ts` (Competition, Register) |
 | Bank details | Assembly Ground Sdn Bhd (the company behind T.A.S.K), RHB Bank, account 262111-00010155, reference "PHAROS + your full name". Shown only on `/register/` once `REGISTRATION_OPEN` is `true` (launch day, or the entries-open PR preview) | `BANK` in `src/site.ts` |
 | Meals per entry | "Every USD 10 entry funds about 3 meals at T.A.S.K." (figure from T.A.S.K) | `MEALS_PER_ENTRY` in `src/site.ts` (Competition, "Where the money goes") |
 | Volunteering card (Home) | Switched on: links to T.A.S.K's Instagram | `SOUP_KITCHEN_INSTAGRAM_URL` in `src/site.ts` |
@@ -104,7 +104,7 @@ The form is set up in Tally, not on this site. I could not open it from the buil
 | Item | Decided value |
 |---|---|
 | Entry fee | USD 10, with 50% fee support: USD 5. Fee support is 50% only: there is no free waiver |
-| Prizes | Junior (14 and under): USD 75. Open (25 and under): USD 125. Funded separately, not from entry fees |
+| Prizes | Junior (14 and under): USD 50. Open (25 and under): USD 100. Funded separately, not from entry fees |
 | Payment | Bank transfer in US dollars directly to T.A.S.K's account; entrants upload proof of payment on the form. Pharos never handles the money. No payment code or link on the site |
 
 ## Social post maker (`tools/social/`)
