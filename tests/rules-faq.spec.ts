@@ -22,7 +22,7 @@ const rulesText = [
   'Students only, from any country. Junior is 14 and under; Open is 25 and under. Your age is your age on 17 January 2027. Junior-eligible entrants may enter Open instead.',
   'One essay per person, answering one of the three prompts.',
   "Up to 800 words, in English, uploaded as a PDF. Do not put your name or school inside the essay.",
-  "It must be your own work. Do not use AI tools to write, rewrite, expand or translate any of it, and do not enter an essay that has been published or entered somewhere else.",
+  "It must be your own work. Do not use AI to write, rewrite, expand or translate any of it (AI may be used only to find sources and brainstorm ideas; see the FAQ). Grammarly, QuillBot and similar tools are not allowed; the ordinary spelling and grammar check in Word or Google Docs is. Tell us on the entry form what you used AI for. Do not enter an essay that has been published or entered somewhere else.",
   'Pay the entry fee, USD 10, as exactly RM 40 straight to The Assembly Soup Kitchen (T.A.S.K) before you submit, and upload proof of payment on the form.',
   'Under 18? A parent or guardian must agree to you entering. On the form, tick the box saying they agree and give their email address; we may email them to check.',
   'Submit by Sunday 17 January 2027, 15:59 UTC. No extensions.',
@@ -45,8 +45,7 @@ const faqAnswers: Record<string, string> = {
   'other-languages': 'No, essays must be in English.',
   'name-in-the-pdf': 'So that essays are judged without knowing who wrote them. The file name is removed before judging, and the form collects your name separately.',
   'make-a-pdf': 'In Google Docs or Word, use File, then Download (or Save as), then PDF. Open the file before you submit to check it works. Name your PDF with your full name and the essay title, for example “Jane Tan - Who Gets to Eat.pdf”. Do not put your name or school inside the essay.',
-  'ai-use': 'Not to write, rewrite, expand or translate any part of your essay. Spelling and grammar checkers that only fix mistakes are permitted. Using AI to find sources is permitted, but read the sources yourself and write every word yourself.',
-  'ai-suspected': "We contact you first and may ask to see your notes or drafts. We never disqualify an essay because of a detection tool's result alone.",
+  'ai-policy': 'You may use AI to find sources and to brainstorm ideas. You must read the sources yourself and write every word of your essay yourself.You may not use AI to write, rewrite, expand or translate any part of your essay. This includes Grammarly, QuillBot, and the AI writing features in Google Docs (Gemini) and Word (Copilot). The ordinary spelling and grammar check built into Word or Google Docs is permitted.The entry form asks what you used AI for. Answer in your own words, or write "Nothing". Using AI for sources or brainstorming will not count against you. We do not ask for your prompts.If the organisers believe your essay breaks this policy, it will be disqualified. We will not contact you about this decision. The organisers\' decision is final. A detection tool\'s result is never the only reason.',
   'where-the-fee-goes': 'Straight to The Assembly Soup Kitchen (T.A.S.K). Pharos never handles the money. T.A.S.K tells us every USD 10 is about 3 meals.',
   'pay-from-abroad': "Use your bank's international transfer or a service such as Wise, Remitly or Western Union, and send RM 40 to T.A.S.K's account (SWIFT code RHBBMYKL). Transfer fees and bank charges are paid by you, not by Pharos, and the full RM 40 must arrive. If less arrives, your entry is not complete.",
   'payment-arrived': "We check payments with T.A.S.K once a week and email you within a week of your entry. If we cannot find your payment, we will email you. You have until Sunday 24 January 2027 to resolve it. If we still cannot find it by then, your entry is disqualified.",
@@ -69,7 +68,7 @@ const faqQuestions = [
   'When do entries open and close?', 'I made a mistake in my entry. Can I fix it?',
   'What counts towards the 800 words?', 'Do I need references?', 'Can I write in another language?',
   "Why can I not put my name inside the essay?", 'How do I make a PDF?',
-  'Can I use AI at all?', 'What happens if you think an essay used AI?',
+  'What is the AI policy?',
   'Where does my fee go?', 'How do I pay?', "I am not in Malaysia. How do I pay?", 'How do I know my payment arrived?',
   'Who judges the essays?', 'Will I get feedback or a score?', 'When are the results?', 'How are prizes paid?', 'How do winners confirm their age?', 'Do I get a certificate?',
   'Who owns my essay?', 'Will my essay be published?', 'What do you publish about me?', 'How do you handle my data?',
@@ -153,7 +152,12 @@ test.describe('Rules page', () => {
     expect((await request.get(`${NORMAL}/pharos-judging-criteria.pdf`)).status()).toBe(200);
     await expect(page.locator('main p.rules__after').getByRole('link', { name: 'the FAQ' })).toHaveAttribute('href', '/faq/');
     // Rule 10 points at the FAQ answer about the winner age check, and that answer exists.
-    await expect(page.locator('main ol').getByRole('link', { name: 'the FAQ' })).toHaveAttribute('href', '/faq/#winner-age-check');
+    await expect(page.locator('main ol').getByRole('link', { name: 'the FAQ', exact: true })).toHaveAttribute('href', '/faq/#winner-age-check');
+    // Rule 4 points at the AI policy answer, and that answer exists and opens.
+    await expect(page.locator('main ol').getByRole('link', { name: 'see the FAQ', exact: true })).toHaveAttribute('href', '/faq/#ai-policy');
+    await page.goto('/faq/#ai-policy');
+    await expect(page.locator('details:has(> div#ai-policy)')).toHaveAttribute('open', '');
+    await page.goto('/rules/');
     await page.goto('/faq/#winner-age-check');
     await expect(page.locator('details:has(> div#winner-age-check)')).toHaveAttribute('open', '');
     await page.goto('/rules/');
@@ -200,7 +204,7 @@ test.describe('Rules page', () => {
     await page.setViewportSize(phone);
     await page.goto('/rules/');
     // About one phone screen of rules after the title; the whole page, with the footer, well under four screens.
-    expect(await page.locator('main').evaluate((el) => el.getBoundingClientRect().height)).toBeLessThan(1950); // measured 1816: rules 1, 3, 9 and 10 and the Last updated line grew on 4 Nov 2026
+    expect(await page.locator('main').evaluate((el) => el.getBoundingClientRect().height)).toBeLessThan(2100); // measured 1968: rules 1, 3, 9 and 10 and the Last updated line grew on 4 Nov 2026, then rule 4 grew with the AI policy
     expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBeLessThan(2900);
   });
 });
