@@ -41,13 +41,13 @@ test('entries-open preview: /register/ is one version only: the six steps, and t
   await expect(main.getByRole('heading', { level: 3 })).toHaveText([
     'Check you can enter',
     'Write your essay',
-    'Pay USD 10, transferred as MYR 40',
+    'Pay MYR 40 (about USD 10)',
     'Screenshot your payment',
     'Fill in the entry form',
     'We confirm',
   ]);
   // the old "Before you start" section and the old three step sections are gone
-  for (const gone of ['Before you start', 'Three steps', 'Step 1:', 'Step 2:', 'Step 3:', 'Pay USD 10 to The Assembly Soup Kitchen']) {
+  for (const gone of ['Before you start', 'Three steps', 'Step 1:', 'Step 2:', 'Step 3:']) {
     await expect(main).not.toContainText(gone);
   }
   await expect(main.locator('section')).toHaveCount(1);
@@ -64,11 +64,11 @@ test('entries-open preview: /register/ shows the bank number, reference, consent
   await expect(pay.getByText(BANK.accountNumber)).toHaveCount(1);
   await expect(pay.getByText(BANK.reference)).toHaveCount(1);
   await expect(pay.locator('dl.bank div', { hasText: 'SWIFT code' })).toContainText('RHBBMYKL');
-  await expect(pay.locator('dl.bank div', { hasText: 'Amount' })).toHaveText('AmountMYR 40 (the USD 10 fee)');
+  await expect(pay.locator('dl.bank div', { hasText: 'Amount' })).toHaveText('AmountMYR 40 (about USD 10)');
   await expect(pay.locator('dl.bank div', { hasText: 'Currency' })).toContainText('Malaysian Ringgit (MYR)');
   // the Currency row sits directly under Amount
   await expect(pay.locator('dl.bank > div > dt')).toHaveText(['Amount', 'Currency', 'Account name', 'Bank', 'Account number', 'SWIFT code', 'Reference']);
-  await expect(pay).toContainText('Transfer exactly MYR 40 (the fee in Malaysian Ringgit). Exchange rates change, but the amount you transfer is always MYR 40. Any method may be used, provided the full MYR 40 arrives. You pay any transfer fees.');
+  await expect(pay).toContainText('Transfer exactly MYR 40 (the fee in Malaysian Ringgit). Any method may be used, provided the full MYR 40 arrives. You pay any transfer fees.');
   // the proof of payment is asked for once, in step 5, where it is uploaded
   await expect(pay).not.toContainText('Upload proof of payment');
   await expect(pay).not.toContainText('DuitNow');
@@ -93,7 +93,7 @@ test('entries-open preview: /register/ links to the prompts instead of repeating
     'The Universal Declaration of Human Rights',
   ]) expect(html).not.toContain(text);
   const main = page.locator('main');
-  for (const gone of ['Our AI policy', 'The rules, in short', 'Who can enter', 'Prizes are funded separately', 'Prize USD', 'One essay per person.']) {
+  for (const gone of ['Our AI policy', 'The rules, in short', 'Who can enter', 'Prizes are funded separately', 'Prize MYR', 'One essay per person.']) {
     await expect(main).not.toContainText(gone);
   }
   await expect(main).toContainText('Open to students only: Junior is 14 and under, Open is 25 and under (your age on 17 January 2027).');
@@ -122,7 +122,7 @@ test('entries-open preview: the six steps are numbered, and there is no sideways
 test('entries-open preview: on desktop the plum title block spans the page and its "At a glance" facts are shown', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto(`${OPEN}/register/`);
-  await expect(page.locator('.glance')).toContainText('USD 10');
+  await expect(page.locator('.glance')).toContainText('MYR 40 (about USD 10)');
   await expect(page.locator('.glance')).toContainText('17 January 2027, 15:59 UTC');
   await expect(page.locator('.glance')).toContainText('Students only, two categories');
   await expect(page.locator('.reg__summary').getByRole('link', { name: 'Enter now' })).toHaveCount(0);

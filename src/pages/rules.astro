@@ -6,9 +6,10 @@
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import MoneyNote from '../components/MoneyNote.astro';
 import {
   SITE_NAME, CONTACT_EMAIL, FAQ_URL, JUDGING_PDF_URL, SOUP_KITCHEN_NAME, CATEGORIES, DATES,
-  ENTRY_FEE, ENTRY_FEE_MYR, PROOF_OF_PAYMENT_INLINE, DEADLINE_TIME_PLAIN, WINNER_CHECK_DAYS, formatDate, formatDateDay, FAQ_URL_WINNER_AGE,
+  ENTRY_FEE, prizeText, PROOF_OF_PAYMENT_INLINE, DEADLINE_TIME_PLAIN, WINNER_CHECK_DAYS, formatDate, formatDateDay, FAQ_URL_WINNER_AGE,
 } from '../site';
 
 const junior = CATEGORIES.find((c) => c.id === 'junior')!;
@@ -26,6 +27,7 @@ const intro = 'Ten rules. The FAQ explains the details.';
   </Hero>
 
   <main id="main" class="rules">
+    <MoneyNote />
     <ol class="rules__list">
       <li>
         Students only, from any country. {junior.name} is {junior.who}; {open.name} is {open.who}. Your age is your age on {formatDate(DATES.deadline)}. Junior-eligible entrants may enter Open instead.
@@ -36,7 +38,7 @@ const intro = 'Ten rules. The FAQ explains the details.';
         It must be your own work. Do not use AI to write, rewrite, expand or translate any of it (AI may be used only to find sources and brainstorm ideas; <a href="/faq/#ai-policy">see the FAQ</a>). Grammarly, QuillBot and similar tools are not allowed; the ordinary spelling and grammar check in Word or Google Docs is. Tell us on the entry form what you used AI for. Do not enter an essay that has been published or entered somewhere else.
       </li>
       <li>
-        Pay the entry fee, {ENTRY_FEE}, as exactly {ENTRY_FEE_MYR} straight to {SOUP_KITCHEN_NAME} before you submit, and {PROOF_OF_PAYMENT_INLINE}.
+        Pay the entry fee, {ENTRY_FEE}, straight to {SOUP_KITCHEN_NAME} before you submit, and {PROOF_OF_PAYMENT_INLINE}.
       </li>
       <li>
         Under 18? A parent or guardian must agree to you entering. On the form, tick the box saying they agree and give their email address; we may email them to check.
@@ -46,7 +48,7 @@ const intro = 'Ten rules. The FAQ explains the details.';
         Essays are read and judged by people, against the published <a href={JUDGING_PDF_URL}>judging criteria</a>. The judges' decisions are final.
       </li>
       <li>
-        Winners may be named on {domain} and Instagram by their pen name only (the name given on the entry form, which may be their real name or a pen name). Shortlisted entrants are not named publicly. Prizes: {junior.prize} ({junior.name}) and {open.prize} ({open.name}); only the winner in each category receives prize money. Copyright in each essay remains with its writer. An essay is published only under its writer's pen name, and only with the separate written permission of its writer (and of a parent or guardian, if the writer is under 18).
+        Winners may be named on {domain} and Instagram by their pen name only (the name given on the entry form, which may be their real name or a pen name). Shortlisted entrants are not named publicly. Prizes: {junior.name} {prizeText(junior)} and {open.name} {prizeText(open)}; only the winner in each category receives prize money. Copyright in each essay remains with its writer. An essay is published only under its writer's pen name, and only with the separate written permission of its writer (and of a parent or guardian, if the writer is under 18).
       </li>
       <li>
         Before the prize is paid, the winner must confirm their age and that they are a student (see <a href={FAQ_URL_WINNER_AGE}>the FAQ</a>). If a winner cannot be reached, or does not complete this check, within {WINNER_CHECK_DAYS} days of the results email, they do not receive the prize and it goes to the next-ranked entry.

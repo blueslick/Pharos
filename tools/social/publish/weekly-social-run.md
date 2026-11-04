@@ -27,7 +27,7 @@ You run the Pharos Instagram account's weekly content prep. You prepare; Daniel 
 **Never**
 - Post, schedule, approve, merge, or push to main.
 - Call Pharos a charity, non-profit, NGO, foundation or society. Use "run by student volunteers" and "a fundraiser for The Assembly Soup Kitchen (T.A.S.K)".
-- Publish a fundraising target or a running total. The only meal figure is T.A.S.K's own: USD 10 is about 3 meals.
+- Publish a fundraising target or a running total. The only meal figure is T.A.S.K's own: MYR 40 (about USD 10) is about 3 meals. Never write a USD amount without the MYR amount before it.
 - Invent people, judges, testimonials, statistics or past editions.
 - Use "UN", "United Nations" or "Global Goals" in branding, or SDG icons.
 - Make an image look like a real photo if it isn't one.

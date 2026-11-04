@@ -1,0 +1,12 @@
+---
+// The one money note (MONEY_NOTE in src/site.ts). Show it ONCE on each page that shows money
+// (Competition, How to enter, Rules, FAQ), before the long ENTRY_FEE wording, because it spells out
+// "foreign exchange (FOREX)". Do not repeat it on the same page.
+import { MONEY_NOTE } from '../site';
+---
+
+<p class="money-note">{MONEY_NOTE}</p>
+
+<style>
+  .money-note { font-size: 17px; line-height: 1.45; max-width: 760px; }
+</style>

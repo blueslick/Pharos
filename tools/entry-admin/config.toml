@@ -21,10 +21,10 @@ adult_age = 18            # under this age, the entry needs a parent or guardian
 # match its answer WORD FOR WORD (only capital letters and extra spaces are ignored), or EVERY entry
 # will be flagged "Fee problem: Unclear" until you change it. If the form no longer asks, nothing is checked.
 [fees]
-full = "USD 10"
-# The amount to match on T.A.S.K's bank statement. The fee is advertised as USD 10, but every entrant transfers exactly this in
+full = "MYR 40 (about USD 10 at current FOREX rates)"
+# The amount to match on T.A.S.K's bank statement. The fee is MYR 40 (USD is only a guide), and every entrant transfers exactly this in
 # ringgit (T.A.S.K's account takes ringgit only), so a payment is found and correct only if it shows this amount.
-statement_amount = "RM 40.00"
+statement_amount = "MYR 40.00"
 
 # What goes into the email drafts. Placeholders stay in [brackets] until you know them.
 [email]

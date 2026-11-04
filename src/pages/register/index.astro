@@ -11,7 +11,7 @@
 // Money never passes through this site.
 import Base from '../../layouts/Base.astro';
 import HowToEnter from '../../components/HowToEnter.astro';
-import { SITE_NAME, REGISTRATION_OPEN, ENTRY_FEE, DATES, formatDate, deadlineWithTime } from '../../site';
+import { SITE_NAME, REGISTRATION_OPEN, ENTRY_FEE_SHORT, DATES, formatDate, deadlineWithTime } from '../../site';
 
 const description = REGISTRATION_OPEN
   ? `How to enter the ${SITE_NAME} essay competition in six steps: check you can enter, write your essay, pay, screenshot your payment, fill in the entry form, and we confirm.`
@@ -43,7 +43,7 @@ const description = REGISTRATION_OPEN
       <div class="glance desktop-only">
         <h2 class="glance__title">At a glance</h2>
         <dl class="glance__list">
-          <div><dt>Fee</dt><dd>{ENTRY_FEE}</dd></div>
+          <div><dt>Fee</dt><dd>{ENTRY_FEE_SHORT}</dd></div>
           <div><dt>Deadline</dt><dd>{deadlineWithTime()}</dd></div>
           <div><dt>Who</dt><dd>Students only, two categories</dd></div>
         </dl>

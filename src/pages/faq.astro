@@ -9,10 +9,11 @@
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
 import FaqItem from '../components/FaqItem.astro';
+import MoneyNote from '../components/MoneyNote.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import {
   SITE_NAME, CONTACT_EMAIL, INSTAGRAM_HANDLE, CATEGORIES, RULES_URL, REGISTRATION_OPEN, SOUP_KITCHEN_NAME, BANK, DATES,
-  ENTRY_FEE, ENTRY_FEE_MYR, FX_NOTE, PROOF_OF_PAYMENT, PROOF_OF_PAYMENT_INLINE, MEALS_ESTIMATE, PRIZES_NOTE, RUBRIC, DEADLINE_TIME, DEADLINE_TIME_PLAIN,
+  ENTRY_FEE, ENTRY_FEE_MYR, prizeText, PROOF_OF_PAYMENT, PROOF_OF_PAYMENT_INLINE, MEALS_ESTIMATE, RUBRIC, DEADLINE_TIME, DEADLINE_TIME_PLAIN,
   PAYMENT_GRACE_DAYS_AFTER_DEADLINE, WINNER_CHECK_DAYS, ESSAY_REMOVAL_DAYS, formatDate, formatDateDay, addDays,
 } from '../site';
 
@@ -111,6 +112,7 @@ const paymentFixDay = formatDateDay(addDays(DATES.deadline, PAYMENT_GRACE_DAYS_A
 
     <section class="faq-group" aria-labelledby="paying">
       <h2 id="paying" class="t-heading-sm">Paying</h2>
+      <MoneyNote />
       <div class="faq-group__items">
         <FaqItem id="where-the-fee-goes" question="Where does my fee go?">
           <p>Straight to {SOUP_KITCHEN_NAME}. {SITE_NAME} never handles the money. T.A.S.K tells us every {ENTRY_FEE} is {MEALS_ESTIMATE}.</p>
@@ -118,8 +120,7 @@ const paymentFixDay = formatDateDay(addDays(DATES.deadline, PAYMENT_GRACE_DAYS_A
         <FaqItem id="pay-how" question="How do I pay?">
           {/* Bank details are never on this page. Before launch the How to enter page has no details yet, so no link. */}
           <p>
-            The fee is {ENTRY_FEE}, transferred as {ENTRY_FEE_MYR} to T.A.S.K's account by bank transfer.{' '}
-            USD is the United States Dollar and MYR is the Malaysian Ringgit. {FX_NOTE}{' '}
+            The fee is {ENTRY_FEE}, paid to T.A.S.K's account by bank transfer.{' '}
             {
               REGISTRATION_OPEN ? (
                 <>The details are on the <a href="/register/#how-to-pay">How to enter page</a>.</>
@@ -162,7 +163,7 @@ const paymentFixDay = formatDateDay(addDays(DATES.deadline, PAYMENT_GRACE_DAYS_A
         </FaqItem>
         <FaqItem id="prizes-paid" question="How are prizes paid?">
           <p>
-            T.A.S.K sends the prize money by bank transfer or Wise to the winner (or to a parent or guardian, if the winner is under 18) once the winner's ID has been checked (see <a href="#winner-age-check">How do winners confirm their age?</a>). {PRIZES_NOTE}{' '}
+            T.A.S.K sends the prize money by bank transfer or Wise to the winner (or to a parent or guardian, if the winner is under 18) once the winner's ID has been checked (see <a href="#winner-age-check">How do winners confirm their age?</a>).{' '}
             If a winner cannot be reached, or does not complete the age and student check, within {WINNER_CHECK_DAYS} days of the results email, they do not receive the prize and it goes to the next-ranked entry.
           </p>
         </FaqItem>
@@ -178,7 +179,7 @@ const paymentFixDay = formatDateDay(addDays(DATES.deadline, PAYMENT_GRACE_DAYS_A
           <p>
             There are three e-certificates: a participation certificate for every eligible entrant, a shortlist certificate for shortlisted entrants, and a top-3 certificate for the top three
             essays in each category. All are emailed by {formatDate(DATES.certificatesBy)}. Each has a code that anyone can check at <a href="/verify/">{domain}/verify/</a>.
-            Only the winner in each category receives prize money ({junior.prize} for {junior.name}, {open.prize} for {open.name}). The shortlist and top-3 certificates do not come with prize money.
+            Only the winner in each category receives prize money ({junior.name} {prizeText(junior)}, {open.name} {prizeText(open)}). The shortlist and top-3 certificates do not come with prize money.
           </p>
         </FaqItem>
       </div>

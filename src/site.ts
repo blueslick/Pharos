@@ -36,18 +36,21 @@ export const REGISTRATION_URL = 'https://tally.so/r/Ar7QeB'; // the entry form: 
 export const RULES_URL = '/rules/';
 export const FAQ_URL = '/faq/';
 export const FAQ_URL_WINNER_AGE = '/faq/#winner-age-check'; // the FAQ answer rule 10 points to; the id is set in faq.astro
-// Entry fee. One wording, used everywhere a fee is mentioned.
-export const ENTRY_FEE = 'USD 10'; // the fee as advertised, in US dollars
-// What every entrant actually transfers: T.A.S.K's account takes Malaysian Ringgit only, so the fee of USD 10 is paid as
-// exactly this amount. Never show any other amount or a live exchange rate.
+// Money. Owner decision 4 Nov (T141): MYR is the price; USD appears only as an "about" guide, never alone.
+// ENTRY_FEE is the standard wording; ENTRY_FEE_SHORT is for tight spaces (headings, tables, slides).
+export const ENTRY_FEE = 'MYR 40 (about USD 10 at current FOREX rates)';
+export const ENTRY_FEE_SHORT = 'MYR 40 (about USD 10)';
+// What every entrant transfers: T.A.S.K's account takes Malaysian Ringgit only. Never show any other amount or a live exchange rate.
 export const ENTRY_FEE_MYR = 'MYR 40';
-// The two standard payment sentences. Use these words every time we say how to pay.
+// The one note shown once on each page that shows money (Competition, How to enter, Rules, FAQ), via components/MoneyNote.astro.
+// It spells out "foreign exchange (FOREX)" once per page, so show it before the long ENTRY_FEE wording.
+export const MONEY_NOTE = `All amounts are set and paid in Malaysian ringgit (MYR). US dollar (USD) figures are a guide only and may change with foreign exchange (FOREX) rates; the entry fee is always ${ENTRY_FEE_MYR}.`;
+// The standard payment sentence. Use these words every time we say how to pay.
 export const PAY_IN_MYR = `Transfer exactly ${ENTRY_FEE_MYR} (the fee in Malaysian Ringgit).`;
-export const FX_NOTE = `Exchange rates change, but the amount you transfer is always ${ENTRY_FEE_MYR}.`; // follows PAY_IN_MYR on How to enter, and the FAQ's "How do I pay?"
 export const PROOF_OF_PAYMENT = 'Upload proof of payment on the form.';
 export const PROOF_OF_PAYMENT_INLINE = 'upload proof of payment on the form'; // the same sentence, for use mid-sentence
 export const MEALS_ESTIMATE = 'about 3 meals'; // figure from T.A.S.K; the FAQ's "Where does my fee go?" reads this too
-export const MEALS_PER_ENTRY = `Every ${ENTRY_FEE} entry funds ${MEALS_ESTIMATE} at T.A.S.K.`;
+export const MEALS_PER_ENTRY = `Every ${ENTRY_FEE_SHORT} entry funds ${MEALS_ESTIMATE} at T.A.S.K.`;
 
 // Bank transfer details, shown on /register/ once REGISTRATION_OPEN is true.
 // Payments go straight to the soup kitchen's account; this site never handles money.
@@ -62,12 +65,13 @@ export const BANK = {
 } as const;
 
 // The two prize categories: the one source every page reads. Age is the entrant's age on DATES.deadline
-// (Junior: 14 and under; Open: 25 and under). Both are for students only. Prizes are funded separately, not from entry fees.
+// (Junior: 14 and under; Open: 25 and under). Both are for students only.
+// `prize` is the MYR amount; `prizeAbout` is the USD guide, shown beside it in brackets. Use prizeText() for plain text.
 export const CATEGORIES = [
-  { id: 'junior', name: 'Junior', who: '14 and under', prize: 'USD 50' },
-  { id: 'open', name: 'Open', who: '25 and under', prize: 'USD 100' },
+  { id: 'junior', name: 'Junior', who: '14 and under', prize: 'MYR 200', prizeAbout: 'about USD 50' },
+  { id: 'open', name: 'Open', who: '25 and under', prize: 'MYR 400', prizeAbout: 'about USD 100' },
 ] as const;
-export const PRIZES_NOTE = 'Prizes are funded separately, not from entry fees.';
+export const prizeText = (c: { prize: string; prizeAbout: string }) => `${c.prize} (${c.prizeAbout})`;
 
 // The partner soup kitchen, named with its written permission (24 Oct 2026).
 // This is the only place the name is written. Pages must use this constant,

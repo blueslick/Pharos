@@ -1,12 +1,13 @@
-// The fee is advertised as USD 10 and paid as exactly MYR 40 (Daniel, 3 Nov 2026; written MYR 40, not RM 40, from
-// the expert review of 4 Nov 2026). T.A.S.K's account takes Malaysian Ringgit only. The two test builds (the normal one, where REGISTRATION_OPEN is false, and the entries-open one,
+// MYR is the price; USD is only an "about" guide and never appears alone (owner decision, 4 Nov 2026, T141). The fee is
+// MYR 40 (about USD 10), the prizes MYR 200 (about USD 50) and MYR 400 (about USD 100). T.A.S.K's account takes Malaysian
+// Ringgit only. The two test builds (the normal one, where REGISTRATION_OPEN is false, and the entries-open one,
 // where it is true: see playwright.config.ts) are built before any test runs. This reads every page, the
 // sitemap and the other text files in both builds and fails if any of them:
-//  - shows an MYR (or RM) amount other than MYR 40, or a USD amount other than the fee (USD 10) and the two prizes
-//    (USD 50 and USD 100, which the Competition page and Rules show);
-//  - names an exchange rate (the one allowed sentence, FX_NOTE: "Exchange rates change, but the amount you
-//    transfer is always MYR 40.", names no rate and is taken out before this check);
-//  - still says "US dollars" or shows an amount in any other currency symbol.
+//  - shows an MYR amount other than MYR 40, 200 or 400, or writes "RM" before a number;
+//  - shows a USD amount that is not written "(about USD n)", or that does not go with its MYR amount
+//    (MYR 40 / USD 10, MYR 200 / USD 50, MYR 400 / USD 100);
+//  - names a live exchange rate, still says "US dollars", or shows an amount in any other currency symbol.
+// It also checks that the one money note is on each page that shows money, once, and comes first.
 import { test, expect } from '@playwright/test';
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, extname } from 'node:path';
@@ -16,9 +17,9 @@ const BUILDS = [
   { name: 'REGISTRATION_OPEN true', dir: 'dist-test-open' },
 ];
 const TEXT_FILES = new Set(['.html', '.xml', '.txt', '.webmanifest', '.json']);
-const ALLOWED_MYR = new Set(['40']);
-const FX_NOTE = 'Exchange rates change, but the amount you transfer is always MYR 40.';
-const ALLOWED_USD = new Set(['10', '50', '100']);
+const MYR_TO_USD: Record<string, string> = { '40': '10', '200': '50', '400': '100' };
+const MONEY_NOTE =
+  'All amounts are set and paid in Malaysian ringgit (MYR). US dollar (USD) figures are a guide only and may change with foreign exchange (FOREX) rates; the entry fee is always MYR 40.';
 
 function textFiles(dir: string): string[] {
   const out: string[] = [];
@@ -33,29 +34,53 @@ function textFiles(dir: string): string[] {
 const around = (text: string, index: number) => text.slice(Math.max(0, index - 30), index + 40).replace(/\s+/g, ' ');
 
 for (const build of BUILDS) {
-  test(`${build.name}: the only amounts are USD 10 (fee), MYR 40 (what is transferred) and the two prizes`, () => {
+  test(`${build.name}: money is MYR 40, 200 and 400, and USD only ever appears as "(about USD n)" after its MYR amount`, () => {
     const files = textFiles(build.dir);
     expect(files.length, `no built files found in ${build.dir}`).toBeGreaterThan(5);
     const problems: string[] = [];
     for (const file of files) {
       const text = readFileSync(file, 'utf8');
-      for (const m of text.matchAll(/\b(?:MYR|RM)\s?(\d+(?:[.,]\d+)*)/g)) {
-        if (!ALLOWED_MYR.has(m[1])) problems.push(`${file}: MYR amount "${m[0]}" near "${around(text, m.index!)}"`);
+      for (const m of text.matchAll(/\bMYR\s?(\d+(?:[.,]\d+)*)/g)) {
+        if (!(m[1] in MYR_TO_USD)) problems.push(`${file}: MYR amount "${m[0]}" near "${around(text, m.index!)}"`);
       }
-      for (const m of text.matchAll(/\bUSD\s?(\d+(?:[.,]\d+)*)/g)) {
-        if (!ALLOWED_USD.has(m[1])) problems.push(`${file}: USD amount "${m[0]}" near "${around(text, m.index!)}"`);
+      for (const m of text.matchAll(/\bRM\s?\d/g)) problems.push(`${file}: "RM" before a number near "${around(text, m.index!)}"`);
+      const plain = text.replace(/<[^>]*>/g, ''); // tags removed, so "MYR 200 <span>(about USD 50)</span>" reads as one phrase
+      for (const m of plain.matchAll(/\bUSD\s?(\d+(?:[.,]\d+)*)/g)) {
+        const before = plain.slice(Math.max(0, m.index! - 40), m.index!);
+        const pair = /\bMYR (\d+) \(about $/.exec(before);
+        if (!pair) problems.push(`${file}: USD amount "${m[0]}" is not written "MYR n (about USD n)" near "${around(plain, m.index!)}"`);
+        else if (MYR_TO_USD[pair[1]] !== m[1]) problems.push(`${file}: MYR ${pair[1]} is paired with USD ${m[1]} near "${around(plain, m.index!)}"`);
       }
-      const withoutFxNote = text.split(FX_NOTE).join('');
+      const withoutNote = text.split(MONEY_NOTE).join('');
       for (const [what, re] of [
         ['"US dollars"', /US dollars?/i],
         ['an exchange rate', /exchange rate|conversion rate|rate of (MYR|RM|USD)/i],
+        ['"funded separately"', /funded separately/i],
         ['a dollar, pound, euro or other currency symbol before a number', /[$£€]\s?\d/],
       ] as const) {
-        const m = re.exec(withoutFxNote);
-        if (m) problems.push(`${file}: ${what} near "${around(withoutFxNote, m.index)}"`);
+        const m = re.exec(withoutNote);
+        if (m) problems.push(`${file}: ${what} near "${around(withoutNote, m.index)}"`);
       }
     }
     expect(problems, problems.join('\n')).toEqual([]);
+  });
+}
+
+// Every page that shows money shows the one note, once, before the long "at current FOREX rates" wording,
+// and spells out "foreign exchange (FOREX)" only that once.
+const MONEY_PAGES = [
+  { dir: 'dist-test', page: 'competition' },
+  { dir: 'dist-test', page: 'rules' },
+  { dir: 'dist-test', page: 'faq' },
+  { dir: 'dist-test-open', page: 'register' },
+];
+for (const { dir, page } of MONEY_PAGES) {
+  test(`/${page}/ (${dir}) shows the money note once, before the fee wording`, () => {
+    const html = readFileSync(join(dir, page, 'index.html'), 'utf8');
+    expect(html.split(MONEY_NOTE).length - 1, 'the money note appears exactly once').toBe(1);
+    expect(html.split('foreign exchange (FOREX)').length - 1, '"foreign exchange (FOREX)" is spelled out exactly once').toBe(1);
+    const long = html.indexOf('at current FOREX rates');
+    if (long !== -1) expect(html.indexOf(MONEY_NOTE), 'the note comes before the long fee wording').toBeLessThan(long);
   });
 }
 

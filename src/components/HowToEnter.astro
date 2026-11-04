@@ -12,8 +12,9 @@
 // tablet (640px) = 2 columns; desktop (1024px) = steps 1 and 2 side by side, step 3 (the long one) across
 // the full row, then steps 4, 5 and 6.
 import ExternalAction from './ExternalAction.astro';
+import MoneyNote from './MoneyNote.astro';
 import {
-  SITE_NAME, REGISTRATION_URL, RULES_URL, FAQ_URL, ENTRY_FEE, ENTRY_FEE_MYR, PAY_IN_MYR, FX_NOTE,
+  SITE_NAME, REGISTRATION_URL, RULES_URL, FAQ_URL, ENTRY_FEE, ENTRY_FEE_SHORT, ENTRY_FEE_MYR, PAY_IN_MYR,
   PROOF_OF_PAYMENT_INLINE, SOUP_KITCHEN_NAME, BANK, CATEGORIES, DATES,
   formatDate, deadlineWithTime, isPlaceholder,
 } from '../site';
@@ -53,12 +54,13 @@ const open = CATEGORIES.find((c) => c.id === 'open')!;
 
     {/* ONE money section: the fee is paid here. The entry form links to #how-to-pay. */}
     <li class="hte__item hte__pay" id="how-to-pay">
-      <div class="hte__head"><span class="hte__n" aria-hidden="true">3</span><h3 class="hte__step">Pay {ENTRY_FEE}, transferred as {ENTRY_FEE_MYR}</h3></div>
+      <div class="hte__head"><span class="hte__n" aria-hidden="true">3</span><h3 class="hte__step">Pay {ENTRY_FEE_SHORT}</h3></div>
       <div class="hte__text">
         <div class="hte__pay-grid">
-          <p class="hte__line">The fee is {ENTRY_FEE}, transferred as {ENTRY_FEE_MYR} straight to {SOUP_KITCHEN_NAME}. {SITE_NAME} never handles the money.</p>
+          <MoneyNote />
+          <p class="hte__line">The fee is {ENTRY_FEE}, transferred straight to {SOUP_KITCHEN_NAME}. {SITE_NAME} never handles the money.</p>
           <dl class="bank">
-            <div><dt>Amount</dt><dd>{ENTRY_FEE_MYR} (the {ENTRY_FEE} fee)</dd></div>
+            <div><dt>Amount</dt><dd>{ENTRY_FEE_SHORT}</dd></div>
             <div><dt>Currency</dt><dd>{BANK.currency}</dd></div>
             <div><dt>Account name</dt><dd>{BANK.accountName} ({BANK.accountNote})</dd></div>
             <div><dt>Bank</dt><dd>{BANK.bank}</dd></div>
@@ -67,7 +69,7 @@ const open = CATEGORIES.find((c) => c.id === 'open')!;
             <div class="bank__copy"><dt>Reference</dt><dd><span class="bank__value">{BANK.reference}</span></dd></div>
           </dl>
           {/* The proof of payment is asked for once, in step 5, where it is uploaded. */}
-          <p class="hte__line">{PAY_IN_MYR} {FX_NOTE} Any method may be used, provided the full {ENTRY_FEE_MYR} arrives. You pay any transfer fees.</p>
+          <p class="hte__line">{PAY_IN_MYR} Any method may be used, provided the full {ENTRY_FEE_MYR} arrives. You pay any transfer fees.</p>
         </div>
       </div>
     </li>

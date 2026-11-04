@@ -66,11 +66,11 @@ test('entries-open: step 3 is #how-to-pay with the account number and the paymen
   const pay = page.locator('#how-to-pay');
   await expect(pay).toHaveCount(1);
   await expect(page.locator('section.hte ol > li').nth(2)).toHaveAttribute('id', 'how-to-pay');
-  await expect(pay.getByRole('heading', { name: 'Pay USD 10, transferred as MYR 40' })).toBeVisible();
+  await expect(pay.getByRole('heading', { name: 'Pay MYR 40 (about USD 10)' })).toBeVisible();
   await expect(pay.getByText(ACCOUNT_NUMBER)).toHaveCount(1);
   await expect(pay.locator('dl.bank > div > dt')).toHaveText(['Amount', 'Currency', 'Account name', 'Bank', 'Account number', 'SWIFT code', 'Reference']);
   await expect(pay).toContainText('The Assembly Soup Kitchen (T.A.S.K)');
-  await expect(pay).toContainText('Transfer exactly MYR 40 (the fee in Malaysian Ringgit). Exchange rates change, but the amount you transfer is always MYR 40. Any method may be used, provided the full MYR 40 arrives. You pay any transfer fees.');
+  await expect(pay).toContainText('Transfer exactly MYR 40 (the fee in Malaysian Ringgit). Any method may be used, provided the full MYR 40 arrives. You pay any transfer fees.');
   await expect(pay).not.toContainText('proof of payment');
   await expect(page.locator('section.hte ol > li').nth(4)).toContainText('upload proof of payment on the form');
 });
@@ -79,7 +79,7 @@ test('entries-open: fee support is gone from the Register page', async ({ page }
   await page.goto(`${OPEN}/register/`);
   await expect(page.locator('#fee-support')).toHaveCount(0);
   await expect(page.locator('main')).not.toContainText(/fee support|USD 5\b/i);
-  await expect(page.locator('dl.bank div', { hasText: 'Amount' })).toHaveText('AmountMYR 40 (the USD 10 fee)');
+  await expect(page.locator('dl.bank div', { hasText: 'Amount' })).toHaveText('AmountMYR 40 (about USD 10)');
 });
 
 test('entries-open: /register/#how-to-pay (the link the entry form and FAQ use) scrolls to the bank details', async ({ page }) => {

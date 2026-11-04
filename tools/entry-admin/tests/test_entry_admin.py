@@ -220,7 +220,7 @@ class TestFlags(Base):
 
     def test_fee_answer_must_be_the_one_fee_but_ignores_case_and_spacing(self):
         rows = self.csv_rows()
-        rows[0]["Your entry fee"] = "  usd 10 "
+        rows[0]["Your entry fee"] = "  myr 40 (about usd 10 at current forex rates) "
         rows[1]["Your entry fee"] = "Fee support at 50%: USD 5"  # the old half-fee option no longer exists
         self.write_csv_rows(rows)
         self.process()
@@ -239,8 +239,8 @@ class TestFlags(Base):
 
     def test_there_is_no_fee_support_anywhere_in_the_toolkit(self):
         self.assertEqual(list(self.cfg["fees"]), ["full", "statement_amount"])  # one fee; no half
-        self.assertEqual(self.cfg["fees"]["full"], "USD 10")
-        self.assertEqual(self.cfg["fees"]["statement_amount"], "RM 40.00")  # what to match on T.A.S.K's statement
+        self.assertEqual(self.cfg["fees"]["full"], "MYR 40 (about USD 10 at current FOREX rates)")
+        self.assertEqual(self.cfg["fees"]["statement_amount"], "MYR 40.00")  # what to match on T.A.S.K's statement
         self.assertNotIn("fee_code", self.cfg["columns"])
         for h in tracker.HEADERS:
             self.assertNotIn("support", h.lower())
@@ -536,8 +536,12 @@ class TestPaymentEmailMatchesSite(unittest.TestCase):
         cfg = tomllib.loads((ROOT / "config.toml").read_text(encoding="utf-8"))
         self.assertEqual(cfg["email"]["fee_myr"], fee.group(1))
         self.assertEqual(cfg["email"]["payment_fix_by"], f"{day.day} {day.strftime('%B %Y')}")
-        # T.A.S.K's bank statement shows ringgit as "RM 40.00", so the statement amount is the fee with "MYR " swapped for "RM ".
-        self.assertEqual(cfg["fees"]["statement_amount"], fee.group(1).replace("MYR ", "RM ", 1) + ".00")
+        # The statement amount to match is the ringgit fee with ".00" added.
+        self.assertEqual(cfg["fees"]["statement_amount"], fee.group(1) + ".00")
+        # The form's fee answer is the site's standard ENTRY_FEE wording.
+        entry_fee = re.search(r"""ENTRY_FEE\s*=\s*['"]([^'"]+)['"]""", src)
+        self.assertTrue(entry_fee, "ENTRY_FEE not found in src/site.ts")
+        self.assertEqual(cfg["fees"]["full"], entry_fee.group(1))
 
 
 class TestSampleDataIsFake(unittest.TestCase):
