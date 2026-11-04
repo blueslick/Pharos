@@ -6,9 +6,9 @@ import tomllib
 from pathlib import Path
 
 from .config import Config, ConfigError
-from .tracker import load_tracker, raised_flags, status_of, is_ready
+from .tracker import PAYMENT_COL, PAYMENT_FLAGS, load_tracker, raised_flags, status_of, is_ready
 
-KINDS = ("received", "confirmed", "problem")
+KINDS = ("received", "confirmed", "payment_not_found")
 RULE = "=" * 72
 
 
@@ -44,13 +44,22 @@ def _context(cfg: Config, row: dict) -> dict:
         "open_max_age": cfg["entry"]["open_max_age"],
         "site_name": ec["site_name"], "edition": ec["edition"], "contact_email": ec["contact_email"],
         "soup_kitchen": ec["soup_kitchen"], "sign_off": ec["sign_off"],
+        "fee_myr": ec["fee_myr"], "payment_fix_by": ec["payment_fix_by"],
     }
 
 
+def payment_flags(row: dict) -> list[tuple[str, str]]:
+    """The flags on this entry that need an email: payment problems only. Every other flag is internal."""
+    flags = [(k, t) for k, t in raised_flags(row) if k in PAYMENT_FLAGS]
+    if str(row.get(PAYMENT_COL) or "").strip().upper() == "N":  # checked against T.A.S.K's statement: not found / wrong amount
+        flags.insert(0, ("payment_not_found", "Payment verified = N"))
+    return flags
+
+
 def problem_lines(cfg: Config, row: dict, messages: dict) -> list[str]:
-    """One plain-English sentence per flag on the entry, from templates/flag_messages.toml."""
+    """One plain-English sentence per payment flag on the entry, from templates/flag_messages.toml."""
     ctx = _context(cfg, row)
-    flags = raised_flags(row)
+    flags = payment_flags(row)
     lines: list[str] = []
     for key, text in flags:
         sub, _, detail = text.partition(":")
@@ -72,7 +81,7 @@ def make_drafts(cfg: Config, kind: str, redo_all: bool = False, only: set[str] |
     rows = load_tracker(cfg)
     template = _load_template(cfg, f"{kind}.txt")
     messages = {}
-    if kind == "problem":
+    if kind == "payment_not_found":
         messages = tomllib.loads(_load_template(cfg, "flag_messages.toml"))
 
     out_dir = cfg.path("emails")
@@ -93,13 +102,13 @@ def make_drafts(cfg: Config, kind: str, redo_all: bool = False, only: set[str] |
                 notes.append(why)
             if not ok:
                 continue
-        if kind == "problem":
+        if kind == "payment_not_found":
             if status != "Pending" and not only:
                 continue  # already decided: no point chasing it
             lines = problem_lines(cfg, row, messages)
             if not lines:
-                continue
-            fingerprint = "|".join(f"{k}={t}" for k, t in raised_flags(row))
+                continue  # no payment problem: no email, whatever other flags the entry has
+            fingerprint = "|".join(f"{k}={t}" for k, t in payment_flags(row))
         else:
             lines, fingerprint = [], "v1"
         if not str(row.get("Email") or "").strip():

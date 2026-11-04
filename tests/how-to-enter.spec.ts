@@ -14,14 +14,14 @@ const ENTRY_FEE = constant('ENTRY_FEE');
 const bankBlock = siteSource.match(/export const BANK = \{([\s\S]*?)\} as const;/)![1];
 const ACCOUNT_NUMBER = bankBlock.match(/accountNumber:\s*'([^']+)'/)![1];
 
-const MAX_PHONE_HEIGHT = 2050; // measured 1958 at 375px after the restyle (it was 2373 before)
+const MAX_PHONE_HEIGHT = 2150; // measured 2070 at 375px (1958 after the restyle, 2373 before): the RM 40 wording, the SWIFT row and the file-name sentence added height
 const OPEN = 'http://localhost:4332';
 const NORMAL = 'http://localhost:4331';
 
 const TITLES = [
   'Check you can enter',
   'Write your essay',
-  `Pay ${ENTRY_FEE} in US dollars`,
+  `Pay ${ENTRY_FEE}, transferred as RM 40`,
   'Screenshot your payment',
   'Fill in the entry form',
   'We confirm',
@@ -56,7 +56,7 @@ test('entries-open: step 2 keeps the word limit, the PDF, no AI, no name or scho
   await page.goto(`${OPEN}/register/`);
   const step = page.locator('section.hte ol > li').nth(1);
   await expect(step).toContainText('One essay of up to 800 words on one of the three prompts, as a PDF, written without AI tools.');
-  await expect(step).toContainText("Don't put your name or school in the PDF.");
+  await expect(step).toContainText('Name your PDF with your full name and the essay title, for example “Jane Tan - Who Gets to Eat.pdf”. Do not put your name or school inside the essay.');
   await expect(step.getByRole('link', { name: 'See the prompts' })).toHaveAttribute('href', '/competition/#prompts');
 });
 
@@ -65,46 +65,20 @@ test('entries-open: step 3 is #how-to-pay with the account number and the paymen
   const pay = page.locator('#how-to-pay');
   await expect(pay).toHaveCount(1);
   await expect(page.locator('section.hte ol > li').nth(2)).toHaveAttribute('id', 'how-to-pay');
-  await expect(pay.getByRole('heading', { name: 'Pay USD 10 in US dollars' })).toBeVisible();
+  await expect(pay.getByRole('heading', { name: 'Pay USD 10, transferred as RM 40' })).toBeVisible();
   await expect(pay.getByText(ACCOUNT_NUMBER)).toHaveCount(1);
-  await expect(pay.locator('dl.bank > div > dt')).toHaveText(['Amount', 'Currency', 'Account name', 'Bank', 'Account number', 'Reference']);
+  await expect(pay.locator('dl.bank > div > dt')).toHaveText(['Amount', 'Currency', 'Account name', 'Bank', 'Account number', 'SWIFT code', 'Reference']);
   await expect(pay).toContainText('The Assembly Soup Kitchen (T.A.S.K)');
-  await expect(pay).toContainText('Transfer the fee in US dollars (USD). Any method is fine as long as the full amount arrives in US dollars; transfer fees are yours.');
+  await expect(pay).toContainText('Transfer exactly RM 40 (the fee in ringgit, MYR). Any method may be used, provided the full RM 40 arrives. You pay any transfer fees.');
   await expect(pay).not.toContainText('proof of payment');
   await expect(page.locator('section.hte ol > li').nth(4)).toContainText('upload proof of payment on the form');
 });
 
-test('entries-open: fee support is a closed <details id="fee-support"> with the text and the mailto link inside', async ({ page }) => {
+test('entries-open: fee support is gone from the Register page', async ({ page }) => {
   await page.goto(`${OPEN}/register/`);
-  const fee = page.locator('#fee-support');
-  await expect(fee).toHaveCount(1);
-  expect(await fee.evaluate((el) => el.tagName)).toBe('DETAILS');
-  await expect(page.locator('#how-to-pay #fee-support')).toHaveCount(1);
-  expect(await fee.evaluate((el: HTMLDetailsElement) => el.open)).toBe(false);
-  await expect(fee.locator('summary')).toHaveText("Can't afford USD 10? Ask for fee support");
-  // the text is in the page for anyone (and anything) that reads it, and shows when the summary is opened
-  await expect(fee).toContainText('Requests close 5 days before the deadline; we reply within 72 hours with a code for the form.');
-  await expect(fee).toContainText("with your full name and school. You don't need to explain why.");
-  await expect(fee.locator('a[href^="mailto:"]')).toHaveCount(1);
-  await expect(fee.getByText('Requests close 5 days')).toBeHidden();
-  await fee.locator('summary').click();
-  expect(await fee.evaluate((el: HTMLDetailsElement) => el.open)).toBe(true);
-  await expect(fee.getByText('Requests close 5 days')).toBeVisible();
-  await expect(fee.getByRole('link', { name: 'fee support' })).toHaveAttribute('href', `${FAQ_URL}#fee-support-how`);
-  await fee.locator('summary').click();
-  await expect(fee.getByText('Requests close 5 days')).toBeHidden();
-});
-
-test('entries-open: /register/#fee-support opens the fee-support details on load', async ({ page }) => {
-  await page.goto(`${OPEN}/register/#fee-support`);
-  const fee = page.locator('#fee-support');
-  await expect(fee.getByText('Requests close 5 days')).toBeVisible();
-  expect(await fee.evaluate((el: HTMLDetailsElement) => el.open)).toBe(true);
-  // and when the hash changes on the page itself
-  await page.goto(`${OPEN}/register/`);
-  expect(await fee.evaluate((el: HTMLDetailsElement) => el.open)).toBe(false);
-  await page.evaluate(() => { location.hash = '#fee-support'; });
-  await expect(fee.getByText('Requests close 5 days')).toBeVisible();
+  await expect(page.locator('#fee-support')).toHaveCount(0);
+  await expect(page.locator('main')).not.toContainText(/fee support|USD 5\b/i);
+  await expect(page.locator('dl.bank div', { hasText: 'Amount' })).toHaveText('AmountRM 40 (the USD 10 fee)');
 });
 
 test('entries-open: /register/#how-to-pay (the link the entry form and FAQ use) scrolls to the bank details', async ({ page }) => {
@@ -125,7 +99,7 @@ test('entries-open: step 4 says what to screenshot and what can be cropped', asy
 test('entries-open: step 5 has the consent line, the Privacy link and an Enter now button to REGISTRATION_URL', async ({ page }) => {
   await page.goto(`${OPEN}/register/`);
   const step = page.locator('section.hte ol > li').nth(4);
-  await expect(step).toContainText("The form asks for your consent to how we handle your details (and a parent or guardian's if you're under 18).");
+  await expect(step).toContainText("The form asks for your consent to how we handle your details (and a parent or guardian's if you are under 18).");
   await expect(step.getByRole('link', { name: 'Privacy notice' })).toHaveAttribute('href', '/privacy/');
   const enter = step.getByRole('link', { name: 'Enter now' });
   await expect(enter).toHaveAttribute('href', REGISTRATION_URL);
@@ -258,7 +232,7 @@ test('entries-open: on a phone the number sits on the same line as the title, in
   }
 });
 
-test('entries-open: on a phone the bank details are label-left, value-right (one row each), except the two big copy values', async ({ page }) => {
+test('entries-open: on a phone the bank details are label-left, value-right (one row each), except the three big copy values', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });
   await page.goto(`${OPEN}/register/`);
   const rows = await page.locator('dl.bank > div').evaluateAll((els) =>
@@ -268,9 +242,10 @@ test('entries-open: on a phone the bank details are label-left, value-right (one
       return { sameLine: Math.abs(dt.top - dd.top) < 6, ddRight: dd.left >= dt.right - 1 };
     }));
   for (const r of rows.slice(0, 4)) { expect(r.sameLine).toBe(true); expect(r.ddRight).toBe(true); }
-  // account number and reference are large and keep their label above
+  // account number, SWIFT code and reference are large and keep their label above
   expect(rows[4].sameLine).toBe(false);
   expect(rows[5].sameLine).toBe(false);
+  expect(rows[6].sameLine).toBe(false);
   expect(await overflow(page)).toBeLessThanOrEqual(0);
 });
 

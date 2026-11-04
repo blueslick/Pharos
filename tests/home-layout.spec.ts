@@ -16,7 +16,7 @@ test.describe('Home layout (sections and order)', () => {
       'Who we are',
       'What we do',
       'Your essay can feed someone.',
-      'Get told when entries open',
+      'Be notified when entries open',
     ]);
   });
 
@@ -24,7 +24,7 @@ test.describe('Home layout (sections and order)', () => {
     await page.goto('/');
     const who = page.locator('section.who');
     await expect(who.getByRole('heading', { name: 'Who we are' })).toBeVisible();
-    await expect(who).toContainText("We're student volunteers who think young people should have a say");
+    await expect(who).toContainText("We are student volunteers who think young people should have a say");
     await expect(who.getByRole('link', { name: 'About us' })).toHaveAttribute('href', '/about/');
   });
 

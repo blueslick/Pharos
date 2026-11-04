@@ -3,12 +3,11 @@
 // notice is built: no fees, no payment details, no entry-form link. When it is open the page is the
 // title block plus ONE version of the instructions: the six-step "How to enter, step by step" list
 // (components/HowToEnter.astro). The older "Before you start" and three-step sections are gone; everything
-// they said now lives inside the six steps (the bank details and fee support in step 3, which keeps
-// id="how-to-pay" and the fee-support <details id="fee-support"; the consent line and Enter now button in step 5).
+// they said now lives inside the six steps (the bank details in step 3, which keeps
+// id="how-to-pay"; the consent line and Enter now button in step 5).
 // It does not repeat the Competition page (categories, prizes, prompts, rules): it links there.
 // Everything entrants do (age check, consent ticks, the PDF essay, the proof of payment) happens in the
-// external entry form (REGISTRATION_URL). It collects and stores nothing, and its only script (in
-// HowToEnter.astro) opens the closed "fee support" <details> when the page is loaded with #fee-support.
+// external entry form (REGISTRATION_URL). It collects and stores nothing and runs no script.
 // Money never passes through this site.
 import Base from '../../layouts/Base.astro';
 import HowToEnter from '../../components/HowToEnter.astro';

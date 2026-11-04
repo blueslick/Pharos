@@ -17,7 +17,7 @@ test.describe('Partner with us on About', () => {
     await expect(section.getByText('Pharos is run by student volunteers.', { exact: true })).toBeVisible();
     await expect(
       section.getByText(
-        "We'd like to hear from schools, youth groups and organisations that want to help: sharing the competition with students, sponsoring a prize, or partnering on a future edition.",
+        "We would like to hear from schools, youth groups and organisations that want to help: sharing the competition with students, sponsoring a prize, or partnering on a future edition.",
         { exact: true },
       ),
     ).toBeVisible();

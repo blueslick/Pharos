@@ -12,7 +12,7 @@ import { CONTACT_EMAIL, SITE_NAME } from '../site';
 import { loadCertificates } from '../lib/certificates';
 
 const description = `Check a ${SITE_NAME} certificate by typing the code printed on it.`;
-const intro = 'Got a certificate? Type the code printed on it to check it is real.';
+const intro = 'Type the code printed on a certificate to check that it is genuine.';
 
 const data = JSON.stringify(loadCertificates());
 ---
@@ -49,7 +49,7 @@ const data = JSON.stringify(loadCertificates());
       </div>
       <p id="code-hint" class="form__hint">
         It is printed on your certificate: 8 letters and numbers, shown as XXXX-XXXX. Capital letters, spaces and dashes
-        don't matter, and O is read as 0, I and L as 1.
+        do not matter, and O is read as 0, I and L as 1.
       </p>
     </form>
 
@@ -69,9 +69,9 @@ const data = JSON.stringify(loadCertificates());
       </section>
 
       <section id="result-missing" class="card card--missing" aria-labelledby="missing-title" hidden>
-        <h2 id="missing-title" class="t-heading-sm">We couldn't find that code</h2>
+        <h2 id="missing-title" class="t-heading-sm">We could not find that code</h2>
         <p class="t-body-lg">
-          Check it matches the certificate, letter for letter. If it still doesn't work, email us at <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> and we'll look into it.
+          Check that it matches the certificate, letter for letter. If it still does not work, email us at <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> and we will look into it.
         </p>
         <p class="card__small">Code you typed <span id="missing-code" class="card__code"></span></p>
       </section>

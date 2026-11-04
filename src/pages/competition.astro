@@ -12,7 +12,7 @@ import WaitlistAndFooter from '../components/WaitlistAndFooter.astro';
 import SoupKitchenCard from '../components/SoupKitchenCard.astro';
 import {
   SITE_NAME, SOUP_KITCHEN_NAME, CONTACT_EMAIL, DATES, formatDate, formatDateDay, DEADLINE_TIME_UTC, deadlineWithTime, CATEGORIES, PRIZES_NOTE,
-  ENTRY_FEE, ENTRY_FEE_HALF, PROOF_OF_PAYMENT_INLINE, MEALS_PER_ENTRY, DEADLINE_TIME_SHORT, RULES_URL, FAQ_URL,
+  ENTRY_FEE, ENTRY_FEE_MYR, PROOF_OF_PAYMENT_INLINE, MEALS_PER_ENTRY, DEADLINE_TIME_SHORT, RULES_URL, FAQ_URL,
   PROMPTS, PROMPTS_INTRO, RUBRIC, RUBRIC_CLOSING, RUBRIC_TOTAL, JUDGING_PDF_URL, JUDGING_PDF_PAGES,
 } from '../site';
 
@@ -45,7 +45,7 @@ const pdfKb = Math.round(statSync(`public${JUDGING_PDF_URL}`).size / 1024);
 const pdfMeta = `PDF, ${JUDGING_PDF_PAGES} ${JUDGING_PDF_PAGES === 1 ? 'page' : 'pages'}, ${pdfKb} KB`;
 
 const steps = [
-  { title: 'Enter', text: "Check you're eligible and register." },
+  { title: 'Enter', text: 'Check that you are eligible, then register.' },
   { title: 'Write', text: `Up to 800 words on one prompt. Submit by ${deadlineWithTime()}.` },
   { title: 'Read and scored by people', text: 'Every essay is read by a person. AI never judges.' },
   { title: 'Results', text: `Winners announced by ${formatDate(DATES.results)}.` },
@@ -67,12 +67,12 @@ const steps = [
         <div class="top__text">
           <p class="t-label top__label">Inaugural edition: Goal 2</p>
           <h1 class="top__title">Zero Hunger</h1>
-          <p class="top__sdg desktop-only">This edition is based on UN Sustainable Development Goal 2: Zero Hunger.</p>
+          <p class="top__sdg desktop-only">This edition is based on Sustainable Development Goal 2 (SDG 2): Zero Hunger.</p>
           <p class="top__opens">Opens {formatDate(DATES.entriesOpen)}</p>
         </div>
         <EditionCover size={[140, 456]} frame={[3, 8]} />
       </div>
-      <p class="top__sdg mobile-only">This edition is based on UN Sustainable Development Goal 2: Zero Hunger.</p>
+      <p class="top__sdg mobile-only">This edition is based on Sustainable Development Goal 2 (SDG 2): Zero Hunger.</p>
     </div>
 
     {/* PARTNER: the soup kitchen's logo, name and socials (SoupKitchenCard). When its
@@ -178,7 +178,7 @@ const steps = [
       <h2 id="money-title" class="t-heading">Where the money goes</h2>
       <p class="t-body-lg">{MEALS_PER_ENTRY}</p>
       <p class="t-body-lg">
-        Entry fee: {ENTRY_FEE}. Fee support at 50%: {ENTRY_FEE_HALF}. You pay {SOUP_KITCHEN_NAME} directly by bank transfer in US dollars, and {PROOF_OF_PAYMENT_INLINE}.{' '}
+        Entry fee: {ENTRY_FEE}, transferred as {ENTRY_FEE_MYR}. You pay {SOUP_KITCHEN_NAME} directly by bank transfer, and {PROOF_OF_PAYMENT_INLINE}.{' '}
         {SITE_NAME} never handles the money.
       </p>
       {/* MONEY SLOT (launch): "Raised so far" (no target) and "Donate without entering" go here. */}

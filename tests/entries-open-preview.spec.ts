@@ -41,7 +41,7 @@ test('entries-open preview: /register/ is one version only: the six steps, and t
   await expect(main.getByRole('heading', { level: 3 })).toHaveText([
     'Check you can enter',
     'Write your essay',
-    'Pay USD 10 in US dollars',
+    'Pay USD 10, transferred as RM 40',
     'Screenshot your payment',
     'Fill in the entry form',
     'We confirm',
@@ -57,33 +57,27 @@ test('entries-open preview: /register/ is one version only: the six steps, and t
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /six steps/);
 });
 
-test('entries-open preview: /register/ shows the bank number, reference, fee support note, consent line and Enter now', async ({ page }) => {
+test('entries-open preview: /register/ shows the bank number, reference, consent line and Enter now', async ({ page }) => {
   await page.goto(`${OPEN}/register/`);
   const pay = page.locator('#how-to-pay');
   await expect(page.locator('#how-to-pay')).toHaveCount(1);
   await expect(pay.getByText(BANK.accountNumber)).toHaveCount(1);
   await expect(pay.getByText(BANK.reference)).toHaveCount(1);
-  await expect(pay.locator('dl.bank div', { hasText: 'Amount' })).toContainText('USD 10 (USD 5 with an approved fee support code)');
-  await expect(pay.locator('dl.bank div', { hasText: 'Currency' })).toContainText('US dollars (USD)');
+  await expect(pay.locator('dl.bank div', { hasText: 'SWIFT code' })).toContainText('RHBBMYKL');
+  await expect(pay.locator('dl.bank div', { hasText: 'Amount' })).toHaveText('AmountRM 40 (the USD 10 fee)');
+  await expect(pay.locator('dl.bank div', { hasText: 'Currency' })).toContainText('Malaysian ringgit (MYR)');
   // the Currency row sits directly under Amount
-  await expect(pay.locator('dl.bank > div > dt')).toHaveText(['Amount', 'Currency', 'Account name', 'Bank', 'Account number', 'Reference']);
-  await expect(pay).toContainText('Transfer the fee in US dollars (USD). Any method is fine as long as the full amount arrives in US dollars; transfer fees are yours.');
+  await expect(pay.locator('dl.bank > div > dt')).toHaveText(['Amount', 'Currency', 'Account name', 'Bank', 'Account number', 'SWIFT code', 'Reference']);
+  await expect(pay).toContainText('Transfer exactly RM 40 (the fee in ringgit, MYR). Any method may be used, provided the full RM 40 arrives. You pay any transfer fees.');
   // the proof of payment is asked for once, in step 5, where it is uploaded
   await expect(pay).not.toContainText('Upload proof of payment');
   await expect(pay).not.toContainText('DuitNow');
-  // Fee support is a closed <details> inside step 3, with a mailto link built from CONTACT_EMAIL.
-  const note = pay.locator('details#fee-support');
-  await expect(note).toHaveCount(1);
-  await expect(note.locator('summary')).toHaveText("Can't afford USD 10? Ask for fee support");
-  await expect(note).toContainText("Ask for fee support before you pay and you'll pay USD 5.");
-  await expect(note).toContainText("with your full name and school. You don't need to explain why.");
-  await expect(note).toContainText('Requests close 5 days before the deadline; we reply within 72 hours with a code for the form.');
-  // (the details is closed, so look the link up by its href: role lookups skip hidden content)
-  await expect(note.locator(`a[href="mailto:${CONTACT_EMAIL}"]`)).toHaveText(CONTACT_EMAIL);
-  await expect(page.getByText('[fee support details]')).toHaveCount(0);
+  // Fee support has gone: no fee-support block or code on the page.
+  await expect(page.locator('details#fee-support')).toHaveCount(0);
+  await expect(page.locator('main')).not.toContainText(/fee support/i);
   // The Enter section keeps the consent line and the Privacy link right next to the button.
   const enter = page.locator('li.hte__enter');
-  await expect(enter).toContainText("The form asks for your consent to how we handle your details (and a parent or guardian's if you're under 18).");
+  await expect(enter).toContainText("The form asks for your consent to how we handle your details (and a parent or guardian's if you are under 18).");
   await expect(enter.getByRole('link', { name: 'Privacy notice' })).toHaveAttribute('href', '/privacy/');
   await expect(enter.getByRole('link', { name: 'Enter now' })).toBeVisible();
   await expect(enter.getByRole('link', { name: 'Enter now' })).toHaveAttribute('href', REGISTRATION_URL);

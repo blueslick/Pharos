@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Makes FAKE test data: a Tally-style CSV, fake essay PDFs and a codes.xlsx.
+"""Makes FAKE test data: a Tally-style CSV and fake essay PDFs.
 
     python sample/make_sample.py            # writes into sample/
     python sample/make_sample.py some/dir   # or anywhere else
@@ -19,14 +19,12 @@ from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 
 HERE = Path(__file__).resolve().parent
-sys.path.insert(0, str(HERE.parent))
-from entryadmin import codes as codes_mod  # noqa: E402
 
 HEADERS = ["Submission ID", "Respondent ID", "Submitted at", "Full name", "Email", "Country", "School",
            "Age on 17 January 2027", "Secondary email", "Which prompt are you answering?", "Your essay (PDF)", "Your entry fee",
-           "Fee support code", "Proof of payment", "Transfer reference or transaction ID", "Name on the account you paid from",
+           "Proof of payment", "Transfer reference or transaction ID", "Name on the account you paid from",
            "Before you submit"]
-FULL, HALF = "USD 10", "Fee support at 50%: USD 5"
+FULL = "USD 10"
 LOREM = ("lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore "
          "et dolore magna aliqua enim ad minim veniam quis nostrud exercitation ullamco laboris nisi aliquip").split()
 URL = "https://storage.tally.so/private/{}?id=abc123&accessType=DOWNLOAD&signature=fake"
@@ -68,18 +66,14 @@ def build(target: Path) -> dict:
     dl = target / "downloads"
     dl.mkdir(exist_ok=True)
 
-    code_file = target / "codes.xlsx"
-    code_file.unlink(missing_ok=True)
-    good = codes_mod.generate(code_file, 5, rng=random.Random(7))
-
-    # (key, name, email, age, fee, code, essay words, proof?, txn, extra)
+    # (key, name, email, age, fee, essay words, proof?, txn, extra)
     E = []
 
-    def add(key, name, email, age=17, fee=FULL, code="", n=600, proof=True, txn=None, **kw):
+    def add(key, name, email, age=17, fee=FULL, n=600, proof=True, txn=None, **kw):
         # Under 18 (the default age is 17): the form shows a "Secondary email", so give a parent's address unless told otherwise.
         if "second" not in kw:
             kw["second"] = f"parent.{key}@example.com" if isinstance(age, int) and age < 18 else ""
-        E.append(dict(key=key, name=name, email=email, age=age, fee=fee, code=code, n=n, proof=proof,
+        E.append(dict(key=key, name=name, email=email, age=age, fee=fee, n=n, proof=proof,
                       txn=txn if txn is not None else f"TXN{len(E) + 1:04d}FAKE", **kw))
 
     add("clean", "Ada Example", "ada@example.com", author="Ada Example")             # no flags
@@ -94,13 +88,8 @@ def build(target: Path) -> dict:
     add("dupname_b", "ivy  same", "ivy.two@example.com")                              # (case/space differences)
     add("old", "Jon Elder", "jon@example.com", age=23)                                # an adult: fine (Open is 25 and under)
     add("age20", "Kit Twenty", "kit@example.com", age=20)                             # 20 is allowed
-    add("half_ok", "Lia Half", "lia@example.com", fee=HALF, code=good[0], author="Lia Half",
-        title="By Lia Half")                                                          # valid code (+ name in essay)
-    add("half_reuse", "Max Reuse", "max@example.com", fee=HALF, code=good[0].lower())  # code already used
-    add("half_bad", "Nia Wrong", "nia@example.com", fee=HALF, code="ZZZZ-9999")       # invalid code
-    add("half_none", "Omar Blank", "omar@example.com", fee=HALF, code="")             # code missing
-    add("half_spaces", "Pia Spaces", "pia@example.com", fee=HALF,
-        code=good[1].replace("-", " ").lower())                                       # valid, typed loosely
+    add("named_essay", "Lia Named", "lia@example.com", author="Lia Named",
+        title="By Lia Named")                                                         # name in the essay text (the pack warns)
     add("noproof", "Quin NoProof", "quin@example.com", proof=False)                   # no proof of payment
     add("txn_a", "Rae Dupe", "rae@example.com", txn="REF9999")                        # same transfer reference as next
     add("txn_b", "Sam Dupe", "sam@example.com", txn="ref 9999")                       # (case/space differences)
@@ -141,7 +130,7 @@ def build(target: Path) -> dict:
             "Full name": e["name"], "Email": e["email"], "Country": "Malaysia", "School": "Fake Example School",
             "Age on 17 January 2027": e["age"], "Secondary email": e["second"],
             "Which prompt are you answering?": "Prompt A (placeholder)",
-            "Your essay (PDF)": e["essay_cell"] if "essay_cell" in e else URL.format(fname), "Your entry fee": e["fee"], "Fee support code": e["code"],
+            "Your essay (PDF)": e["essay_cell"] if "essay_cell" in e else URL.format(fname), "Your entry fee": e["fee"],
             "Proof of payment": URL.format(f"proof-{e['key']}.png") if e["proof"] else "",
             "Transfer reference or transaction ID": e["txn"], "Name on the account you paid from": e["name"], "Before you submit": "Yes",
         })
@@ -155,11 +144,10 @@ def build(target: Path) -> dict:
         .replace('"work/submissions.csv"', '"tally-export.csv"')
         .replace('"work/downloads"', '"downloads"')
         .replace('"work/tracker.xlsx"', '"output/tracker.xlsx"')
-        .replace('"work/codes.xlsx"', '"codes.xlsx"')
         .replace('"templates"', '"' + Path(os.path.relpath(HERE.parent / "templates", target)).as_posix() + '"')
         .replace('"work/emails"', '"output/emails"')
         .replace('"work/judging"', '"output/judging"'), encoding="utf-8")
-    return {"codes": good, "entries": [(f"sub{i:03d}", e["key"]) for i, e in enumerate(E, start=1)]}
+    return {"entries": [(f"sub{i:03d}", e["key"]) for i, e in enumerate(E, start=1)]}
 
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 # Entry admin toolkit
 
-Turns the **Tally submissions export** into everything you need to process entries: a tracker spreadsheet, email drafts, fee-support codes and an anonymous judging folder. It runs on your own computer, never sends anything and never uploads anything. It works with Excel files (`.xlsx`).
+Turns the **Tally submissions export** into everything you need to process entries: a tracker spreadsheet, email drafts and an anonymous judging folder. It runs on your own computer, never sends anything and never uploads anything. It works with Excel files (`.xlsx`).
 
 ## One-time setup
 
@@ -18,19 +18,15 @@ Turns the **Tally submissions export** into everything you need to process entri
 
 On Mac/Linux type `python3` where this guide says `python`.
 
-## The four commands
+## The three commands
 
 ```
-python entry_admin.py codes generate 20
 python entry_admin.py process
 python entry_admin.py emails
 python entry_admin.py pack
 ```
 
-### 1. `codes generate N`: fee-support codes
-Makes N new codes like `K7MQ-X3TD` (never containing 0, O, 1, I or L, so they can't be misread) and adds them to `work/codes.xlsx`. Running it again **adds** more; it never replaces or repeats codes. Columns: Code, Issued to, Email, Date issued, Used by submission. You type the first four when you hand a code out. `process` fills in the last one.
-
-### 2. `process`: build the tracker
+### 1. `process`: build the tracker
 Reads the CSV and builds `work/tracker.xlsx`, one row per entry, with an entry ID (`ZH-001`, `ZH-002`...). Entries are numbered in the order they were submitted, and **an entry keeps its ID forever**.
 
 **Flags** (colour-coded, and blank when nothing is wrong):
@@ -44,7 +40,7 @@ Reads the CSV and builds `work/tracker.xlsx`, one row per entry, with an entry I
 | Age unclear | age missing or not a number | red |
 | Over Open age limit | age above 25 (`open_max_age` in `config.toml`). The Open category is 25 and under, counted on 17 January 2027, and the form's own age box goes up to 99, so it can't stop these. Look before confirming: it may be a typo, or someone who typed their age today instead of their age on the deadline | red |
 | Parent email missing | under 18 (`adult_age`) and the form's "Secondary email" is blank, or is the entrant's own address. The form suggests a parent or guardian's address but can't check whose it is, so this only catches a missing or obviously wrong one. The "parent or guardian agrees" tick is a required box on the form, so every entry has it | red |
-| Fee code problem | half fee chosen and the code is missing, not on `codes.xlsx`, or already used. Also raised if the fee answer is neither of the two options on the form. | red |
+| Fee problem | the form's fee answer is not the one fee in `config.toml` (`USD 10`). Not checked if the export has no fee column. | red |
 | No proof of payment | the Proof of payment question is empty | red |
 | Duplicate transfer reference | same transfer reference as another entry | red |
 
@@ -58,36 +54,40 @@ Things to know:
 - **Word count is approximate.** It counts every word in the PDF, including the title. Different PDF programs break text slightly differently, so treat entries within a few words of the limit as borderline and check by hand.
 - **How downloaded files are matched.** The CSV has Tally download links; the tool takes the file name at the end of each link and looks for that file name in `work/downloads/` (any sub-folder, upper/lower case ignored). Files inside a sub-folder named after the Submission ID, or starting with it, also match. If you download everything flat into one folder and two people uploaded files with the same name, your computer will rename the second one (`essay (1).pdf`), and it can't be matched reliably: both entries get flagged "PDF problem: Shared..." so you notice. Putting each entry's files in a folder named after its Submission ID avoids this.
 - The payment screenshot only needs to exist in the CSV. It isn't opened.
-- The essay is a PDF upload only (Tally takes no pasted text or links). Anything else in the essay answer (blank, text, a link, or another file type) gets the red "PDF problem" flag, and the problem email asks for the essay as a PDF. The tool never opens or fetches links, and there is no word count for those entries.
-- **Warning: the fee wording must match Tally word for word.** The fee answer must be exactly one of the two options on the form, "USD 10" or "Fee support at 50%: USD 5" (capital letters and extra spaces don't matter). They're set under `[fees]` in `config.toml`; **if you edit the fee wording or prices in Tally, update that section too, or every entry will be flagged.** The first entry (by time) to use a valid code owns it. Later ones are flagged "already used". If you hand a code out and know it was used another way, type an entry ID in "Used by submission" in `codes.xlsx` and every entry using it will be flagged.
+- The essay is a PDF upload only (Tally takes no pasted text or links). Anything else in the essay answer (blank, text, a link, or another file type) gets the red "PDF problem" flag (internal only: no email). The tool never opens or fetches links, and there is no word count for those entries.
+- **A name in the file name is expected, not a problem.** Entrants are asked to name the PDF with their full name and the essay title (for example "Jane Tan - Who Gets to Eat.pdf"). Nothing flags that. Only a name, email address or school written **inside** the essay is a problem, and `pack` warns about it. `pack` also renames every essay to its entry ID (`ZH-001.pdf`), so the entrant's file name never reaches the judges.
+- **The amount to match on T.A.S.K's statement is RM 40.00.** The fee is advertised as USD 10, but every entrant transfers exactly RM 40 (T.A.S.K's account takes ringgit only). It is set as `statement_amount` under `[fees]` in `config.toml`; a payment that shows any other amount is not a match.
+- **There is one fee, for everyone.** If the Tally form still has a fee question, its answer must be exactly "USD 10" (capital letters and extra spaces don't matter). That is set under `[fees]` in `config.toml`; **if you edit the fee wording in Tally, update that line too, or every entry will be flagged.** If the form has no fee question at all, `process` says so and skips the check.
 
-### 3. `emails`: draft emails (nothing is sent)
+### 2. `emails`: draft emails (nothing is sent)
 Writes drafts into `work/emails/`, one `.txt` per entry in a folder per type, plus one combined file per type (`received_ALL.txt` etc.) you can read straight through:
 
 | Type | Written for |
 |---|---|
 | `received` | every entry that isn't Rejected |
 | `confirmed` | Status = Confirmed **and** Payment verified = Y (if you forget the Y, it tells you) |
-| `problem` | entries still Pending that have at least one flag. The email lists that entry's problems in plain English. |
+| `payment_not_found` | entries still Pending with a **payment** problem: the red "No proof of payment" or "Duplicate transfer reference" flag, or Payment verified = N (you checked T.A.S.K's statement and the RM 40 was missing or the wrong amount). The email says the transfer must be RM 40 and found by 24 January 2027, or the entry is disqualified, and lists that entry's payment problems in plain English. |
+
+**Only payment problems get an email.** An entrant who breaks a rule (over the word limit, a PDF problem, a name inside the essay, an age problem, a missing parent email) is disqualified and is **not** emailed. Those flags stay in the tracker so you can see them, and no draft is made for them.
 
 ```
-python entry_admin.py emails            # all three types
-python entry_admin.py emails problem    # just one type
+python entry_admin.py emails                      # all three types
+python entry_admin.py emails payment_not_found    # just one type
 python entry_admin.py emails --only ZH-003 ZH-007
 python entry_admin.py emails --all      # remake drafts you already made
 ```
-To stop you emailing people twice, a draft is only made once. A problem draft is made again if the entry's problems change. The combined file contains only the drafts made in that run.
+To stop you emailing people twice, a draft is only made once. A payment draft is made again if the entry's payment problems change. The combined file contains only the drafts made in that run.
 
-**Read each draft before you send it**, especially problem emails: a flag is a prompt to look, not a verdict. Copy it into your email program and send it yourself.
+**Read each draft before you send it**, especially payment emails: a flag is a prompt to look, not a verdict. Copy it into your email program and send it yourself.
 
-Edit the wording in `templates/` (`received.txt`, `confirmed.txt`, `problem.txt`, and the sentence for each flag in `flag_messages.toml`). `templates/README.txt` lists the `{placeholders}`. The contact email (pharosprize@gmail.com), site name and so on are set once in `config.toml` under `[email]`. The contact email **must match `CONTACT_EMAIL` in `src/site.ts`** (a test fails if they differ). The toolkit's settings that still need checking are listed under "Entry-admin toolkit" in the root `PLACEHOLDERS.md`. Anything still in `[square brackets]` is a reminder for you to fill in.
+Edit the wording in `templates/` (`received.txt`, `confirmed.txt`, `payment_not_found.txt`, and the sentence for each payment flag in `flag_messages.toml`). The RM 40 and the 24 January 2027 date in the payment email are `fee_myr` and `payment_fix_by` under `[email]` in `config.toml`. `templates/README.txt` lists the `{placeholders}`. The contact email (pharosprize@gmail.com), site name and so on are set once in `config.toml` under `[email]`. The contact email **must match `CONTACT_EMAIL` in `src/site.ts`** (a test fails if they differ). The toolkit's settings that still need checking are listed under "Entry-admin toolkit" in the root `PLACEHOLDERS.md`. Anything still in `[square brackets]` is a reminder for you to fill in.
 
-### 4. `pack`: the judging folder
+### 3. `pack`: the judging folder
 Copies the essays of entries that are **Confirmed with Payment verified = Y** into `work/judging/` as `ZH-001.pdf` and so on, and writes `work/judging/key.xlsx` linking IDs to names, emails, schools and so on.
 
 - **`key.xlsx` is private.** It is in the same folder only for convenience. Give judges the PDFs, not the key and not the folder as it is.
 - The tool rewrites each PDF so the author name and software details hidden inside the file are dropped (file names alone aren't enough).
-- It warns you if an essay's text contains the entrant's name, email or school, which would let judges identify them. Edit those essays by hand before judging.
+- It warns you if an essay's text contains the entrant's name, email or school, which would let judges identify them. Edit those essays by hand before judging. (The file name is not checked: it holds the entrant's name by design, and it is replaced by the entry ID.)
 - If you later change someone to Rejected, running `pack` again removes their PDF from `judging/`.
 
 **The age checks need the "Secondary email" column.** If an export doesn't have it, `process` still runs, skips the parent-email check for everyone and prints a note saying so. Nobody is flagged by mistake.
@@ -96,13 +96,13 @@ Copies the essays of entries that are **Confirmed with Payment verified = Y** in
 Open `config.toml`, find the question under `[columns]` and change the text on the **right** to match the new title in the CSV. That's the whole fix. If a name doesn't match, the tool stops and shows you the columns the CSV actually has.
 
 ## Trying it out with fake data
-`sample/` holds a fake CSV, fake essays and fake codes, built so each flag fires at least once (names are invented; emails end in `example.com`).
+`sample/` holds a fake CSV and fake essays, built so each flag fires at least once (names are invented; emails end in `example.com`).
 
 ```
 python entry_admin.py --config sample/config.toml process
 python entry_admin.py --config sample/config.toml emails
 ```
-Results go in `sample/output/`. Running it also writes into `sample/codes.xlsx`; to reset, run `python sample/make_sample.py` (needs `pip install -r requirements-dev.txt`).
+Results go in `sample/output/`. To rebuild the fake data, run `python sample/make_sample.py` (needs `pip install -r requirements-dev.txt`).
 
 ## Tests
 ```
@@ -112,9 +112,9 @@ python -m unittest discover -s tests -v
 The tests build the fake data in a temporary folder and check every flag, re-running, the emails and the judging pack.
 
 ## Where real exports go
-Put the real Tally CSV and downloaded files in **`tools/entry-admin/work/`** (`work/submissions.csv`, `work/downloads/`). Everything the tools produce (tracker, codes, emails, judging pack) is written there too. `work/` is git-ignored, and so are `data/`, `real/`, `downloads/`, `judging/`, `emails/` and any `.csv`, `.xlsx` or `.pdf` placed directly in the toolkit folder, so an export saved there by mistake can't be committed. A test checks this.
+Put the real Tally CSV and downloaded files in **`tools/entry-admin/work/`** (`work/submissions.csv`, `work/downloads/`). Everything the tools produce (tracker, emails, judging pack) is written there too. `work/` is git-ignored, and so are `data/`, `real/`, `downloads/`, `judging/`, `emails/` and any `.csv`, `.xlsx` or `.pdf` placed directly in the toolkit folder, so an export saved there by mistake can't be committed. A test checks this.
 
 Everything in `sample/` is fake and safe to commit: invented names, emails ending `example.com`, and "Fake Example School". A test checks that too. Never put a real export in `sample/`.
 
 ## Privacy
-Entrants may be under 18, so the tracker, codes, emails and judging key are personal data. `work/` is git-ignored. Don't put these files in the repo, email them around or keep them in shared folders. Delete them when you no longer need them.
+Entrants may be under 18, so the tracker, emails and judging key are personal data. `work/` is git-ignored. Don't put these files in the repo, email them around or keep them in shared folders. Delete them when you no longer need them.

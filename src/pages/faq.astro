@@ -1,30 +1,26 @@
 ---
 // FAQ: every question is a native <details> (FaqItem.astro), closed by default, with a stable id
-// so other pages can deep-link (e.g. /faq/#fee-support-how). Visible whether or not
+// so other pages can deep-link (e.g. /faq/#winner-age-check). Visible whether or not
 // REGISTRATION_OPEN is true. Bank details never appear here: "How do I pay?" links to the
 // How to enter page only once REGISTRATION_OPEN is true, and says when the details go up before that.
 // The wording is owner-approved, so copy it exactly. Values that live in src/site.ts (dates, fees,
-// FEE_SUPPORT, the soup kitchen's name, the contact email, the rubric) are built from there so the
+// the soup kitchen's name, the contact email, the rubric) are built from there so the
 // answers can't drift from the rest of the site.
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
 import FaqItem from '../components/FaqItem.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import {
-  SITE_NAME, CONTACT_EMAIL, INSTAGRAM_HANDLE, CATEGORIES, RULES_URL, REGISTRATION_OPEN, FEE_SUPPORT, SOUP_KITCHEN_NAME, BANK, DATES,
-  ENTRY_FEE, ENTRY_FEE_HALF, PROOF_OF_PAYMENT, PROOF_OF_PAYMENT_INLINE, MEALS_ESTIMATE, PRIZES_NOTE, RUBRIC, DEADLINE_TIME, DEADLINE_TIME_PLAIN,
-  FEE_SUPPORT_DAYS_BEFORE_DEADLINE, PAYMENT_GRACE_DAYS_AFTER_DEADLINE, formatDate, formatDateDay, addDays,
+  SITE_NAME, CONTACT_EMAIL, INSTAGRAM_HANDLE, CATEGORIES, RULES_URL, REGISTRATION_OPEN, SOUP_KITCHEN_NAME, BANK, DATES,
+  ENTRY_FEE, ENTRY_FEE_MYR, PROOF_OF_PAYMENT, PROOF_OF_PAYMENT_INLINE, MEALS_ESTIMATE, PRIZES_NOTE, RUBRIC, DEADLINE_TIME, DEADLINE_TIME_PLAIN,
+  PAYMENT_GRACE_DAYS_AFTER_DEADLINE, WINNER_CHECK_DAYS, ESSAY_REMOVAL_DAYS, formatDate, formatDateDay, addDays,
 } from '../site';
 
-const description = `Answers about entering the ${SITE_NAME} essay competition: who can enter, the essay, AI, paying, fee support, judging and your details.`;
+const description = `Answers about entering the ${SITE_NAME} essay competition: who can enter, the essay, AI, paying, judging and your details.`;
 const domain = Astro.site!.host; // "pharosprize.org", from the `site` setting in astro.config.mjs
 const mailto = `mailto:${CONTACT_EMAIL}`;
 
 const lowerFirst = (text: string) => `${text.charAt(0).toLowerCase()}${text.slice(1)}`;
-// FEE_SUPPORT contains CONTACT_EMAIL; the answer shows that address as a mailto link.
-const [supportBefore, ...supportAfter] = lowerFirst(FEE_SUPPORT).split(CONTACT_EMAIL);
-const supportAfterText = supportAfter.join(CONTACT_EMAIL);
-
 // "response to the prompt (30), insight and understanding (30), clarity and structure (20) and voice and originality (20)"
 const criteria = RUBRIC.map((c) => `${lowerFirst(c.name)} (${c.marks})`);
 const criteriaList = `${criteria.slice(0, -1).join(', ')} and ${criteria[criteria.length - 1]}`;
@@ -35,7 +31,6 @@ const open = CATEGORIES.find((c) => c.id === 'open')!;
 const orUnder = (who: string) => who.replace(' and under', ' or under');
 
 const deadlineDate = formatDate(DATES.deadline);
-const feeSupportLastDay = formatDateDay(addDays(DATES.deadline, -FEE_SUPPORT_DAYS_BEFORE_DEADLINE));
 const paymentFixDay = formatDateDay(addDays(DATES.deadline, PAYMENT_GRACE_DAYS_AFTER_DEADLINE));
 ---
 
@@ -52,7 +47,7 @@ const paymentFixDay = formatDateDay(addDays(DATES.deadline, PAYMENT_GRACE_DAYS_A
           <p>Anyone studying at a school, college or university on {deadlineDate}. We may ask for proof, such as a student card or a letter from your school, before we award a prize.</p>
         </FaqItem>
         <FaqItem id="which-category" question="Which category am I in?">
-          <p>Your age on {deadlineDate}. If you're {orUnder(junior.who)}, you're {junior.name}. Otherwise, if you're {orUnder(open.who)}, you're {open.name}.</p>
+          <p>Your age on {deadlineDate}. If you are {orUnder(junior.who)}, you are {junior.name}. Otherwise, if you are {orUnder(open.who)}, you are {open.name}. If you are eligible for {junior.name}, you may choose to enter {open.name} instead. You may enter only one category, with one essay.</p>
         </FaqItem>
         <FaqItem id="poster-says-any-age" question="I saw a poster that says Open is for any age. Which is right?">
           <p>
@@ -63,16 +58,16 @@ const paymentFixDay = formatDateDay(addDays(DATES.deadline, PAYMENT_GRACE_DAYS_A
         <FaqItem id="enter-more-than-once" question="Can I enter more than once?">
           <p>No, one essay per person.</p>
         </FaqItem>
-        <FaqItem id="under-18" question="I'm under 18. What do I need?">
-          <p>A parent or guardian has to agree to you entering and to us handling your details. The entry form asks for a second email address; we suggest theirs.</p>
+        <FaqItem id="under-18" question="I am under 18. What do I need?">
+          <p>A parent or guardian must agree to you entering and to us handling your details. The entry form asks for a second email address; we suggest theirs.</p>
         </FaqItem>
         <FaqItem id="open-and-close" question="When do entries open and close?">
-          <p>Entries open on {formatDateDay(DATES.entriesOpen)} and close on {formatDateDay(DATES.deadline)} at {DEADLINE_TIME}. Late entries aren't judged. <a href="/competition/#dates">See all key dates</a></p>
+          <p>Entries open on {formatDateDay(DATES.entriesOpen)} and close on {formatDateDay(DATES.deadline)} at {DEADLINE_TIME}. Late entries are disqualified. <a href="/competition/#dates">See all key dates</a></p>
         </FaqItem>
         <FaqItem id="fix-a-mistake" question="I made a mistake in my entry. Can I fix it?">
           <p>
             Yes, until entries close ({deadlineDate}, {DEADLINE_TIME_PLAIN}). Email <a href={mailto}>{CONTACT_EMAIL}</a> with your full name,
-            the email address you entered with, and what needs fixing. If it's your essay, attach the corrected PDF. After the deadline we can't accept changes.
+            the email address you entered with, and what needs fixing. If it is your essay, attach the corrected PDF. After the deadline we cannot accept changes.
           </p>
         </FaqItem>
       </div>
@@ -82,19 +77,22 @@ const paymentFixDay = formatDateDay(addDays(DATES.deadline, PAYMENT_GRACE_DAYS_A
       <h2 id="the-essay" class="t-heading-sm">The essay</h2>
       <div class="faq-group__items">
         <FaqItem id="word-count" question="What counts towards the 800 words?">
-          <p>Everything from the first word of your essay to the last, including footnotes. Your title and your reference list don't count. Essays over 800 words aren't judged.</p>
+          <p>Everything from the first word of your essay to the last, including footnotes. Your title and your reference list do not count. Essays over 800 words are disqualified.</p>
         </FaqItem>
         <FaqItem id="references" question="Do I need references?">
-          <p>If you use someone else's words, ideas or numbers, credit them. Any clear, consistent style is fine.</p>
+          <p>If you use someone else's words, ideas or numbers, credit them. Any clear, consistent style is acceptable.</p>
         </FaqItem>
         <FaqItem id="other-languages" question="Can I write in another language?">
           <p>No, essays must be in English.</p>
         </FaqItem>
-        <FaqItem id="name-in-the-pdf" question="Why can't I put my name in the PDF?">
-          <p>So we can judge essays without knowing who wrote them. The form collects your name separately.</p>
+        <FaqItem id="name-in-the-pdf" question="Why can I not put my name inside the essay?">
+          <p>So that essays are judged without knowing who wrote them. The file name is removed before judging, and the form collects your name separately.</p>
         </FaqItem>
         <FaqItem id="make-a-pdf" question="How do I make a PDF?">
-          <p>In Google Docs or Word, use File, then Download (or Save as), then PDF. Open the file before you submit to check it works.</p>
+          <p>
+            In Google Docs or Word, use File, then Download (or Save as), then PDF. Open the file before you submit to check it works. Name your PDF with your full name and the essay title,
+            for example “Jane Tan - Who Gets to Eat.pdf”. Do not put your name or school inside the essay.
+          </p>
         </FaqItem>
       </div>
     </section>
@@ -103,7 +101,7 @@ const paymentFixDay = formatDateDay(addDays(DATES.deadline, PAYMENT_GRACE_DAYS_A
       <h2 id="ai" class="t-heading-sm">AI</h2>
       <div class="faq-group__items">
         <FaqItem id="ai-use" question="Can I use AI at all?">
-          <p>Not to write, rewrite, expand or translate any part of your essay. Spelling and grammar checkers that only fix mistakes are fine. Using AI to find sources is fine, but read the sources yourself and write every word yourself.</p>
+          <p>Not to write, rewrite, expand or translate any part of your essay. Spelling and grammar checkers that only fix mistakes are permitted. Using AI to find sources is permitted, but read the sources yourself and write every word yourself.</p>
         </FaqItem>
         <FaqItem id="ai-suspected" question="What happens if you think an essay used AI?">
           <p>We contact you first and may ask to see your notes or drafts. We never disqualify an essay because of a detection tool's result alone.</p>
@@ -120,7 +118,7 @@ const paymentFixDay = formatDateDay(addDays(DATES.deadline, PAYMENT_GRACE_DAYS_A
         <FaqItem id="pay-how" question="How do I pay?">
           {/* Bank details are never on this page. Before launch the How to enter page has no details yet, so no link. */}
           <p>
-            By bank transfer in US dollars to T.A.S.K's account.{' '}
+            The fee is {ENTRY_FEE}, transferred as {ENTRY_FEE_MYR} to T.A.S.K's account by bank transfer.{' '}
             {
               REGISTRATION_OPEN ? (
                 <>The details are on the <a href="/register/#how-to-pay">How to enter page</a>.</>
@@ -131,35 +129,17 @@ const paymentFixDay = formatDateDay(addDays(DATES.deadline, PAYMENT_GRACE_DAYS_A
             Use the reference "{BANK.reference}". {PROOF_OF_PAYMENT}
           </p>
         </FaqItem>
-        <FaqItem id="pay-from-abroad" question="I'm not in Malaysia. How do I pay?">
-          <p>Use your bank's international transfer or a service such as Wise, Remitly or Western Union, and send the fee in US dollars. Any method is fine as long as the full amount arrives. Transfer fees are yours.</p>
+        <FaqItem id="pay-from-abroad" question="I am not in Malaysia. How do I pay?">
+          <p>
+            Use your bank's international transfer or a service such as Wise, Remitly or Western Union, and send {ENTRY_FEE_MYR} to T.A.S.K's account (SWIFT code {BANK.swift}).
+            Transfer fees and bank charges are paid by you, not by {SITE_NAME}, and the full {ENTRY_FEE_MYR} must arrive. If less arrives, your entry is not complete.
+          </p>
         </FaqItem>
         <FaqItem id="payment-arrived" question="How do I know my payment arrived?">
           <p>
-            We check payments with T.A.S.K once a week and email you within a week of your entry. If we can't find your payment, we'll email you.
-            You have until {paymentFixDay} to sort it out. If we still can't find it by then, your entry is disqualified.
+            We check payments with T.A.S.K once a week and email you within a week of your entry. If we cannot find your payment, we will email you.
+            You have until {paymentFixDay} to resolve it. If we still cannot find it by then, your entry is disqualified.
           </p>
-        </FaqItem>
-      </div>
-    </section>
-
-    <section class="faq-group" aria-labelledby="fee-support">
-      <h2 id="fee-support" class="t-heading-sm">Fee support</h2>
-      <div class="faq-group__items">
-        <FaqItem id="fee-support-what" question="What is fee support?">
-          <p>If {ENTRY_FEE} is hard for you to afford, you can pay half: {ENTRY_FEE_HALF}.</p>
-        </FaqItem>
-        <FaqItem id="fee-support-who" question="Who can ask for it?">
-          <p>Any student who finds the fee hard to afford. You don't need to explain why, and we don't ask for proof.</p>
-        </FaqItem>
-        <FaqItem id="fee-support-how" question="How do I ask?">
-          <p>
-            Before you pay, {supportBefore}<a href={mailto}>{CONTACT_EMAIL}</a>{supportAfterText} We reply within 72 hours with a code.
-            Pay {ENTRY_FEE_HALF} in US dollars, then choose fee support on the entry form, type in your code and {PROOF_OF_PAYMENT_INLINE}.
-          </p>
-        </FaqItem>
-        <FaqItem id="fee-support-deadline" question="Is there a deadline?">
-          <p>Yes: ask at least {FEE_SUPPORT_DAYS_BEFORE_DEADLINE} days before entries close, so by {feeSupportLastDay}.</p>
         </FaqItem>
       </div>
     </section>
@@ -174,7 +154,7 @@ const paymentFixDay = formatDateDay(addDays(DATES.deadline, PAYMENT_GRACE_DAYS_A
           </p>
         </FaqItem>
         <FaqItem id="feedback" question="Will I get feedback or a score?">
-          <p>No. We can't give individual scores or feedback.</p>
+          <p>No. We cannot give individual scores or feedback.</p>
         </FaqItem>
         <FaqItem id="results" question="When are the results?">
           <p>{formatDateDay(DATES.results)}, on {domain} and Instagram ({INSTAGRAM_HANDLE}). Winners are also told by email.</p>
@@ -182,19 +162,22 @@ const paymentFixDay = formatDateDay(addDays(DATES.deadline, PAYMENT_GRACE_DAYS_A
         <FaqItem id="prizes-paid" question="How are prizes paid?">
           <p>
             By bank transfer or Wise to the winner, or to a parent or guardian if the winner is under 18, within 2 weeks of the results. {PRIZES_NOTE}{' '}
-            If we can't reach a winner within 14 days of the results, we may award the prize to the next-placed essay.
+            If a winner cannot be reached, or does not complete the age and student check, within {WINNER_CHECK_DAYS} days of the results email, they do not receive the prize and it goes to the next-ranked entry.
           </p>
         </FaqItem>
         <FaqItem id="winner-age-check" question="How do winners confirm their age?">
           <p>
-            Before we pay a prize, we check the winner's age and that they're a student. You can either show your ID on a short video call, or send a photo
+            Before we pay a prize, we check the winner's age and that they are a student. You can either show your ID on a short video call, or send a photo
             of it with the ID number partly covered (on a MyKad, cover the last six digits; the first six show your date of birth). A letter from your school
-            also works. If you're under 18, a parent or guardian joins the call or sends the photo. We don't keep a copy of your ID or its number; we only note
+            is also accepted. If you are under 18, a parent or guardian joins the call or sends the photo. We do not keep a copy of your ID or its number; we only note
             that the check was done.
           </p>
         </FaqItem>
         <FaqItem id="certificate" question="Do I get a certificate?">
-          <p>Winners and shortlisted entrants get a certificate with a code anyone can check at <a href="/verify/">{domain}/verify/</a>.</p>
+          <p>
+            There are three e-certificates: a participation certificate for every eligible entrant, a shortlist certificate for shortlisted entrants, and a top-3 certificate for the top three
+            essays in each category. All are emailed by {formatDate(DATES.certificatesBy)}. Each has a code that anyone can check at <a href="/verify/">{domain}/verify/</a>.
+          </p>
         </FaqItem>
       </div>
     </section>
@@ -203,13 +186,17 @@ const paymentFixDay = formatDateDay(addDays(DATES.deadline, PAYMENT_GRACE_DAYS_A
       <h2 id="your-details" class="t-heading-sm">Your details and your essay</h2>
       <div class="faq-group__items">
         <FaqItem id="who-owns-my-essay" question="Who owns my essay?">
-          <p>You do. You let us store and read it to run the competition.</p>
+          <p>You do. Copyright remains with you. By entering, you allow {SITE_NAME} to store, read and judge your essay for this competition only.</p>
         </FaqItem>
         <FaqItem id="essay-published" question="Will my essay be published?">
-          <p>Only if it wins and you (and a parent or guardian, if you're under 18) give separate permission after the results.</p>
+          <p>
+            Only with your permission. After the results, we may ask winners whether they would like their essay published on {domain}. If you are under 18, a parent or guardian must also agree.
+            You may decline; this does not affect your result, prize or certificate. If you agree and later change your mind, email <a href={mailto}>{CONTACT_EMAIL}</a> and we will remove it
+            within {ESSAY_REMOVAL_DAYS} days.
+          </p>
         </FaqItem>
         <FaqItem id="what-we-publish" question="What do you publish about me?">
-          <p>If you're shortlisted or win: your name only (no school, country or age), on {domain} and Instagram, as you agreed on the entry form.</p>
+          <p>If you are shortlisted or win: your name only (no school, country or age), on {domain} and Instagram, as you agreed on the entry form.</p>
         </FaqItem>
         <FaqItem id="your-data" question="How do you handle my data?">
           <p>See our Privacy notice: <a href="/privacy/">{domain}/privacy/</a>.</p>
@@ -223,7 +210,7 @@ const paymentFixDay = formatDateDay(addDays(DATES.deadline, PAYMENT_GRACE_DAYS_A
       </div>
     </section>
 
-    <p class="faq__stuck">Still stuck? Email <a href={mailto}>{CONTACT_EMAIL}</a>.</p>
+    <p class="faq__stuck">Another question? Email <a href={mailto}>{CONTACT_EMAIL}</a>.</p>
   </main>
 
   <SiteFooter />

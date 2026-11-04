@@ -4,7 +4,7 @@ Read this at the start of every session. It sets the rules for this repo.
 
 ## What this is
 
-The website for an independently run online essay competition for students, in two prize categories (Junior: 14 and under, USD 75; Open: 25 and under, USD 125; age counted on the deadline), built around the UN Sustainable Development Goals with a social-justice focus. Each edition features one SDG. The Inaugural Edition is SDG 2 (Zero Hunger) and is a fundraiser for a local soup kitchen.
+The website for an independently run online essay competition for students, in two prize categories (Junior: 14 and under, USD 50; Open: 25 and under, USD 100; age counted on the deadline), built around the Sustainable Development Goals (SDGs) with a social-justice focus. Each edition features one SDG. The Inaugural Edition is SDG 2 (Zero Hunger) and is a fundraiser for a local soup kitchen.
 
 The site owner is a student. Explain technical steps in plain language and don't assume prior setup knowledge.
 
@@ -59,14 +59,14 @@ Not yet: rules, payment wording changes, "raised so far" counter, results. Leave
 - The beneficiary is The Assembly Soup Kitchen (T.A.S.K), named with written permission (24 Oct 2026). Use SOUP_KITCHEN_NAME; never hard-code or re-spell it.
 - No invented team members, testimonials, past editions, judges, statistics or partner logos.
 - No public fundraising target.
-- Don't use "UN", "United Nations" or "Global Goals" in the site name or branding. Name SDGs in text only. Don't use official SDG icons or the colour wheel.
+- Don't use "UN", "United Nations" or "Global Goals" in the site name or branding, and don't add "UN" or "United Nations" to any new text (the footer disclaimer and the About page's source link to sdgs.un.org stay as they are). Name SDGs in text only. On each page a visitor can land on first (Home, Competition, About, Blog index) the first mention reads "the Sustainable Development Goals (SDGs)" (Competition: "Sustainable Development Goal 2 (SDG 2)"); later mentions use "SDGs". Don't use official SDG icons or the colour wheel.
 - No photos of people in poverty or being served. Typography, shapes, food, hands and students only.
 - Don't write blog post content that states facts or numbers unless the owner supplies the source. Placeholder text is fine.
 
 ## Placeholders to leave (clearly marked)
 
 - **Waitlist form:** the signup section shows the owner's Tally form (before launch it was a disabled "Opening soon" placeholder that collected nothing). The owner supplied the Tally waitlist form (`WAITLIST_FORM_ID` in `src/site.ts`), shown by `Waitlist.astro`. The consent line and a link to the Privacy page must sit next to it: entrants may be under 18, and Malaysia's PDPA applies.
-- **Payment:** by bank transfer, directly to the soup kitchen's account (details in `BANK` in `src/site.ts`, shown on the Register page once `REGISTRATION_OPEN` is true). No payment code, no payment links, and the site never handles money. The fee is in US dollars only: "USD 10", fee support "USD 5" (`ENTRY_FEE`, `ENTRY_FEE_HALF`). Never write amounts in any other currency. Wherever the site says how to pay, it says the transfer is made in US dollars (`PAY_IN_USD`) and says "Upload proof of payment on the form." (`PROOF_OF_PAYMENT`, or `PROOF_OF_PAYMENT_INLINE` mid-sentence), always in those words; don't write other versions ("keep a screenshot", "upload proof"). Don't say prizes come from entry fees: "Prizes are funded separately, not from entry fees."
+- **Payment:** by bank transfer, directly to the soup kitchen's account (details in `BANK` in `src/site.ts`, shown on the Register page once `REGISTRATION_OPEN` is true). No payment code, no payment links, and the site never handles money. The fee is advertised as "USD 10" and paid as exactly "RM 40" (`ENTRY_FEE`, `ENTRY_FEE_MYR`): T.A.S.K's account takes ringgit only. Never show any other amount or a live exchange rate. Wherever the site says how to pay, it says the fee is USD 10, transferred as RM 40 to T.A.S.K's account (`PAY_IN_MYR`), and says "Upload proof of payment on the form." (`PROOF_OF_PAYMENT`, or `PROOF_OF_PAYMENT_INLINE` mid-sentence), always in those words; don't write other versions ("keep a screenshot", "upload proof"). Don't say prizes come from entry fees: "Prizes are funded separately, not from entry fees."
 - **Contact email, opening month, deadline:** bracketed placeholders like `[month]`.
 
 Keep a list of every placeholder in `PLACEHOLDERS.md` so the owner can fill them in later.

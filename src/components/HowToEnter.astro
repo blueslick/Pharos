@@ -2,10 +2,9 @@
 // "How to enter, step by step": the ONE how-to-enter content on the Register page (built only when
 // REGISTRATION_OPEN is true; the page decides). Six steps in an ordered list, each one an outlined box.
 // Everything an entrant needs is inside the steps: who can enter (1), the essay rules (2), the bank
-// details and fee support (3, id="how-to-pay": the Tally form and the FAQ link to /register/#how-to-pay),
+// details (3, id="how-to-pay": the Tally form and the FAQ link to /register/#how-to-pay),
 // the proof of payment (4), the entry form with the consent line and the Enter now button (5), and what
-// happens next (6). Every value comes from src/site.ts. Plain HTML and CSS; the only script opens the
-// fee-support <details> when the page is loaded with #fee-support. The step numbers are decoration
+// happens next (6). Every value comes from src/site.ts. Plain HTML and CSS, no script. The step numbers are decoration
 // (aria-hidden) because the list already numbers the items.
 // Boxes: the same thin plum outline as the bank list (.bank), square corners like it, and the cream
 // token for the fill (the lightest colour token: there is no white token).
@@ -14,17 +13,13 @@
 // the full row, then steps 4, 5 and 6.
 import ExternalAction from './ExternalAction.astro';
 import {
-  SITE_NAME, REGISTRATION_URL, RULES_URL, FAQ_URL, FEE_SUPPORT_DAYS_BEFORE_DEADLINE, ENTRY_FEE, ENTRY_FEE_HALF, PAY_IN_USD,
-  PROOF_OF_PAYMENT_INLINE, FEE_SUPPORT, CONTACT_EMAIL, SOUP_KITCHEN_NAME, BANK, CATEGORIES, DATES,
+  SITE_NAME, REGISTRATION_URL, RULES_URL, FAQ_URL, ENTRY_FEE, ENTRY_FEE_MYR, PAY_IN_MYR,
+  PROOF_OF_PAYMENT_INLINE, SOUP_KITCHEN_NAME, BANK, CATEGORIES, DATES,
   formatDate, deadlineWithTime, isPlaceholder,
 } from '../site';
 
 const junior = CATEGORIES.find((c) => c.id === 'junior')!;
 const open = CATEGORIES.find((c) => c.id === 'open')!;
-
-// FEE_SUPPORT contains CONTACT_EMAIL; the page shows that address as a mailto link.
-const [supportBefore, ...supportAfter] = FEE_SUPPORT.split(CONTACT_EMAIL);
-const supportHasEmail = supportAfter.length > 0;
 ---
 
 <section class="hte" aria-labelledby="hte-title">
@@ -49,7 +44,8 @@ const supportHasEmail = supportAfter.length > 0;
       <div class="hte__text">
         <p class="hte__line">
           One essay of up to 800 words on one of the three prompts, as a PDF, written without AI tools.
-          Don't put your name or school in the PDF.
+          Name your PDF with your full name and the essay title, for example “Jane Tan - Who Gets to Eat.pdf”.
+          Do not put your name or school inside the essay.
         </p>
         <p class="hte__links"><a href="/competition/#prompts">See the prompts</a></p>
       </div>
@@ -57,30 +53,21 @@ const supportHasEmail = supportAfter.length > 0;
 
     {/* ONE money section: the fee is paid here. The entry form links to #how-to-pay. */}
     <li class="hte__item hte__pay" id="how-to-pay">
-      <div class="hte__head"><span class="hte__n" aria-hidden="true">3</span><h3 class="hte__step">Pay {ENTRY_FEE} in US dollars</h3></div>
+      <div class="hte__head"><span class="hte__n" aria-hidden="true">3</span><h3 class="hte__step">Pay {ENTRY_FEE}, transferred as {ENTRY_FEE_MYR}</h3></div>
       <div class="hte__text">
         <div class="hte__pay-grid">
-          <p class="hte__line">Pay {ENTRY_FEE} straight to {SOUP_KITCHEN_NAME}. {SITE_NAME} never handles the money.</p>
+          <p class="hte__line">The fee is {ENTRY_FEE}, transferred as {ENTRY_FEE_MYR} straight to {SOUP_KITCHEN_NAME}. {SITE_NAME} never handles the money.</p>
           <dl class="bank">
-            <div><dt>Amount</dt><dd>{ENTRY_FEE} ({ENTRY_FEE_HALF} with an approved fee support code)</dd></div>
+            <div><dt>Amount</dt><dd>{ENTRY_FEE_MYR} (the {ENTRY_FEE} fee)</dd></div>
             <div><dt>Currency</dt><dd>{BANK.currency}</dd></div>
             <div><dt>Account name</dt><dd>{BANK.accountName} ({BANK.accountNote})</dd></div>
             <div><dt>Bank</dt><dd>{BANK.bank}</dd></div>
             <div class="bank__copy"><dt>Account number</dt><dd><span class="bank__value bank__value--number">{BANK.accountNumber}</span></dd></div>
+            <div class="bank__copy"><dt>SWIFT code</dt><dd><span class="bank__value">{BANK.swift}</span></dd></div>
             <div class="bank__copy"><dt>Reference</dt><dd><span class="bank__value">{BANK.reference}</span></dd></div>
           </dl>
           {/* The proof of payment is asked for once, in step 5, where it is uploaded. */}
-          <p class="hte__line">{PAY_IN_USD} Any method is fine as long as the full amount arrives in US dollars; transfer fees are yours.</p>
-          {/* FEE SUPPORT SLOT: FEE_SUPPORT in src/site.ts says how to ask; its email address becomes a mailto link.
-              Closed until opened; the small script below opens it when the page is loaded with #fee-support. */}
-          <details class="hte__fee" id="fee-support">
-            <summary>Can't afford {ENTRY_FEE}? Ask for fee support</summary>
-            <p>
-              Ask for <a href={`${FAQ_URL}#fee-support-how`}>fee support</a> before you pay and you'll pay {ENTRY_FEE_HALF}.{' '}
-              {supportHasEmail ? <>{supportBefore}<a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>{supportAfter.join(CONTACT_EMAIL)}</> : FEE_SUPPORT}{' '}
-              Requests close {FEE_SUPPORT_DAYS_BEFORE_DEADLINE} days before the deadline; we reply within 72 hours with a code for the form.
-            </p>
-          </details>
+          <p class="hte__line">{PAY_IN_MYR} Any method may be used, provided the full {ENTRY_FEE_MYR} arrives. You pay any transfer fees.</p>
         </div>
       </div>
     </li>
@@ -100,7 +87,7 @@ const supportHasEmail = supportAfter.length > 0;
         <p class="hte__line">Upload your essay, then {PROOF_OF_PAYMENT_INLINE}. Deadline: {deadlineWithTime()}.</p>
         {/* CONSENT: keep this line and the Privacy link right next to the Enter now button.
             Entrants may be under 18 and Malaysia's PDPA applies. */}
-        <p class="hte__line hte__consent">The form asks for your consent to how we handle your details (and a parent or guardian's if you're under 18). See our <a href="/privacy/">Privacy notice</a>.</p>
+        <p class="hte__line hte__consent">The form asks for your consent to how we handle your details (and a parent or guardian's if you are under 18). See our <a href="/privacy/">Privacy notice</a>.</p>
         <ExternalAction href={REGISTRATION_URL} label="Enter now" tone="coral" />
       </div>
     </li>
@@ -113,20 +100,6 @@ const supportHasEmail = supportAfter.length > 0;
     </li>
   </ol>
 </section>
-
-<script>
-  // Open the fee-support <details> when the page is loaded with, or moved to, #fee-support.
-  const openFeeSupport = () => {
-    if (location.hash !== '#fee-support') return;
-    const el = document.getElementById('fee-support');
-    if (el instanceof HTMLDetailsElement) {
-      el.open = true;
-      el.scrollIntoView();
-    }
-  };
-  openFeeSupport();
-  addEventListener('hashchange', openFeeSupport);
-</script>
 
 <style>
   /* Phone sizes first; the media queries below make the boxes roomier. */
@@ -181,11 +154,6 @@ const supportHasEmail = supportAfter.length > 0;
 
   .hte__pay-grid { display: flex; flex-direction: column; gap: var(--hte-inner); }
 
-  /* Fee support: closed by default; the plum bar on the left is the old note's look. */
-  .hte__fee { font-size: var(--fs-body); line-height: 1.45; border-left: 4px solid var(--c-plum); padding-left: var(--space-2); }
-  .hte__fee summary { cursor: pointer; font-weight: 600; padding: 6px 0; }
-  .hte__fee p { margin: 0; padding-bottom: 6px; }
-
   /* Bank details: account number and reference are big, selectable text (tap to select all of it) */
   .bank { margin: 0; display: flex; flex-direction: column; border-bottom: 1.5px solid var(--c-plum); }
   .bank > div { border-top: 1.5px solid var(--c-plum); padding: 10px 0; display: flex; flex-direction: column; gap: 2px; }
@@ -234,13 +202,13 @@ const supportHasEmail = supportAfter.length > 0;
 
     /* The bank list sits in the right column across all rows; the text stays together in the left one
        (the last, flexible row soaks up the extra height so the text rows don't stretch). */
-    .hte__pay-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: auto auto auto 1fr; column-gap: var(--space-6); row-gap: var(--space-2); align-items: start; }
-    .hte__pay-grid > .bank { grid-column: 2; grid-row: 1 / span 4; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-3); align-content: start; border-bottom: 0; }
+    .hte__pay-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: auto auto 1fr; column-gap: var(--space-6); row-gap: var(--space-2); align-items: start; }
+    .hte__pay-grid > .bank { grid-column: 2; grid-row: 1 / span 3; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-3); align-content: start; border-bottom: 0; }
     .hte__pay-grid > .bank > div { border-bottom: 0; }
-    .hte__pay-grid > .bank > div:nth-last-child(-n + 2) { border-bottom: 1.5px solid var(--c-plum); }
+    /* The last detail (the reference) takes the full row, so the list ends on one line. */
+    .hte__pay-grid > .bank > div:last-child { grid-column: 1 / -1; border-bottom: 1.5px solid var(--c-plum); }
     .hte__pay-grid > :nth-child(1) { grid-column: 1; grid-row: 1; }
     .hte__pay-grid > :nth-child(3) { grid-column: 1; grid-row: 2; }
-    .hte__pay-grid > :nth-child(4) { grid-column: 1; grid-row: 3; }
     .hte__enter .hte__consent { flex: 1; }
   }
 </style>

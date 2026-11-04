@@ -13,7 +13,6 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.datavalidation import DataValidation
 
-from . import codes as codes_mod
 from .config import Config, ConfigError
 from .pdfs import FileIndex, analyse, classify_essay
 from .xlsxutil import OWNER_FILL, autosize, read_table, save_workbook, style_header
@@ -36,22 +35,27 @@ FLAGS = [
     ("age_unclear", "Age unclear", RED),
     ("age_over_open", "Over Open age limit", RED),
     ("parent_email", "Parent email missing", RED),
-    ("fee_code", "Fee code problem", RED),
+    ("fee", "Fee problem", RED),
     ("no_proof", "No proof of payment", RED),
     ("duplicate_transfer", "Duplicate transfer reference", RED),
 ]
 FLAG_HEADERS = [h for _, h, _ in FLAGS]
 
+# Only payment problems get an email (see emails.py). Entrants who break a rule are disqualified and are not
+# emailed, so every other flag above stays an internal flag in the tracker. "Payment verified (Y/N)" = N is the
+# owner's own "not found, or wrong amount" decision and also gets the payment email.
+PAYMENT_FLAGS = ("no_proof", "duplicate_transfer")
+
 DATA_COLS = ["Entry ID", "Submission ID", "Submitted at", "Full name", "Email", "Country", "School", "Age",
-             "Secondary email", "Prompt", "Fee", "Fee support code", "Transfer reference", "Name on paying account", "Declaration",
+             "Secondary email", "Prompt", "Fee", "Transfer reference", "Name on paying account", "Declaration",
              "Essay file", "Word count"]
 HEADERS = DATA_COLS + ["Flags"] + FLAG_HEADERS + list(OWNER_COLS)
 
 # Columns the CSV must have. These are allowed to be absent.
-OPTIONAL_KEYS = {"respondent_id", "declaration", "secondary_email"}
+OPTIONAL_KEYS = {"respondent_id", "declaration", "secondary_email", "fee"}
 # If one of these is absent we can't tell "left blank" from "not in the export", so the value is None, not "",
 # and any check that depends on it is skipped (with a note) instead of flagging everyone.
-UNKNOWN_IF_ABSENT = {"secondary_email"}
+UNKNOWN_IF_ABSENT = {"secondary_email", "fee"}
 
 
 # ---------------------------------------------------------------- reading the CSV
@@ -150,10 +154,10 @@ def _groups(entries: list[dict], keyfn) -> dict[str, list[dict]]:
     return {k: v for k, v in g.items() if len(v) > 1}
 
 
-def compute_flags(entries: list[dict], cfg: Config, code_table: dict[str, dict]) -> dict[str, str]:
-    """Fills e['flags'] (key -> text) for every entry. Returns {normalised code: first user's entry ID}."""
+def compute_flags(entries: list[dict], cfg: Config) -> None:
+    """Fills e['flags'] (key -> text) for every entry."""
     ec = cfg["entry"]
-    full_fee, half_fee = norm_fee(cfg["fees"]["full"]), norm_fee(cfg["fees"]["half"])
+    full_fee = norm_fee(cfg["fees"]["full"])
 
     for e in entries:
         e["flags"] = {}
@@ -230,30 +234,14 @@ def compute_flags(entries: list[dict], cfg: Config, code_table: dict[str, dict])
             extra = " (a transfer reference was given)" if e["transfer_ref"] else ""
             e["flags"]["no_proof"] = f"Missing: no file uploaded{extra}"
 
-    # fee answer, and for half fee the support code. The first entry (by time) to use a valid code owns it,
-    # unless codes.xlsx already says someone used it.
-    first_user: dict[str, str] = {}
-    for e in sorted(entries, key=lambda e: (e["time"], e["order"])):
-        fee = norm_fee(e["fee"])
-        if fee == full_fee:
+    # fee answer: there is one fee for everyone, so the answer (if the form still asks) must be that fee.
+    # If the export has no fee column at all (e["fee"] is None) there is nothing to check.
+    for e in entries:
+        if e["fee"] is None:
             continue
-        if fee != half_fee:  # not one of the two options on the form: don't guess
+        if norm_fee(e["fee"]) != full_fee:  # not the one fee on the form: don't guess
             shown = e["fee"] or "(blank)"
-            e["flags"]["fee_code"] = f"Unclear: fee answer '{shown}' is not one of the two options in config.toml"
-            continue
-        code = codes_mod.normalise(e["fee_code"])
-        if not code:
-            e["flags"]["fee_code"] = "Missing: half fee chosen but no code entered"
-        elif code not in code_table:
-            e["flags"]["fee_code"] = f"Invalid: '{e['fee_code']}' is not on the codes list"
-        else:
-            recorded = str(code_table[code].get("Used by submission") or "").strip()
-            owner = recorded or first_user.get(code, "")
-            if not owner:
-                first_user[code] = e["entry_id"]
-            elif owner not in (e["entry_id"], e["submission_id"]):
-                e["flags"]["fee_code"] = f"Used: already used by {owner}"
-    return first_user
+            e["flags"]["fee"] = f"Unclear: fee answer '{shown}' is not the fee in config.toml"
 
 
 # ---------------------------------------------------------------- building the tracker
@@ -277,7 +265,6 @@ def process(cfg: Config, csv_path: Path | None = None, files_dir: Path | None = 
     csv_path = csv_path or cfg.path("csv")
     files_dir = files_dir or cfg.path("files")
     tracker_path = cfg.path("tracker")
-    codes_path = cfg.path("codes")
     notes: list[str] = []
 
     rows = read_csv(cfg, csv_path)
@@ -286,9 +273,9 @@ def process(cfg: Config, csv_path: Path | None = None, files_dir: Path | None = 
                      "Check the question title under [columns] in config.toml.")
     if not files_dir.is_dir():
         notes.append(f"Downloads folder not found ({files_dir}), so every essay will be flagged as missing.")
-    if not codes_path.exists():
-        notes.append(f"No codes file at {codes_path}, so every half-fee code will look invalid. "
-                     "Run `codes generate N` first.")
+    if rows and rows[0]["fee"] is None:
+        notes.append("The CSV has no 'Your entry fee' column, so the fee answer was NOT checked. "
+                     "That is fine if the form no longer asks; otherwise check [columns] in config.toml.")
 
     old_rows = read_table(tracker_path)
     old = {str(r.get("Submission ID")): r for r in old_rows if r.get("Submission ID")}
@@ -309,17 +296,14 @@ def process(cfg: Config, csv_path: Path | None = None, files_dir: Path | None = 
             "submitted_at": r["submitted_at"], "full_name": r["full_name"], "email": r["email"],
             "country": r["country"], "school": r["school"], "age": r["age"], "secondary_email": r["secondary_email"],
             "prompt": r["prompt"],
-            "fee": r["fee"], "fee_code": r["fee_code"], "transfer_ref": r["transfer_ref"],
+            "fee": r["fee"], "transfer_ref": r["transfer_ref"],
             "payer_name": r["payer_name"], "declaration": r["declaration"],
             "essay_kind": kind, "essay_detail": detail,
             "essay_cell": r["essay"], "essay_path": path, "essay_wanted": wanted, "pdf": pdf,
             "proof_cell": r["proof"], "is_new": r.get("is_new", False),
         })
 
-    code_table = codes_mod.load_codes(codes_path)
-    first_user = compute_flags(entries, cfg, code_table)
-    if first_user and codes_path.exists():
-        codes_mod.record_usage(codes_path, first_user)
+    compute_flags(entries, cfg)
 
     # Rows already in the tracker but no longer in the CSV are kept exactly as they were.
     in_csv = {e["submission_id"] for e in entries}
@@ -343,7 +327,7 @@ def process(cfg: Config, csv_path: Path | None = None, files_dir: Path | None = 
             "Full name": e["full_name"], "Email": e["email"], "Country": e["country"], "School": e["school"],
             "Age": age if age is not None and e["age"].strip().isdigit() else e["age"],
             "Secondary email": e["secondary_email"] or "",
-            "Prompt": e["prompt"], "Fee": e["fee"], "Fee support code": e["fee_code"],
+            "Prompt": e["prompt"], "Fee": e["fee"] or "",
             "Transfer reference": e["transfer_ref"], "Name on paying account": e["payer_name"],
             "Declaration": e["declaration"],
             "Essay file": e["essay_path"].relative_to(files_dir).as_posix() if e["essay_path"] else "",

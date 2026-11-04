@@ -1,7 +1,6 @@
-# EXAMPLE: competition announcements (entries open, deadline countdown, fee support).
-# Dates and contacts below are [placeholders] to fill in. The fee wording follows the decided policy:
-# USD 10 entry fee, with 50% fee support at USD 5 for anyone who can't
-# afford it. Fee support is 50% only, there is no free waiver. Keep it in step with ENTRY_FEE and ENTRY_FEE_HALF in src/site.ts.
+# EXAMPLE: competition announcements (entries open, deadline countdown).
+# Dates and contacts below are [placeholders] to fill in. The fee is one amount for everyone,
+# so keep any fee wording in step with ENTRY_FEE in src/site.ts.
 
 type: announcement
 hook: "The Inaugural Edition is on Zero Hunger"   # used for the caption stand-in; each slide has its own hook
@@ -38,12 +37,3 @@ slides:
       - { label: "Length", value: "[word limit] words" }
       - { label: "Enter at", value: "[link in bio]" }
     cta: "Enter by [deadline date]"
-
-  - kind: fee-support
-    hook: "Fee support is *available*"
-    subtitle: "If you can't afford the entry fee, email us and we'll halve it: USD 5."
-    facts:
-      - { label: "Entry fee", value: "USD 10" }
-      - { label: "With fee support", value: "USD 5" }
-      - { label: "Email", value: "[contact email]" }
-    cta: "Email [contact email]"

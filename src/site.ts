@@ -36,14 +36,13 @@ export const REGISTRATION_URL = 'https://tally.so/r/Ar7QeB'; // the entry form: 
 export const RULES_URL = '/rules/';
 export const FAQ_URL = '/faq/';
 export const FAQ_URL_WINNER_AGE = '/faq/#winner-age-check'; // the FAQ answer rule 10 points to; the id is set in faq.astro
-// How to ask for fee support. Built from CONTACT_EMAIL; the Register page turns the address into a mailto link.
-export const FEE_SUPPORT = `Email ${CONTACT_EMAIL} with your full name and school. You don't need to explain why.`;
-
 // Entry fee. One wording, used everywhere a fee is mentioned.
-export const ENTRY_FEE = 'USD 10'; // US dollars only: entrants transfer the fee in US dollars
-export const ENTRY_FEE_HALF = 'USD 5'; // the fee at 50% fee support
+export const ENTRY_FEE = 'USD 10'; // the fee as advertised, in US dollars
+// What every entrant actually transfers: T.A.S.K's account takes ringgit only, so the fee of USD 10 is paid as
+// exactly this amount. Never show any other amount or a live exchange rate.
+export const ENTRY_FEE_MYR = 'RM 40';
 // The two standard payment sentences. Use these words every time we say how to pay.
-export const PAY_IN_USD = 'Transfer the fee in US dollars (USD).';
+export const PAY_IN_MYR = `Transfer exactly ${ENTRY_FEE_MYR} (the fee in ringgit, MYR).`;
 export const PROOF_OF_PAYMENT = 'Upload proof of payment on the form.';
 export const PROOF_OF_PAYMENT_INLINE = 'upload proof of payment on the form'; // the same sentence, for use mid-sentence
 export const MEALS_ESTIMATE = 'about 3 meals'; // figure from T.A.S.K; the FAQ's "Where does my fee go?" reads this too
@@ -56,15 +55,16 @@ export const BANK = {
   accountNote: 'the company behind T.A.S.K',
   bank: 'RHB Bank',
   accountNumber: '262111-00010155',
-  currency: 'US dollars (USD)',
+  currency: 'Malaysian ringgit (MYR)',
+  swift: 'RHBBMYKL', // for transfers from overseas
   reference: 'PHAROS + your full name',
 } as const;
 
 // The two prize categories: the one source every page reads. Age is the entrant's age on DATES.deadline
 // (Junior: 14 and under; Open: 25 and under). Both are for students only. Prizes are funded separately, not from entry fees.
 export const CATEGORIES = [
-  { id: 'junior', name: 'Junior', who: '14 and under', prize: 'USD 75' },
-  { id: 'open', name: 'Open', who: '25 and under', prize: 'USD 125' },
+  { id: 'junior', name: 'Junior', who: '14 and under', prize: 'USD 50' },
+  { id: 'open', name: 'Open', who: '25 and under', prize: 'USD 100' },
 ] as const;
 export const PRIZES_NOTE = 'Prizes are funded separately, not from entry fees.';
 
@@ -161,9 +161,10 @@ export const DATES = {
   entriesOpen: '2026-11-05',
   deadline: '2027-01-17', // 15:59 UTC, which is the end of the day in Malaysia (DEADLINE_TIME); also the date entrants' ages are counted on
   results: '2027-02-03', // winners are announced on this date
+  certificatesBy: '2027-02-24', // every e-certificate is emailed by this date (FAQ)
   entryDataDeleted: '2027-08-03', // by this date entry data we no longer need is deleted (see the Privacy page)
-  privacyUpdated: '2026-11-02', // "Last updated" on the Privacy page (and its Malay version): change it whenever either notice changes
-  rulesUpdated: '2026-11-02', // "Last updated" line under the Rules list: change it whenever a rule changes
+  privacyUpdated: '2026-11-04', // "Last updated" on the Privacy page (and its Malay version): change it whenever either notice changes
+  rulesUpdated: '2026-11-04', // "Last updated" line under the Rules list: change it whenever a rule changes
 } as const;
 
 // '2026-12-01' -> '1 December 2026'
@@ -185,10 +186,13 @@ export const formatDateDay = (iso: string) =>
 export const addDays = (iso: string, days: number) =>
   new Date(Date.parse(`${iso}T00:00:00Z`) + days * 86_400_000).toISOString().slice(0, 10);
 
-// Fee support requests close this many days before the deadline (Register and the FAQ both say so),
-// and a payment we can't find must be sorted out this many days after it (the FAQ).
-export const FEE_SUPPORT_DAYS_BEFORE_DEADLINE = 5;
+// A payment we can't find must be sorted out this many days after the deadline (Rules and FAQ).
 export const PAYMENT_GRACE_DAYS_AFTER_DEADLINE = 7;
+// A winner who cannot be reached, or does not complete the age and student check, within this many days of the
+// results email does not receive the prize (Rules rule 10 and the FAQ).
+export const WINNER_CHECK_DAYS = 14;
+// A published essay is removed within this many days of its writer asking (FAQ).
+export const ESSAY_REMOVAL_DAYS = 14;
 
 // The deadline is 15:59 UTC (the end of the day in Malaysia, which is UTC+8, so 23:59 there is 15:59 UTC on the same date).
 // Public text always shows it in UTC, never in Malaysia time. These are the one source for every page and post.

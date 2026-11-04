@@ -22,7 +22,7 @@ The first `npm install` (in the project folder, not in `tools/social`) fetches t
 1. **Copy an example folder** from `posts/` and rename it, for example `posts/hunger-report-2026`.
    - `example-report`: a report or study (cover + 5 statistic slides)
    - `example-artwork`: an artwork (cover, the work, 2 or 3 zoom-ins, what it argues)
-   - `example-announcement`: competition announcements (entries open, deadline countdown, fee support)
+   - `example-announcement`: competition announcements (entries open, deadline countdown)
 2. **Put your images in that folder** (screenshots, the artwork) and edit `post.yaml`. Every line has a comment saying what it is.
 3. **Find box and circle positions** with the helper: `npm run coords`. Drag on your image and paste the numbers it gives you (see below).
 4. **Check it:** `npm run preview posts/hunger-report-2026`. This builds everything and opens one page showing every slide, the caption, the alt text and any warnings.
@@ -53,14 +53,14 @@ Add `--no-story` to skip the story versions, `--strict` to make any warning coun
 
 ## The post types
 
-**HTML slides (the Pharos posts).** Each slide is a finished 1080 x 1350 HTML page, usually made in the Claude Design canvas ("Pharos Poster and Posts") and copied into the post folder as `slide-01.html`, `slide-02.html` and so on. `post.yaml` says `type: html` and lists each slide's `file:` and `alt:` text, plus the two caption paragraphs and hashtags. The tool draws each page as it is, adds the fonts, and makes the story version by centring the slide on plum. It checks: every slide has alt text, nothing loads from the internet (images are local, e.g. `../../../../public/images/...`), every colour is a tokens.json colour, nothing runs off the slide, and the red-line words. Only use facts that are on pharosprize.org or the entry form. Fee support is never mentioned in posts (Daniel, 29 Oct 2026): it stays on the website and the form.
+**HTML slides (the Pharos posts).** Each slide is a finished 1080 x 1350 HTML page, usually made in the Claude Design canvas ("Pharos Poster and Posts") and copied into the post folder as `slide-01.html`, `slide-02.html` and so on. `post.yaml` says `type: html` and lists each slide's `file:` and `alt:` text, plus the two caption paragraphs and hashtags. The tool draws each page as it is, adds the fonts, and makes the story version by centring the slide on plum. It checks: every slide has alt text, nothing loads from the internet (images are local, e.g. `../../../../public/images/...`), every colour is a tokens.json colour, nothing runs off the slide, and the red-line words. Only use facts that are on pharosprize.org or the entry form.
 
 
 **Report or study (6 slides).** A cover with the report's front page and your hook line, then 5 slides, each a cropped screenshot with the number boxed and a one-line comment. Needs `cover:` and exactly 5 `slides:`.
 
 **Artwork (5 or 6 slides).** A cover with the whole piece, a slide with the whole piece large plus title, artist and where it's shown, then 2 or 3 zoom-ins with the detail circled and your interpretation, then a final slide on what it argues about hunger. Needs `artwork:`, 2 or 3 `details:`, and `argument:`.
 
-**Announcements (1 to 6 slides).** Each slide has a big line, a plain sentence under it, a panel of facts and a button-shaped line. The `kind` (`entries-open`, `deadline`, `fee-support`) sets the small label at the top. For a countdown, add `deadline: 2027-02-15` and write `{days_left}` in your text. The tool works out the days on the day you build. Use `{deadline}` for the date written out.
+**Announcements (1 to 6 slides).** Each slide has a big line, a plain sentence under it, a panel of facts and a button-shaped line. The `kind` (`entries-open` or `deadline`) sets the small label at the top. For a countdown, add `deadline: 2027-02-15` and write `{days_left}` in your text. The tool works out the days on the day you build. Use `{deadline}` for the date written out.
 
 In any text, put `*stars*` around words to highlight them (peach on the plum slab, bold elsewhere): `"Five numbers about hunger, *explained*"`.
 

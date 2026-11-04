@@ -6,7 +6,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from entryadmin import codes, config, emails, pack, tracker
+from entryadmin import config, emails, pack, tracker
 from entryadmin.config import ConfigError
 
 
@@ -14,11 +14,6 @@ def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="entry_admin.py", description="Process competition entries from a Tally export.")
     p.add_argument("--config", help="path to a config.toml (default: the one next to this script)")
     sub = p.add_subparsers(dest="command", required=True)
-
-    c = sub.add_parser("codes", help="fee-support codes")
-    csub = c.add_subparsers(dest="codes_command", required=True)
-    g = csub.add_parser("generate", help="make N new codes and add them to codes.xlsx")
-    g.add_argument("n", type=int, metavar="N")
 
     pr = sub.add_parser("process", help="build or update tracker.xlsx from the Tally CSV")
     pr.add_argument("--csv", type=Path, help="the Tally export (default: from config.toml)")
@@ -38,14 +33,7 @@ def run(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     try:
         cfg = config.load(args.config)
-        if args.command == "codes":
-            if args.n < 1:
-                raise ConfigError("N must be at least 1.")
-            made = codes.generate(cfg.path("codes"), args.n, cfg["codes"]["length"], cfg["codes"]["group"])
-            print(f"Added {len(made)} codes to {cfg.path('codes')}")
-            for c in made:
-                print("  " + c)
-        elif args.command == "process":
+        if args.command == "process":
             r = tracker.process(cfg, args.csv, args.files)
             for n in r["notes"]:
                 print("Note:", n)
