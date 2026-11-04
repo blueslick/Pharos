@@ -55,7 +55,8 @@ test('entries-open: step 1 has the ages, students only, the age date and links t
 test('entries-open: step 2 keeps the word limit, the PDF, no AI, no name or school, and the link to the prompts', async ({ page }) => {
   await page.goto(`${OPEN}/register/`);
   const step = page.locator('section.hte ol > li').nth(1);
-  await expect(step).toContainText('One essay of up to 800 words on one of the three prompts, as a PDF, written without AI tools.');
+  await expect(step).toContainText('One essay of up to 800 words on one of the three prompts, as a PDF, written by you (see the AI policy).');
+  await expect(step.getByRole('link', { name: 'AI policy' })).toHaveAttribute('href', '/faq/#ai-policy');
   await expect(step).toContainText('Name your PDF with your full name and the essay title, for example “Jane Tan - Who Gets to Eat.pdf”. Do not put your name or school inside the essay.');
   await expect(step.getByRole('link', { name: 'See the prompts' })).toHaveAttribute('href', '/competition/#prompts');
 });
