@@ -211,8 +211,8 @@ test.describe('Rules page', () => {
     await page.setViewportSize(phone);
     await page.goto('/rules/');
     // About one phone screen of rules after the title; the whole page, with the footer, well under four screens.
-    expect(await page.locator('main').evaluate((el) => el.getBoundingClientRect().height)).toBeLessThan(2200); // measured 2142 on 4 Nov 2026 (T138: rule 9 now names pen names and prize money; was 1968 before, limit 2100): rules 1, 3, 9 and 10 and the Last updated line grew, then rule 4 grew with the AI policy
-    expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBeLessThan(3000); // measured 2909 on 4 Nov 2026 (T138: rule 9 grew; limit was 2900)
+    expect(await page.locator('main').evaluate((el) => el.getBoundingClientRect().height)).toBeLessThan(2400); // measured 2286 on 5 Nov 2026 (+144: the currency note and the longer prize wording; limit was 2200); was 2142 on 4 Nov 2026 (T138: rule 9 now names pen names and prize money; was 1968 before, limit 2100): rules 1, 3, 9 and 10 and the Last updated line grew, then rule 4 grew with the AI policy
+    expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBeLessThan(3200); // measured 3052 on 5 Nov 2026 (+143: the currency note and the longer prize wording; limit was 3000); was 2909 on 4 Nov 2026
   });
 });
 

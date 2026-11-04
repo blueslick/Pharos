@@ -13,7 +13,7 @@ const FAQ_URL = constant('FAQ_URL');
 const bankBlock = siteSource.match(/export const BANK = \{([\s\S]*?)\} as const;/)![1];
 const ACCOUNT_NUMBER = bankBlock.match(/accountNumber:\s*'([^']+)'/)![1];
 
-const MAX_PHONE_HEIGHT = 2150; // measured 2070 at 375px (1958 after the restyle, 2373 before): the MYR 40 wording, the SWIFT row and the file-name sentence added height
+const MAX_PHONE_HEIGHT = 2200; // measured 2125 at 375px on 5 Nov 2026 (+55: the "about USD 10" wording and the currency note; limit was 2150); was 2070 at 375px (1958 after the restyle, 2373 before): the MYR 40 wording, the SWIFT row and the file-name sentence added height
 const OPEN = 'http://localhost:4332';
 const NORMAL = 'http://localhost:4331';
 

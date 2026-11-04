@@ -83,7 +83,7 @@ for (const p of PAGES) {
     await page.goto(`${p.base}${p.path}`);
     // textContent, not innerText: the FAQ answers are in collapsed <details>, which innerText leaves out
     const text = (await page.locator('main').textContent()) ?? '';
-    const first = /\b(MYR|USD)\s?\d/.exec(text);
+    const first = /(MYR|USD)\s?\d/.exec(text); // no \b: textContent can join a label and its value ("FeeMYR 40")
     expect(first, `no currency amount found on ${p.path}`).not.toBeNull();
     expect(first![1], `first amount on ${p.path} is "${first![0]}" near "${around(text, first!.index)}"`).toBe('MYR');
   });
