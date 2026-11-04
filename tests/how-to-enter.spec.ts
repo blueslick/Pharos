@@ -67,7 +67,7 @@ test('entries-open: step 3 is #how-to-pay with the account number and the paymen
   await expect(page.locator('section.hte ol > li').nth(2)).toHaveAttribute('id', 'how-to-pay');
   await expect(pay.getByRole('heading', { name: 'Pay USD 10, transferred as RM 40' })).toBeVisible();
   await expect(pay.getByText(ACCOUNT_NUMBER)).toHaveCount(1);
-  await expect(pay.locator('dl.bank > div > dt')).toHaveText(['Amount', 'Currency', 'Account name', 'Bank', 'Account number', 'Reference']);
+  await expect(pay.locator('dl.bank > div > dt')).toHaveText(['Amount', 'Currency', 'Account name', 'Bank', 'Account number', 'SWIFT code', 'Reference']);
   await expect(pay).toContainText('The Assembly Soup Kitchen (T.A.S.K)');
   await expect(pay).toContainText('Transfer exactly RM 40 (the fee in ringgit, MYR). Any method is fine as long as the full RM 40 arrives; transfer fees are yours.');
   await expect(pay).not.toContainText('proof of payment');
@@ -232,7 +232,7 @@ test('entries-open: on a phone the number sits on the same line as the title, in
   }
 });
 
-test('entries-open: on a phone the bank details are label-left, value-right (one row each), except the two big copy values', async ({ page }) => {
+test('entries-open: on a phone the bank details are label-left, value-right (one row each), except the three big copy values', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });
   await page.goto(`${OPEN}/register/`);
   const rows = await page.locator('dl.bank > div').evaluateAll((els) =>
@@ -242,9 +242,10 @@ test('entries-open: on a phone the bank details are label-left, value-right (one
       return { sameLine: Math.abs(dt.top - dd.top) < 6, ddRight: dd.left >= dt.right - 1 };
     }));
   for (const r of rows.slice(0, 4)) { expect(r.sameLine).toBe(true); expect(r.ddRight).toBe(true); }
-  // account number and reference are large and keep their label above
+  // account number, SWIFT code and reference are large and keep their label above
   expect(rows[4].sameLine).toBe(false);
   expect(rows[5].sameLine).toBe(false);
+  expect(rows[6].sameLine).toBe(false);
   expect(await overflow(page)).toBeLessThanOrEqual(0);
 });
 

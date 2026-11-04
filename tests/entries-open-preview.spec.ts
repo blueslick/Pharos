@@ -63,10 +63,11 @@ test('entries-open preview: /register/ shows the bank number, reference, consent
   await expect(page.locator('#how-to-pay')).toHaveCount(1);
   await expect(pay.getByText(BANK.accountNumber)).toHaveCount(1);
   await expect(pay.getByText(BANK.reference)).toHaveCount(1);
+  await expect(pay.locator('dl.bank div', { hasText: 'SWIFT code' })).toContainText('RHBBMYKL');
   await expect(pay.locator('dl.bank div', { hasText: 'Amount' })).toHaveText('AmountRM 40 (the USD 10 fee)');
   await expect(pay.locator('dl.bank div', { hasText: 'Currency' })).toContainText('Malaysian ringgit (MYR)');
   // the Currency row sits directly under Amount
-  await expect(pay.locator('dl.bank > div > dt')).toHaveText(['Amount', 'Currency', 'Account name', 'Bank', 'Account number', 'Reference']);
+  await expect(pay.locator('dl.bank > div > dt')).toHaveText(['Amount', 'Currency', 'Account name', 'Bank', 'Account number', 'SWIFT code', 'Reference']);
   await expect(pay).toContainText('Transfer exactly RM 40 (the fee in ringgit, MYR). Any method is fine as long as the full RM 40 arrives; transfer fees are yours.');
   // the proof of payment is asked for once, in step 5, where it is uploaded
   await expect(pay).not.toContainText('Upload proof of payment');

@@ -127,7 +127,10 @@ const paymentFixDay = formatDateDay(addDays(DATES.deadline, PAYMENT_GRACE_DAYS_A
           </p>
         </FaqItem>
         <FaqItem id="pay-from-abroad" question="I'm not in Malaysia. How do I pay?">
-          <p>Use your bank's international transfer or a service such as Wise, Remitly or Western Union, and send {ENTRY_FEE_MYR}. Any method is fine as long as the full amount arrives. Transfer fees are yours.</p>
+          <p>
+            Use your bank's international transfer or a service such as Wise, Remitly or Western Union, and send {ENTRY_FEE_MYR} to T.A.S.K's account (SWIFT code {BANK.swift}).
+            Transfer fees and bank charges are paid by you, not by {SITE_NAME}, and the full {ENTRY_FEE_MYR} must arrive. If less arrives, your entry is not complete.
+          </p>
         </FaqItem>
         <FaqItem id="payment-arrived" question="How do I know my payment arrived?">
           <p>

@@ -56,18 +56,19 @@ for (const build of BUILDS) {
   });
 }
 
-test('REGISTRATION_OPEN false: the bank account number and SWIFT code appear nowhere before launch', () => {
-  const problems: string[] = [];
+test('REGISTRATION_OPEN false: the bank account number appears nowhere before launch (the FAQ names the SWIFT code, nothing else does)', () => {
+  const swiftIn: string[] = [];
   for (const file of textFiles('dist-test')) {
     const text = readFileSync(file, 'utf8');
-    // The Rules, FAQ and Competition pages may name RM 40; only the bank numbers must not appear.
-    if (/RHBBMYKL|262111-00010155/.test(text)) problems.push(file);
+    expect(text, file).not.toContain('262111-00010155');
+    if (text.includes('RHBBMYKL')) swiftIn.push(file.replace(/\\/g, '/'));
   }
-  expect(problems).toEqual([]);
+  expect(swiftIn).toEqual(['dist-test/faq/index.html']);
 });
 
 test('REGISTRATION_OPEN true: /register/ names RM 40 as the amount to transfer', () => {
   const html = readFileSync('dist-test-open/register/index.html', 'utf8');
   expect(html).toContain('RM 40');
   expect(html).toContain('Malaysian ringgit (MYR)');
+  expect(html).toContain('RHBBMYKL');
 });

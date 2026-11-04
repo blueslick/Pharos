@@ -62,6 +62,7 @@ const open = CATEGORIES.find((c) => c.id === 'open')!;
             <div><dt>Account name</dt><dd>{BANK.accountName} ({BANK.accountNote})</dd></div>
             <div><dt>Bank</dt><dd>{BANK.bank}</dd></div>
             <div class="bank__copy"><dt>Account number</dt><dd><span class="bank__value bank__value--number">{BANK.accountNumber}</span></dd></div>
+            <div class="bank__copy"><dt>SWIFT code</dt><dd><span class="bank__value">{BANK.swift}</span></dd></div>
             <div class="bank__copy"><dt>Reference</dt><dd><span class="bank__value">{BANK.reference}</span></dd></div>
           </dl>
           {/* The proof of payment is asked for once, in step 5, where it is uploaded. */}
@@ -203,7 +204,8 @@ const open = CATEGORIES.find((c) => c.id === 'open')!;
     .hte__pay-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: auto auto 1fr; column-gap: var(--space-6); row-gap: var(--space-2); align-items: start; }
     .hte__pay-grid > .bank { grid-column: 2; grid-row: 1 / span 3; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-3); align-content: start; border-bottom: 0; }
     .hte__pay-grid > .bank > div { border-bottom: 0; }
-    .hte__pay-grid > .bank > div:nth-last-child(-n + 2) { border-bottom: 1.5px solid var(--c-plum); }
+    /* The last detail (the reference) takes the full row, so the list ends on one line. */
+    .hte__pay-grid > .bank > div:last-child { grid-column: 1 / -1; border-bottom: 1.5px solid var(--c-plum); }
     .hte__pay-grid > :nth-child(1) { grid-column: 1; grid-row: 1; }
     .hte__pay-grid > :nth-child(3) { grid-column: 1; grid-row: 2; }
     .hte__enter .hte__consent { flex: 1; }
