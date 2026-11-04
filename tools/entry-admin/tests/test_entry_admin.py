@@ -387,7 +387,7 @@ class TestEmails(Base):
         self.assertIn("already been used", self.draft("payment_not_found", self.eid("txn_a")))
         # the payment email says what to transfer, by when, and what happens if it is not found
         text = self.draft("payment_not_found", self.eid("noproof"))
-        self.assertIn("RM 40", text)
+        self.assertIn("MYR 40", text)
         self.assertIn("24 January 2027", text)
         self.assertIn("disqualified", text)
         self.assertNotRegex(text, r"[{}]")
@@ -423,7 +423,7 @@ class TestEmails(Base):
         r = emails.make_drafts(self.cfg, "payment_not_found")
         self.assertIn("ZH-001", r["made"])        # checked on T.A.S.K's statement: not found or wrong amount
         self.assertNotIn("ZH-002", r["made"])     # verified: no payment email
-        self.assertIn("could not find a transfer of RM 40", self.draft("payment_not_found", "ZH-001"))
+        self.assertIn("could not find a transfer of MYR 40", self.draft("payment_not_found", "ZH-001"))
 
     def test_confirmed_needs_status_and_payment_verified(self):
         self.edit_tracker(clean={"Payment verified (Y/N)": "Y", "Status": "Confirmed"},
@@ -520,7 +520,7 @@ class TestNameInTheFileName(Base):
 
 
 class TestPaymentEmailMatchesSite(unittest.TestCase):
-    """The RM 40 and the 24 January date are typed in config.toml and in src/site.ts; fail if they drift apart."""
+    """The MYR 40 and the 24 January date are typed in config.toml and in src/site.ts; fail if they drift apart."""
 
     def test_fee_and_payment_fix_date_match_site_ts(self):
         site_ts = ROOT.parent.parent / "src" / "site.ts"
@@ -536,7 +536,8 @@ class TestPaymentEmailMatchesSite(unittest.TestCase):
         cfg = tomllib.loads((ROOT / "config.toml").read_text(encoding="utf-8"))
         self.assertEqual(cfg["email"]["fee_myr"], fee.group(1))
         self.assertEqual(cfg["email"]["payment_fix_by"], f"{day.day} {day.strftime('%B %Y')}")
-        self.assertEqual(cfg["fees"]["statement_amount"], fee.group(1) + ".00")  # RM 40.00 on T.A.S.K's statement
+        # T.A.S.K's bank statement shows ringgit as "RM 40.00", so the statement amount is the fee with "MYR " swapped for "RM ".
+        self.assertEqual(cfg["fees"]["statement_amount"], fee.group(1).replace("MYR ", "RM ", 1) + ".00")
 
 
 class TestSampleDataIsFake(unittest.TestCase):

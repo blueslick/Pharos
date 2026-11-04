@@ -47,7 +47,7 @@ test('has the same section headings as /privacy/, in the same number and order o
     'Jika anda berumur bawah 18 tahun dan menyertai senarai menunggu',
     'Borang penyertaan',
     'Pembayaran',
-    'Jika anda disenarai pendek atau menang',
+    'Jika anda menang',
     'Jika anda berumur bawah 18 tahun dan menyertai pertandingan',
     'Berapa lama kami menyimpan data penyertaan',
     'Sijil dan penerbitan nama',

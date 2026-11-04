@@ -56,7 +56,7 @@ Things to know:
 - The payment screenshot only needs to exist in the CSV. It isn't opened.
 - The essay is a PDF upload only (Tally takes no pasted text or links). Anything else in the essay answer (blank, text, a link, or another file type) gets the red "PDF problem" flag (internal only: no email). The tool never opens or fetches links, and there is no word count for those entries.
 - **A name in the file name is expected, not a problem.** Entrants are asked to name the PDF with their full name and the essay title (for example "Jane Tan - Who Gets to Eat.pdf"). Nothing flags that. Only a name, email address or school written **inside** the essay is a problem, and `pack` warns about it. `pack` also renames every essay to its entry ID (`ZH-001.pdf`), so the entrant's file name never reaches the judges.
-- **The amount to match on T.A.S.K's statement is RM 40.00.** The fee is advertised as USD 10, but every entrant transfers exactly RM 40 (T.A.S.K's account takes ringgit only). It is set as `statement_amount` under `[fees]` in `config.toml`; a payment that shows any other amount is not a match.
+- **The amount to match on T.A.S.K's statement is RM 40.00.** The fee is advertised as USD 10, but every entrant transfers exactly MYR 40 (T.A.S.K's account takes Malaysian Ringgit only, and its bank statement shows the amount as RM 40.00). It is set as `statement_amount` under `[fees]` in `config.toml`; a payment that shows any other amount is not a match.
 - **There is one fee, for everyone.** If the Tally form still has a fee question, its answer must be exactly "USD 10" (capital letters and extra spaces don't matter). That is set under `[fees]` in `config.toml`; **if you edit the fee wording in Tally, update that line too, or every entry will be flagged.** If the form has no fee question at all, `process` says so and skips the check.
 
 ### 2. `emails`: draft emails (nothing is sent)
@@ -66,7 +66,7 @@ Writes drafts into `work/emails/`, one `.txt` per entry in a folder per type, pl
 |---|---|
 | `received` | every entry that isn't Rejected |
 | `confirmed` | Status = Confirmed **and** Payment verified = Y (if you forget the Y, it tells you) |
-| `payment_not_found` | entries still Pending with a **payment** problem: the red "No proof of payment" or "Duplicate transfer reference" flag, or Payment verified = N (you checked T.A.S.K's statement and the RM 40 was missing or the wrong amount). The email says the transfer must be RM 40 and found by 24 January 2027, or the entry is disqualified, and lists that entry's payment problems in plain English. |
+| `payment_not_found` | entries still Pending with a **payment** problem: the red "No proof of payment" or "Duplicate transfer reference" flag, or Payment verified = N (you checked T.A.S.K's statement and the MYR 40 was missing or the wrong amount). The email says the transfer must be MYR 40 and found by 24 January 2027, or the entry is disqualified, and lists that entry's payment problems in plain English. |
 
 **Only payment problems get an email.** An entrant who breaks a rule (over the word limit, a PDF problem, a name inside the essay, an age problem, a missing parent email) is disqualified and is **not** emailed. Those flags stay in the tracker so you can see them, and no draft is made for them.
 
@@ -80,7 +80,7 @@ To stop you emailing people twice, a draft is only made once. A payment draft is
 
 **Read each draft before you send it**, especially payment emails: a flag is a prompt to look, not a verdict. Copy it into your email program and send it yourself.
 
-Edit the wording in `templates/` (`received.txt`, `confirmed.txt`, `payment_not_found.txt`, and the sentence for each payment flag in `flag_messages.toml`). The RM 40 and the 24 January 2027 date in the payment email are `fee_myr` and `payment_fix_by` under `[email]` in `config.toml`. `templates/README.txt` lists the `{placeholders}`. The contact email (pharosprize@gmail.com), site name and so on are set once in `config.toml` under `[email]`. The contact email **must match `CONTACT_EMAIL` in `src/site.ts`** (a test fails if they differ). The toolkit's settings that still need checking are listed under "Entry-admin toolkit" in the root `PLACEHOLDERS.md`. Anything still in `[square brackets]` is a reminder for you to fill in.
+Edit the wording in `templates/` (`received.txt`, `confirmed.txt`, `payment_not_found.txt`, and the sentence for each payment flag in `flag_messages.toml`). The MYR 40 and the 24 January 2027 date in the payment email are `fee_myr` and `payment_fix_by` under `[email]` in `config.toml`. `templates/README.txt` lists the `{placeholders}`. The contact email (pharosprize@gmail.com), site name and so on are set once in `config.toml` under `[email]`. The contact email **must match `CONTACT_EMAIL` in `src/site.ts`** (a test fails if they differ). The toolkit's settings that still need checking are listed under "Entry-admin toolkit" in the root `PLACEHOLDERS.md`. Anything still in `[square brackets]` is a reminder for you to fill in.
 
 ### 3. `pack`: the judging folder
 Copies the essays of entries that are **Confirmed with Payment verified = Y** into `work/judging/` as `ZH-001.pdf` and so on, and writes `work/judging/key.xlsx` linking IDs to names, emails, schools and so on.

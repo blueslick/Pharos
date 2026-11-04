@@ -33,7 +33,7 @@ test('Competition shows both categories, the prizes and where the money goes', a
   await expect(page.getByText('Prizes are funded separately, not from entry fees.')).toBeVisible();
   await expect(page.getByText('Your age is your age on 17 January 2027.')).toBeVisible();
   await expect(page.getByText('Every USD 10 entry funds about 3 meals at T.A.S.K.')).toBeVisible();
-  await expect(page.getByText('Entry fee: USD 10, transferred as RM 40. You pay The Assembly Soup Kitchen (T.A.S.K) directly by bank transfer, and upload proof of payment on the form.')).toBeVisible();
+  await expect(page.getByText('Entry fee: USD 10, transferred as MYR 40. You pay The Assembly Soup Kitchen (T.A.S.K) directly by bank transfer, and upload proof of payment on the form.')).toBeVisible();
   await expect(page.getByText('Pharos never handles the money.')).toBeVisible();
   await expect(page.locator('.fact', { hasText: 'Deadline' })).toContainText('17 January 2027');
   await expect(page.getByText('15:59 UTC').first()).toBeVisible();
@@ -80,19 +80,19 @@ test('the Privacy page covers the entry form, payments, publishing, under-18s an
   await expect(main).toContainText('Last updated 4 November 2026.');
   await expect(main).not.toContainText('Draft');
   for (const item of [
-    'your full name, email and country', 'your school (optional) and your age', 'your essay (a PDF)',
+    'your full name, pen name, email and country', 'your school (optional) and your age', 'your essay (a PDF)',
     'the transfer reference and the name on the account you paid from', 'a second email address',
   ]) {
     await expect(main).toContainText(item);
   }
   await expect(main).toContainText('directly to the bank account of The Assembly Soup Kitchen (T.A.S.K)');
   await expect(main).toContainText('shares a list of incoming transfers (date, amount and reference)');
-  await expect(main).toContainText('your name only (not your school, country or age)');
+  await expect(main).toContainText('your pen name only (not your full name, school, country or age)');
   await expect(main).toContainText('@pharosprize');
   await expect(main).toContainText('stay published after the competition ends');
   await expect(main).toContainText('A parent or guardian must agree to you entering');
   await expect(main).toContainText('By 3 August 2027 we delete');
-  await expect(main).toContainText('We keep the published names of shortlisted entrants and winners, and the certificate records');
+  await expect(main).toContainText('We keep the published pen names of winners, and the certificate records');
   await expect(main).not.toContainText(/PayPal|before entries open, we'll update this notice|\bAI\b/i);
   await expect(page.getByRole('link', { name: "Tally's privacy policy" })).toHaveCount(2);
 });

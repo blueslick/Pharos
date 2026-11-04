@@ -9,7 +9,7 @@ Entrants who break a rule are disqualified and are not emailed. Only payment pro
 Words in {curly brackets} are filled in automatically for each entrant:
   {first_name}  {name}  {entry_id}  {email}
   {site_name}  {edition}  {contact_email}  {soup_kitchen}  {sign_off}   (set in config.toml)
-  {fee_myr}  {payment_fix_by}   (set in config.toml: the RM 40 transfer and the date it must be found by)
+  {fee_myr}  {payment_fix_by}   (set in config.toml: the MYR 40 transfer and the date it must be found by)
   {word_limit}  {words}  {open_max_age}
   {problems}    (payment_not_found.txt only: the list of payment problems with that entry)
 
