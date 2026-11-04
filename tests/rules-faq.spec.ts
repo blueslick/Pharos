@@ -28,7 +28,7 @@ const rulesText = [
   'Submit by Sunday 17 January 2027, 15:59 UTC. No extensions.',
   "Essays are read and judged by people, against the published judging criteria. The judges' decisions are final.",
   'Winners and shortlisted entrants may be named (name only) on pharosprize.org and Instagram. Prizes: USD 50 (Junior) and USD 100 (Open).',
-  "Before prizes are paid, winners must confirm their age and that they are a student (see the FAQ). If a winner cannot, the prize goes to the next-ranked entry.",
+  'Before a prize is paid, the winner must confirm their age and that they are a student (see the FAQ). If a winner cannot be reached, or does not complete this check, within 14 days of the results email, they do not receive the prize and it goes to the next-ranked entry.',
 ];
 
 // Every FAQ answer (the ones that differ between builds are checked separately).
@@ -53,7 +53,7 @@ const faqAnswers: Record<string, string> = {
   'who-judges': 'The Pharos organisers, against the published judging criteria: response to the prompt (30), insight and understanding (30), clarity and structure (20) and voice and originality (20). You can download the criteria from the Competition page. AI is never used to score, rank or shortlist essays.',
   'feedback': "No. We cannot give individual scores or feedback.",
   'results': 'Wednesday 3 February 2027, on pharosprize.org and Instagram (@pharosprize). Winners are also told by email.',
-  'prizes-paid': "By bank transfer or Wise to the winner, or to a parent or guardian if the winner is under 18, within 2 weeks of the results. Prizes are funded separately, not from entry fees. If we cannot reach a winner within 14 days of the results, we may award the prize to the next-placed essay.",
+  'prizes-paid': "By bank transfer or Wise to the winner, or to a parent or guardian if the winner is under 18, within 2 weeks of the results. Prizes are funded separately, not from entry fees. If a winner cannot be reached, or does not complete the age and student check, within 14 days of the results email, they do not receive the prize and it goes to the next-ranked entry.",
   'winner-age-check': "Before we pay a prize, we check the winner's age and that they are a student. You can either show your ID on a short video call, or send a photo of it with the ID number partly covered (on a MyKad, cover the last six digits; the first six show your date of birth). A letter from your school is also accepted. If you are under 18, a parent or guardian joins the call or sends the photo. We do not keep a copy of your ID or its number; we only note that the check was done.",
   'certificate': 'Winners and shortlisted entrants get a certificate with a code anyone can check at pharosprize.org/verify/.',
   'who-owns-my-essay': 'You do. You let us store and read it to run the competition.',
@@ -175,7 +175,7 @@ test.describe('Rules page', () => {
     const small = page.locator('main p.rules__small');
     await expect(small).toHaveText([
       'If a poster, listing or post says something different, these rules apply.',
-      'Last updated 4 November 2026: fee support removed; the fee is paid as RM 40; entries that break the rules are disqualified.',
+      'Last updated 4 November 2026: fee support removed; the fee is paid as RM 40; rule 10 has a 14-day time limit; entries that break the rules are disqualified.',
     ]);
     // Both come after the list, and are smaller than the rules but not under 16px.
     const [list, line, rule] = await Promise.all([
