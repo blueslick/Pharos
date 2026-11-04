@@ -24,7 +24,7 @@ HEADERS = ["Submission ID", "Respondent ID", "Submitted at", "Full name", "Email
            "Age on 17 January 2027", "Secondary email", "Which prompt are you answering?", "Your essay (PDF)", "Your entry fee",
            "Proof of payment", "Transfer reference or transaction ID", "Name on the account you paid from",
            "Before you submit"]
-FULL = "USD 10"
+FULL = "MYR 40"
 LOREM = ("lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore "
          "et dolore magna aliqua enim ad minim veniam quis nostrud exercitation ullamco laboris nisi aliquip").split()
 URL = "https://storage.tally.so/private/{}?id=abc123&accessType=DOWNLOAD&signature=fake"

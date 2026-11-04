@@ -23,11 +23,11 @@ const rulesText = [
   'One essay per person, answering one of the three prompts.',
   "Up to 800 words, in English, uploaded as a PDF. Do not put your name or school inside the essay.",
   "It must be your own work. Do not use AI to write, rewrite, expand or translate any of it (AI may be used only to find sources and brainstorm ideas; see the FAQ). Grammarly, QuillBot and similar tools are not allowed; the ordinary spelling and grammar check in Word or Google Docs is. Tell us on the entry form what you used AI for. Do not enter an essay that has been published or entered somewhere else.",
-  'Pay the entry fee, USD 10, as exactly MYR 40 straight to The Assembly Soup Kitchen (T.A.S.K) before you submit, and upload proof of payment on the form.',
+  'Pay the entry fee of MYR 40 straight to The Assembly Soup Kitchen (T.A.S.K) before you submit, and upload proof of payment on the form.',
   'Under 18? A parent or guardian must agree to you entering. On the form, tick the box saying they agree and give their email address; we may email them to check.',
   'Submit by Sunday 17 January 2027, 15:59 UTC. No extensions.',
   "Essays are read and judged by people, against the published judging criteria. The judges' decisions are final.",
-  'Winners may be named on pharosprize.org and Instagram by their pen name only (the name given on the entry form, which may be their real name or a pen name). Shortlisted entrants are not named publicly. Prizes: USD 50 (Junior) and USD 100 (Open); only the winner in each category receives prize money. Copyright in each essay remains with its writer. An essay is published only under its writer\'s pen name, and only with the separate written permission of its writer (and of a parent or guardian, if the writer is under 18).',
+  'Winners may be named on pharosprize.org and Instagram by their pen name only (the name given on the entry form, which may be their real name or a pen name). Shortlisted entrants are not named publicly. Prizes: MYR 200 (Junior) and MYR 400 (Open), about USD 50 and USD 100 at current FOREX rates; only the winner in each category receives prize money. Copyright in each essay remains with its writer. An essay is published only under its writer\'s pen name, and only with the separate written permission of its writer (and of a parent or guardian, if the writer is under 18).',
   'Before the prize is paid, the winner must confirm their age and that they are a student (see the FAQ). If a winner cannot be reached, or does not complete this check, within 14 days of the results email, they do not receive the prize and it goes to the next-ranked entry.',
 ];
 
@@ -46,15 +46,15 @@ const faqAnswers: Record<string, string> = {
   'name-in-the-pdf': 'So that essays are judged without knowing who wrote them. The file name is removed before judging, and the form collects your name separately.',
   'make-a-pdf': 'In Google Docs or Word, use File, then Download (or Save as), then PDF. Open the file before you submit to check it works. Name your PDF with your full name and the essay title, for example “Jane Tan - Who Gets to Eat.pdf”. Do not put your name or school inside the essay.',
   'ai-policy': 'You may use AI to find sources and to brainstorm ideas. You must read the sources yourself and write every word of your essay yourself.You may not use AI to write, rewrite, expand or translate any part of your essay. This includes Grammarly, QuillBot, and the AI writing features in Google Docs (Gemini) and Word (Copilot). The ordinary spelling and grammar check built into Word or Google Docs is permitted.The entry form asks what you used AI for. Answer in your own words, or write "Nothing". Using AI for sources or brainstorming will not count against you. We do not ask for your prompts.If the organisers believe your essay breaks this policy, it will be disqualified. We will not contact you about this decision. The organisers\' decision is final. A detection tool\'s result is never the only reason.',
-  'where-the-fee-goes': 'Straight to The Assembly Soup Kitchen (T.A.S.K). Pharos never handles the money. T.A.S.K tells us every USD 10 is about 3 meals.',
+  'where-the-fee-goes': 'Straight to The Assembly Soup Kitchen (T.A.S.K). Pharos never handles the money. T.A.S.K tells us every MYR 40 is about 3 meals.',
   'pay-from-abroad': "Use your bank's international transfer or a service such as Wise, Remitly or Western Union, and send MYR 40 to T.A.S.K's account (SWIFT code RHBBMYKL). Transfer fees and bank charges are paid by you, not by Pharos, and the full MYR 40 must arrive. If less arrives, your entry is not complete.",
   'payment-arrived': "We check payments with T.A.S.K once a week and email you within a week of your entry. If we cannot find your payment, we will email you. You have until Sunday 24 January 2027 to resolve it. If we still cannot find it by then, your entry is disqualified.",
   'who-judges': 'The Pharos organisers, against the published judging criteria: response to the prompt (30), insight and understanding (30), clarity and structure (20) and voice and originality (20). You can download the criteria from the Competition page. AI is never used to score, rank or shortlist essays.',
   'feedback': "No. We cannot give individual scores or feedback.",
   'results': 'Wednesday 3 February 2027, on pharosprize.org and Instagram (@pharosprize). Winners are also told by email.',
-  'prizes-paid': "T.A.S.K sends the prize money by bank transfer or Wise to the winner (or to a parent or guardian, if the winner is under 18) once the winner's ID has been checked (see How do winners confirm their age?). Prizes are funded separately, not from entry fees. If a winner cannot be reached, or does not complete the age and student check, within 14 days of the results email, they do not receive the prize and it goes to the next-ranked entry.",
+  'prizes-paid': "T.A.S.K sends the prize money by bank transfer or Wise to the winner (or to a parent or guardian, if the winner is under 18) once the winner's ID has been checked (see How do winners confirm their age?). If a winner cannot be reached, or does not complete the age and student check, within 14 days of the results email, they do not receive the prize and it goes to the next-ranked entry.",
   'winner-age-check': "Before we pay the prize, we check the winner's age and that they are a student. You can either show your ID on a short video call, or send a photo of it with the ID number partly covered (on a MyKad, cover the last six digits; the first six show your date of birth). A letter from your school is also accepted. If you are under 18, a parent or guardian joins the call or sends the photo. We do not keep a copy of your ID or its number; we only note that the check was done.",
-  'certificate': 'There are three e-certificates: a participation certificate for every eligible entrant, a shortlist certificate for shortlisted entrants, and a top-3 certificate for the top three essays in each category. All are emailed by 24 February 2027. Each has a code that anyone can check at pharosprize.org/verify/. Only the winner in each category receives prize money (USD 50 for Junior, USD 100 for Open). The shortlist and top-3 certificates do not come with prize money.',
+  'certificate': 'There are three e-certificates: a participation certificate for every eligible entrant, a shortlist certificate for shortlisted entrants, and a top-3 certificate for the top three essays in each category. All are emailed by 24 February 2027. Each has a code that anyone can check at pharosprize.org/verify/. Only the winner in each category receives prize money: MYR 200 (Junior) and MYR 400 (Open), about USD 50 and USD 100 at current FOREX rates. The shortlist and top-3 certificates do not come with prize money.',
   'who-owns-my-essay': 'You do. Copyright remains with you. By entering, you allow Pharos to store, read and judge your essay for this competition only.',
   'essay-published': 'Only with your permission, and only under your pen name (your real name or a name you choose). After the results, we may ask winners whether they would like their essay published on pharosprize.org under the pen name they gave on the entry form. If you are under 18, a parent or guardian must also agree. You may decline; this does not affect your result, prize or certificate. If you agree and later change your mind, email pharosprize@gmail.com and we will remove it within 14 days.',
   'what-we-publish': "If you win: your pen name only (no school, country or age), on pharosprize.org and Instagram, as you agreed on the entry form. Your pen name can be your real name or a name you choose. Shortlisted entrants are not named publicly; we tell them by email.",
@@ -164,6 +164,13 @@ test.describe('Rules page', () => {
     await expect(page.locator('main').getByRole('link', { name: 'pharosprize@gmail.com' })).toHaveAttribute('href', 'mailto:pharosprize@gmail.com');
   });
 
+  test('has the currency note once, straight after the rules list', async ({ page }) => {
+    await page.goto('/rules/');
+    const note = page.locator('main p.rules__after', { hasText: 'All amounts are set and paid in Malaysian ringgit (MYR).' });
+    await expect(note).toHaveCount(1);
+    await expect(note).toHaveText('All amounts are set and paid in Malaysian ringgit (MYR). US dollar (USD) figures are a guide only, based on foreign exchange (FOREX) rates as of 5 November 2026, and may change; the entry fee is always MYR 40.');
+  });
+
   test('says the Open category is 25 and under, and the rules themselves never say "any age"', async ({ page }) => {
     await page.goto('/rules/');
     const list = page.locator('main ol');
@@ -179,7 +186,7 @@ test.describe('Rules page', () => {
     const small = page.locator('main p.rules__small');
     await expect(small).toHaveText([
       'If a poster, listing or post says something different, these rules apply.',
-      'Last updated 4 November 2026.',
+      'Last updated 5 November 2026.',
     ]);
     // Both come after the list, and are smaller than the rules but not under 16px.
     const [list, line, rule] = await Promise.all([
@@ -204,8 +211,8 @@ test.describe('Rules page', () => {
     await page.setViewportSize(phone);
     await page.goto('/rules/');
     // About one phone screen of rules after the title; the whole page, with the footer, well under four screens.
-    expect(await page.locator('main').evaluate((el) => el.getBoundingClientRect().height)).toBeLessThan(2200); // measured 2142 on 4 Nov 2026 (T138: rule 9 now names pen names and prize money; was 1968 before, limit 2100): rules 1, 3, 9 and 10 and the Last updated line grew, then rule 4 grew with the AI policy
-    expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBeLessThan(3000); // measured 2909 on 4 Nov 2026 (T138: rule 9 grew; limit was 2900)
+    expect(await page.locator('main').evaluate((el) => el.getBoundingClientRect().height)).toBeLessThan(2400); // measured 2286 on 5 Nov 2026 (+144: the currency note and the longer prize wording; limit was 2200); was 2142 on 4 Nov 2026 (T138: rule 9 now names pen names and prize money; was 1968 before, limit 2100): rules 1, 3, 9 and 10 and the Last updated line grew, then rule 4 grew with the AI policy
+    expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBeLessThan(3200); // measured 3052 on 5 Nov 2026 (+143: the currency note and the longer prize wording; limit was 3000); was 2909 on 4 Nov 2026
   });
 });
 
@@ -280,7 +287,7 @@ test.describe('FAQ page', () => {
     await page.goto('/faq/');
     const answer = page.locator('div#pay-how');
     await expect(answer).toHaveText(
-      `The fee is USD 10, transferred as MYR 40 to T.A.S.K's account by bank transfer. USD is the United States Dollar and MYR is the Malaysian Ringgit. Exchange rates change, but the amount you transfer is always MYR 40. The details go up on the How to enter page when entries open on ${ENTRIES_OPEN}. Use the reference "PHAROS + your full name". Upload proof of payment on the form.`,
+      `The fee is MYR 40 (about USD 10 at current FOREX rates), paid by bank transfer to T.A.S.K's account. All amounts are set and paid in Malaysian ringgit (MYR). US dollar (USD) figures are a guide only, based on foreign exchange (FOREX) rates as of 5 November 2026, and may change; the entry fee is always MYR 40. The details go up on the How to enter page when entries open on ${ENTRIES_OPEN}. Use the reference "PHAROS + your full name". Upload proof of payment on the form.`,
     );
     await expect(answer.locator('a')).toHaveCount(0);
     await expect(page.locator('main a[href^="/register"]')).toHaveCount(0);
@@ -290,7 +297,7 @@ test.describe('FAQ page', () => {
     await page.goto(`${OPEN}/faq/`);
     const answer = page.locator('div#pay-how');
     await expect(answer).toHaveText(
-      `The fee is USD 10, transferred as MYR 40 to T.A.S.K's account by bank transfer. USD is the United States Dollar and MYR is the Malaysian Ringgit. Exchange rates change, but the amount you transfer is always MYR 40. The details are on the How to enter page. Use the reference "PHAROS + your full name". Upload proof of payment on the form.`,
+      `The fee is MYR 40 (about USD 10 at current FOREX rates), paid by bank transfer to T.A.S.K's account. All amounts are set and paid in Malaysian ringgit (MYR). US dollar (USD) figures are a guide only, based on foreign exchange (FOREX) rates as of 5 November 2026, and may change; the entry fee is always MYR 40. The details are on the How to enter page. Use the reference "PHAROS + your full name". Upload proof of payment on the form.`,
     );
     await expect(answer.locator('a', { hasText: 'How to enter page' })).toHaveAttribute('href', '/register/#how-to-pay');
     expect(await page.content()).not.toContain(accountNumber);

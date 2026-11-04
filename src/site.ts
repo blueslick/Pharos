@@ -36,14 +36,21 @@ export const REGISTRATION_URL = 'https://tally.so/r/Ar7QeB'; // the entry form: 
 export const RULES_URL = '/rules/';
 export const FAQ_URL = '/faq/';
 export const FAQ_URL_WINNER_AGE = '/faq/#winner-age-check'; // the FAQ answer rule 10 points to; the id is set in faq.astro
-// Entry fee. One wording, used everywhere a fee is mentioned.
-export const ENTRY_FEE = 'USD 10'; // the fee as advertised, in US dollars
-// What every entrant actually transfers: T.A.S.K's account takes Malaysian Ringgit only, so the fee of USD 10 is paid as
-// exactly this amount. Never show any other amount or a live exchange rate.
-export const ENTRY_FEE_MYR = 'MYR 40';
-// The two standard payment sentences. Use these words every time we say how to pay.
-export const PAY_IN_MYR = `Transfer exactly ${ENTRY_FEE_MYR} (the fee in Malaysian Ringgit).`;
-export const FX_NOTE = `Exchange rates change, but the amount you transfer is always ${ENTRY_FEE_MYR}.`; // follows PAY_IN_MYR on How to enter, and the FAQ's "How do I pay?"
+// Money wording (decided 4 Nov 2026): the Malaysian ringgit (MYR) amount is the price everywhere. US dollars appear only
+// in brackets as an "about" guide, never on their own and never as the big number. No exchange-rate figure anywhere.
+// Entry fee: the amount every entrant actually transfers, because T.A.S.K's account takes ringgit only.
+export const ENTRY_FEE = 'MYR 40';
+export const ENTRY_FEE_USD_GUIDE = 'about USD 10'; // the US-dollar guide; always written with "about"
+export const ENTRY_FEE_FULL = `${ENTRY_FEE} (${ENTRY_FEE_USD_GUIDE} at current FOREX rates)`; // full form: running text
+export const ENTRY_FEE_SHORT = `${ENTRY_FEE} (${ENTRY_FEE_USD_GUIDE})`; // short form: cards, headings, the facts grid
+// The date the "about USD" figures are based on: the one place to change it. Change it whenever the guide is re-checked.
+export const FX_DATE = '5 November 2026';
+// The short dated line for the Instagram slides (typed into each slide's HTML; a test checks they match this).
+export const FX_DATED_LINE = `USD figures are approximate, based on FOREX rates as of ${FX_DATE}.`;
+// The note that goes once on any page that shows money (not after every number), and ends every caption that mentions money.
+export const CURRENCY_NOTE = `All amounts are set and paid in Malaysian ringgit (MYR). US dollar (USD) figures are a guide only, based on foreign exchange (FOREX) rates as of ${FX_DATE}, and may change; the entry fee is always ${ENTRY_FEE}.`;
+// The standard "how to pay" sentence. No US dollars in it.
+export const PAY_IN_MYR = `Transfer exactly ${ENTRY_FEE} (Malaysian ringgit).`;
 export const PROOF_OF_PAYMENT = 'Upload proof of payment on the form.';
 export const PROOF_OF_PAYMENT_INLINE = 'upload proof of payment on the form'; // the same sentence, for use mid-sentence
 export const MEALS_ESTIMATE = 'about 3 meals'; // figure from T.A.S.K; the FAQ's "Where does my fee go?" reads this too
@@ -56,18 +63,19 @@ export const BANK = {
   accountNote: 'the company behind T.A.S.K',
   bank: 'RHB Bank',
   accountNumber: '262111-00010155',
-  currency: 'Malaysian Ringgit (MYR)',
+  currency: 'Malaysian ringgit (MYR)',
   swift: 'RHBBMYKL', // for transfers from overseas
   reference: 'PHAROS + your full name',
 } as const;
 
 // The two prize categories: the one source every page reads. Age is the entrant's age on DATES.deadline
-// (Junior: 14 and under; Open: 25 and under). Both are for students only. Prizes are funded separately, not from entry fees.
+// (Junior: 14 and under; Open: 25 and under). Both are for students only. The prize is the ringgit amount; usdGuide is
+// the "about" US-dollar guide, shown smaller and never on its own. Prize full form (running text): PRIZES_FULL.
 export const CATEGORIES = [
-  { id: 'junior', name: 'Junior', who: '14 and under', prize: 'USD 50' },
-  { id: 'open', name: 'Open', who: '25 and under', prize: 'USD 100' },
+  { id: 'junior', name: 'Junior', who: '14 and under', prize: 'MYR 200', usdGuide: 'about USD 50' },
+  { id: 'open', name: 'Open', who: '25 and under', prize: 'MYR 400', usdGuide: 'about USD 100' },
 ] as const;
-export const PRIZES_NOTE = 'Prizes are funded separately, not from entry fees.';
+export const PRIZES_FULL = `${CATEGORIES[0].prize} (${CATEGORIES[0].name}) and ${CATEGORIES[1].prize} (${CATEGORIES[1].name}), ${CATEGORIES[0].usdGuide} and ${CATEGORIES[1].usdGuide.replace('about ', '')} at current FOREX rates`;
 
 // The partner soup kitchen, named with its written permission (24 Oct 2026).
 // This is the only place the name is written. Pages must use this constant,
@@ -165,7 +173,7 @@ export const DATES = {
   certificatesBy: '2027-02-24', // every e-certificate is emailed by this date (FAQ)
   entryDataDeleted: '2027-08-03', // by this date entry data we no longer need is deleted (see the Privacy page)
   privacyUpdated: '2026-11-04', // "Last updated" on the Privacy page (and its Malay version): change it whenever either notice changes
-  rulesUpdated: '2026-11-04', // "Last updated" line under the Rules list: change it whenever a rule changes
+  rulesUpdated: '2026-11-05', // "Last updated" line under the Rules list: change it whenever a rule changes
 } as const;
 
 // '2026-12-01' -> '1 December 2026'
