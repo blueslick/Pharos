@@ -161,6 +161,7 @@ export const DATES = {
   entriesOpen: '2026-11-05',
   deadline: '2027-01-17', // 15:59 UTC, which is the end of the day in Malaysia (DEADLINE_TIME); also the date entrants' ages are counted on
   results: '2027-02-03', // winners are announced on this date
+  certificatesBy: '2027-02-24', // every e-certificate is emailed by this date (FAQ)
   entryDataDeleted: '2027-08-03', // by this date entry data we no longer need is deleted (see the Privacy page)
   privacyUpdated: '2026-11-04', // "Last updated" on the Privacy page (and its Malay version): change it whenever either notice changes
   rulesUpdated: '2026-11-04', // "Last updated" line under the Rules list: change it whenever a rule changes

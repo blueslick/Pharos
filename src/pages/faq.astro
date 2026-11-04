@@ -171,7 +171,10 @@ const paymentFixDay = formatDateDay(addDays(DATES.deadline, PAYMENT_GRACE_DAYS_A
           </p>
         </FaqItem>
         <FaqItem id="certificate" question="Do I get a certificate?">
-          <p>Winners and shortlisted entrants get a certificate with a code anyone can check at <a href="/verify/">{domain}/verify/</a>.</p>
+          <p>
+            There are three e-certificates: a participation certificate for every eligible entrant, a shortlist certificate for shortlisted entrants, and a top-3 certificate for the top three
+            essays in each category. All are emailed by {formatDate(DATES.certificatesBy)}. Each has a code that anyone can check at <a href="/verify/">{domain}/verify/</a>.
+          </p>
         </FaqItem>
       </div>
     </section>
