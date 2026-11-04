@@ -21,7 +21,7 @@ const NORMAL = 'http://localhost:4331';
 const TITLES = [
   'Check you can enter',
   'Write your essay',
-  `Pay ${ENTRY_FEE} in US dollars`,
+  `Pay ${ENTRY_FEE}, transferred as RM 40`,
   'Screenshot your payment',
   'Fill in the entry form',
   'We confirm',
@@ -65,11 +65,11 @@ test('entries-open: step 3 is #how-to-pay with the account number and the paymen
   const pay = page.locator('#how-to-pay');
   await expect(pay).toHaveCount(1);
   await expect(page.locator('section.hte ol > li').nth(2)).toHaveAttribute('id', 'how-to-pay');
-  await expect(pay.getByRole('heading', { name: 'Pay USD 10 in US dollars' })).toBeVisible();
+  await expect(pay.getByRole('heading', { name: 'Pay USD 10, transferred as RM 40' })).toBeVisible();
   await expect(pay.getByText(ACCOUNT_NUMBER)).toHaveCount(1);
   await expect(pay.locator('dl.bank > div > dt')).toHaveText(['Amount', 'Currency', 'Account name', 'Bank', 'Account number', 'Reference']);
   await expect(pay).toContainText('The Assembly Soup Kitchen (T.A.S.K)');
-  await expect(pay).toContainText('Transfer the fee in US dollars (USD). Any method is fine as long as the full amount arrives in US dollars; transfer fees are yours.');
+  await expect(pay).toContainText('Transfer exactly RM 40 (the fee in ringgit, MYR). Any method is fine as long as the full RM 40 arrives; transfer fees are yours.');
   await expect(pay).not.toContainText('proof of payment');
   await expect(page.locator('section.hte ol > li').nth(4)).toContainText('upload proof of payment on the form');
 });
@@ -78,7 +78,7 @@ test('entries-open: fee support is gone from the Register page', async ({ page }
   await page.goto(`${OPEN}/register/`);
   await expect(page.locator('#fee-support')).toHaveCount(0);
   await expect(page.locator('main')).not.toContainText(/fee support|USD 5\b/i);
-  await expect(page.locator('dl.bank div', { hasText: 'Amount' })).toHaveText('AmountUSD 10');
+  await expect(page.locator('dl.bank div', { hasText: 'Amount' })).toHaveText('AmountRM 40 (the USD 10 fee)');
 });
 
 test('entries-open: /register/#how-to-pay (the link the entry form and FAQ use) scrolls to the bank details', async ({ page }) => {

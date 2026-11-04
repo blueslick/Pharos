@@ -23,7 +23,7 @@ const rulesText = [
   'One essay per person, answering one of the three prompts.',
   "Up to 800 words, in English, uploaded as a PDF. Don't put your name or school in the file.",
   "It must be your own work. Don't use AI tools to write, rewrite, expand or translate any of it, and don't enter an essay that's been published or entered somewhere else.",
-  'Pay the entry fee, USD 10, in US dollars, straight to The Assembly Soup Kitchen (T.A.S.K) before you submit, and upload proof of payment on the form.',
+  'Pay the entry fee, USD 10, as exactly RM 40 straight to The Assembly Soup Kitchen (T.A.S.K) before you submit, and upload proof of payment on the form.',
   'Under 18? A parent or guardian must agree to you entering. On the form, tick the box saying they agree and give their email address; we may email them to check.',
   'Submit by Sunday 17 January 2027, 15:59 UTC. No extensions.',
   "Essays are read and judged by people, against the published judging criteria. The judges' decisions are final.",
@@ -48,7 +48,7 @@ const faqAnswers: Record<string, string> = {
   'ai-use': 'Not to write, rewrite, expand or translate any part of your essay. Spelling and grammar checkers that only fix mistakes are fine. Using AI to find sources is fine, but read the sources yourself and write every word yourself.',
   'ai-suspected': "We contact you first and may ask to see your notes or drafts. We never disqualify an essay because of a detection tool's result alone.",
   'where-the-fee-goes': 'Straight to The Assembly Soup Kitchen (T.A.S.K). Pharos never handles the money. T.A.S.K tells us every USD 10 is about 3 meals.',
-  'pay-from-abroad': "Use your bank's international transfer or a service such as Wise, Remitly or Western Union, and send the fee in US dollars. Any method is fine as long as the full amount arrives. Transfer fees are yours.",
+  'pay-from-abroad': "Use your bank's international transfer or a service such as Wise, Remitly or Western Union, and send RM 40. Any method is fine as long as the full amount arrives. Transfer fees are yours.",
   'payment-arrived': "We check payments with T.A.S.K once a week and email you within a week of your entry. If we can't find your payment, we'll email you. You have until Sunday 24 January 2027 to sort it out. If we still can't find it by then, your entry is disqualified.",
   'who-judges': 'The Pharos organisers, against the published judging criteria: response to the prompt (30), insight and understanding (30), clarity and structure (20) and voice and originality (20). You can download the criteria from the Competition page. AI is never used to score, rank or shortlist essays.',
   'feedback': "No. We can't give individual scores or feedback.",
@@ -175,7 +175,7 @@ test.describe('Rules page', () => {
     const small = page.locator('main p.rules__small');
     await expect(small).toHaveText([
       'If a poster, listing or post says something different, these rules apply.',
-      'Last updated 4 November 2026: fee support removed.',
+      'Last updated 4 November 2026: fee support removed; the fee is paid as RM 40.',
     ]);
     // Both come after the list, and are smaller than the rules but not under 16px.
     const [list, line, rule] = await Promise.all([
@@ -276,7 +276,7 @@ test.describe('FAQ page', () => {
     await page.goto('/faq/');
     const answer = page.locator('div#pay-how');
     await expect(answer).toHaveText(
-      `By bank transfer in US dollars to T.A.S.K's account. The details go up on the How to enter page when entries open on ${ENTRIES_OPEN}. Use the reference "PHAROS + your full name". Upload proof of payment on the form.`,
+      `The fee is USD 10, transferred as RM 40 to T.A.S.K's account by bank transfer. The details go up on the How to enter page when entries open on ${ENTRIES_OPEN}. Use the reference "PHAROS + your full name". Upload proof of payment on the form.`,
     );
     await expect(answer.locator('a')).toHaveCount(0);
     await expect(page.locator('main a[href^="/register"]')).toHaveCount(0);
@@ -286,7 +286,7 @@ test.describe('FAQ page', () => {
     await page.goto(`${OPEN}/faq/`);
     const answer = page.locator('div#pay-how');
     await expect(answer).toHaveText(
-      `By bank transfer in US dollars to T.A.S.K's account. The details are on the How to enter page. Use the reference "PHAROS + your full name". Upload proof of payment on the form.`,
+      `The fee is USD 10, transferred as RM 40 to T.A.S.K's account by bank transfer. The details are on the How to enter page. Use the reference "PHAROS + your full name". Upload proof of payment on the form.`,
     );
     await expect(answer.locator('a', { hasText: 'How to enter page' })).toHaveAttribute('href', '/register/#how-to-pay');
     expect(await page.content()).not.toContain(accountNumber);

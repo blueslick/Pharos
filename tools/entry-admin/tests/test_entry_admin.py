@@ -238,7 +238,9 @@ class TestFlags(Base):
         self.assertTrue(any("Your entry fee" in n and "NOT checked" in n for n in result["notes"]))
 
     def test_there_is_no_fee_support_anywhere_in_the_toolkit(self):
-        self.assertEqual(list(self.cfg["fees"]), ["full"])
+        self.assertEqual(list(self.cfg["fees"]), ["full", "statement_amount"])  # one fee; no half
+        self.assertEqual(self.cfg["fees"]["full"], "USD 10")
+        self.assertEqual(self.cfg["fees"]["statement_amount"], "RM 40.00")  # what to match on T.A.S.K's statement
         self.assertNotIn("fee_code", self.cfg["columns"])
         for h in tracker.HEADERS:
             self.assertNotIn("support", h.lower())

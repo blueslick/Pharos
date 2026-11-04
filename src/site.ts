@@ -37,9 +37,12 @@ export const RULES_URL = '/rules/';
 export const FAQ_URL = '/faq/';
 export const FAQ_URL_WINNER_AGE = '/faq/#winner-age-check'; // the FAQ answer rule 10 points to; the id is set in faq.astro
 // Entry fee. One wording, used everywhere a fee is mentioned.
-export const ENTRY_FEE = 'USD 10'; // US dollars only: entrants transfer the fee in US dollars
+export const ENTRY_FEE = 'USD 10'; // the fee as advertised, in US dollars
+// What every entrant actually transfers: T.A.S.K's account takes ringgit only, so the fee of USD 10 is paid as
+// exactly this amount. Never show any other amount or a live exchange rate.
+export const ENTRY_FEE_MYR = 'RM 40';
 // The two standard payment sentences. Use these words every time we say how to pay.
-export const PAY_IN_USD = 'Transfer the fee in US dollars (USD).';
+export const PAY_IN_MYR = `Transfer exactly ${ENTRY_FEE_MYR} (the fee in ringgit, MYR).`;
 export const PROOF_OF_PAYMENT = 'Upload proof of payment on the form.';
 export const PROOF_OF_PAYMENT_INLINE = 'upload proof of payment on the form'; // the same sentence, for use mid-sentence
 export const MEALS_ESTIMATE = 'about 3 meals'; // figure from T.A.S.K; the FAQ's "Where does my fee go?" reads this too
@@ -52,7 +55,8 @@ export const BANK = {
   accountNote: 'the company behind T.A.S.K',
   bank: 'RHB Bank',
   accountNumber: '262111-00010155',
-  currency: 'US dollars (USD)',
+  currency: 'Malaysian ringgit (MYR)',
+  swift: 'RHBBMYKL', // for transfers from overseas
   reference: 'PHAROS + your full name',
 } as const;
 

@@ -12,7 +12,7 @@ import FaqItem from '../components/FaqItem.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import {
   SITE_NAME, CONTACT_EMAIL, INSTAGRAM_HANDLE, CATEGORIES, RULES_URL, REGISTRATION_OPEN, SOUP_KITCHEN_NAME, BANK, DATES,
-  ENTRY_FEE, PROOF_OF_PAYMENT, PROOF_OF_PAYMENT_INLINE, MEALS_ESTIMATE, PRIZES_NOTE, RUBRIC, DEADLINE_TIME, DEADLINE_TIME_PLAIN,
+  ENTRY_FEE, ENTRY_FEE_MYR, PROOF_OF_PAYMENT, PROOF_OF_PAYMENT_INLINE, MEALS_ESTIMATE, PRIZES_NOTE, RUBRIC, DEADLINE_TIME, DEADLINE_TIME_PLAIN,
   PAYMENT_GRACE_DAYS_AFTER_DEADLINE, formatDate, formatDateDay, addDays,
 } from '../site';
 
@@ -115,7 +115,7 @@ const paymentFixDay = formatDateDay(addDays(DATES.deadline, PAYMENT_GRACE_DAYS_A
         <FaqItem id="pay-how" question="How do I pay?">
           {/* Bank details are never on this page. Before launch the How to enter page has no details yet, so no link. */}
           <p>
-            By bank transfer in US dollars to T.A.S.K's account.{' '}
+            The fee is {ENTRY_FEE}, transferred as {ENTRY_FEE_MYR} to T.A.S.K's account by bank transfer.{' '}
             {
               REGISTRATION_OPEN ? (
                 <>The details are on the <a href="/register/#how-to-pay">How to enter page</a>.</>
@@ -127,7 +127,7 @@ const paymentFixDay = formatDateDay(addDays(DATES.deadline, PAYMENT_GRACE_DAYS_A
           </p>
         </FaqItem>
         <FaqItem id="pay-from-abroad" question="I'm not in Malaysia. How do I pay?">
-          <p>Use your bank's international transfer or a service such as Wise, Remitly or Western Union, and send the fee in US dollars. Any method is fine as long as the full amount arrives. Transfer fees are yours.</p>
+          <p>Use your bank's international transfer or a service such as Wise, Remitly or Western Union, and send {ENTRY_FEE_MYR}. Any method is fine as long as the full amount arrives. Transfer fees are yours.</p>
         </FaqItem>
         <FaqItem id="payment-arrived" question="How do I know my payment arrived?">
           <p>
