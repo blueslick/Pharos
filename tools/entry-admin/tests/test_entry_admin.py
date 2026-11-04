@@ -487,6 +487,39 @@ class TestContactEmailMatchesSite(unittest.TestCase):
                          "tools/entry-admin/config.toml [email] contact_email must match CONTACT_EMAIL in src/site.ts")
 
 
+class TestNameInTheFileName(Base):
+    """Entrants name the PDF with their full name and the essay title. Nothing may flag that."""
+
+    def setUp(self):
+        super().setUp()
+        # Cara Exact (limit800) has no other problem. Her file is named like the Register page asks.
+        self.fname = "Cara Exact - Who Gets to Eat.pdf"
+        (self.dir / "downloads" / self.fname).write_bytes((self.dir / "downloads" / "essay-limit800.pdf").read_bytes())
+        (self.dir / "downloads" / "essay-limit800.pdf").unlink()
+        rows = self.csv_rows()
+        row = next(r for r in rows if r["Full name"] == "Cara Exact")
+        row["Your essay (PDF)"] = "https://storage.tally.so/private/Cara%20Exact%20-%20Who%20Gets%20to%20Eat.pdf?id=abc123&signature=fake"
+        self.write_csv_rows(rows)
+        self.process()
+
+    def test_a_name_in_the_file_name_raises_no_flag_and_no_email(self):
+        self.assertEqual(self.flags()["limit800"], set())
+        self.assertEqual(self.by_key()["limit800"]["Essay file"], self.fname)
+        self.assertEqual(self.by_key()["limit800"]["Word count"], 800)
+        for kind in emails.KINDS:
+            made = emails.make_drafts(self.cfg, kind)["made"]
+            if kind != "received":
+                self.assertNotIn(self.eid("limit800"), made, kind)
+
+    def test_pack_does_not_warn_about_the_file_name_and_judges_never_see_it(self):
+        eid = self.eid("limit800")
+        self.edit_tracker(limit800={"Payment verified (Y/N)": "Y", "Status": "Confirmed"})
+        r = pack.pack(self.cfg)
+        self.assertEqual(r["packed"], [eid])
+        self.assertEqual(r["warnings"], [])  # the name is in the file name only, not inside the essay
+        self.assertEqual(sorted(p.name for p in self.cfg.path("judging").iterdir()), [f"{eid}.pdf", "key.xlsx"])
+
+
 class TestSampleDataIsFake(unittest.TestCase):
     """The committed sample files must never hold real people's details."""
 

@@ -55,6 +55,7 @@ Things to know:
 - **How downloaded files are matched.** The CSV has Tally download links; the tool takes the file name at the end of each link and looks for that file name in `work/downloads/` (any sub-folder, upper/lower case ignored). Files inside a sub-folder named after the Submission ID, or starting with it, also match. If you download everything flat into one folder and two people uploaded files with the same name, your computer will rename the second one (`essay (1).pdf`), and it can't be matched reliably: both entries get flagged "PDF problem: Shared..." so you notice. Putting each entry's files in a folder named after its Submission ID avoids this.
 - The payment screenshot only needs to exist in the CSV. It isn't opened.
 - The essay is a PDF upload only (Tally takes no pasted text or links). Anything else in the essay answer (blank, text, a link, or another file type) gets the red "PDF problem" flag, and the problem email asks for the essay as a PDF. The tool never opens or fetches links, and there is no word count for those entries.
+- **A name in the file name is expected, not a problem.** Entrants are asked to name the PDF with their full name and the essay title (for example "Jane Tan - Who Gets to Eat.pdf"). Nothing flags that. Only a name, email address or school written **inside** the essay is a problem, and `pack` warns about it. `pack` also renames every essay to its entry ID (`ZH-001.pdf`), so the entrant's file name never reaches the judges.
 - **The amount to match on T.A.S.K's statement is RM 40.00.** The fee is advertised as USD 10, but every entrant transfers exactly RM 40 (T.A.S.K's account takes ringgit only). It is set as `statement_amount` under `[fees]` in `config.toml`; a payment that shows any other amount is not a match.
 - **There is one fee, for everyone.** If the Tally form still has a fee question, its answer must be exactly "USD 10" (capital letters and extra spaces don't matter). That is set under `[fees]` in `config.toml`; **if you edit the fee wording in Tally, update that line too, or every entry will be flagged.** If the form has no fee question at all, `process` says so and skips the check.
 
@@ -84,7 +85,7 @@ Copies the essays of entries that are **Confirmed with Payment verified = Y** in
 
 - **`key.xlsx` is private.** It is in the same folder only for convenience. Give judges the PDFs, not the key and not the folder as it is.
 - The tool rewrites each PDF so the author name and software details hidden inside the file are dropped (file names alone aren't enough).
-- It warns you if an essay's text contains the entrant's name, email or school, which would let judges identify them. Edit those essays by hand before judging.
+- It warns you if an essay's text contains the entrant's name, email or school, which would let judges identify them. Edit those essays by hand before judging. (The file name is not checked: it holds the entrant's name by design, and it is replaced by the entry ID.)
 - If you later change someone to Rejected, running `pack` again removes their PDF from `judging/`.
 
 **The age checks need the "Secondary email" column.** If an export doesn't have it, `process` still runs, skips the parent-email check for everyone and prints a note saying so. Nobody is flagged by mistake.

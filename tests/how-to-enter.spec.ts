@@ -14,7 +14,7 @@ const ENTRY_FEE = constant('ENTRY_FEE');
 const bankBlock = siteSource.match(/export const BANK = \{([\s\S]*?)\} as const;/)![1];
 const ACCOUNT_NUMBER = bankBlock.match(/accountNumber:\s*'([^']+)'/)![1];
 
-const MAX_PHONE_HEIGHT = 2050; // measured 1958 at 375px after the restyle (it was 2373 before)
+const MAX_PHONE_HEIGHT = 2150; // measured 2070 at 375px (1958 after the restyle, 2373 before): the RM 40 wording, the SWIFT row and the file-name sentence added height
 const OPEN = 'http://localhost:4332';
 const NORMAL = 'http://localhost:4331';
 
@@ -56,7 +56,7 @@ test('entries-open: step 2 keeps the word limit, the PDF, no AI, no name or scho
   await page.goto(`${OPEN}/register/`);
   const step = page.locator('section.hte ol > li').nth(1);
   await expect(step).toContainText('One essay of up to 800 words on one of the three prompts, as a PDF, written without AI tools.');
-  await expect(step).toContainText("Do not put your name or school in the PDF.");
+  await expect(step).toContainText('Name your PDF with your full name and the essay title, for example “Jane Tan - Who Gets to Eat.pdf”. Do not put your name or school inside the essay.');
   await expect(step.getByRole('link', { name: 'See the prompts' })).toHaveAttribute('href', '/competition/#prompts');
 });
 
