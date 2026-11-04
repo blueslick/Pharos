@@ -38,9 +38,9 @@ const faqAnswers: Record<string, string> = {
   'poster-says-any-age': 'The Open category is for students aged 25 and under (as at 17 January 2027). Some early posters and listings show an older version; the Rules page is always the one that counts.',
   'enter-more-than-once': 'No, one essay per person.',
   'under-18': 'A parent or guardian must agree to you entering and to us handling your details. The entry form asks for a second email address; we suggest theirs.',
-  'open-and-close': `Entries open on ${ENTRIES_OPEN_DAY} and close on Sunday 17 January 2027 at 15:59 UTC. Late entries are not judged. See all key dates`,
+  'open-and-close': `Entries open on ${ENTRIES_OPEN_DAY} and close on Sunday 17 January 2027 at 15:59 UTC. Late entries are disqualified. See all key dates`,
   'fix-a-mistake': "Yes, until entries close (17 January 2027, 15:59 UTC). Email pharosprize@gmail.com with your full name, the email address you entered with, and what needs fixing. If it is your essay, attach the corrected PDF. After the deadline we cannot accept changes.",
-  'word-count': "Everything from the first word of your essay to the last, including footnotes. Your title and your reference list do not count. Essays over 800 words are not judged.",
+  'word-count': "Everything from the first word of your essay to the last, including footnotes. Your title and your reference list do not count. Essays over 800 words are disqualified.",
   'references': "If you use someone else's words, ideas or numbers, credit them. Any clear, consistent style is acceptable.",
   'other-languages': 'No, essays must be in English.',
   'name-in-the-pdf': 'So we can judge essays without knowing who wrote them. The form collects your name separately.',
@@ -142,7 +142,7 @@ test.describe('Rules page', () => {
     await expect(items).toHaveText(rulesText);
     await expect(page.locator('main ol')).toHaveCount(1);
     const main = page.locator('main');
-    await expect(main.getByText("An essay that breaks these rules is not judged.", { exact: true })).toBeVisible();
+    await expect(main.getByText("An entry that breaks these rules is disqualified.", { exact: true })).toBeVisible();
     await expect(main.getByText('Questions? Read the FAQ or email pharosprize@gmail.com.', { exact: true })).toBeVisible();
   });
 
@@ -175,7 +175,7 @@ test.describe('Rules page', () => {
     const small = page.locator('main p.rules__small');
     await expect(small).toHaveText([
       'If a poster, listing or post says something different, these rules apply.',
-      'Last updated 4 November 2026: fee support removed; the fee is paid as RM 40.',
+      'Last updated 4 November 2026: fee support removed; the fee is paid as RM 40; entries that break the rules are disqualified.',
     ]);
     // Both come after the list, and are smaller than the rules but not under 16px.
     const [list, line, rule] = await Promise.all([
