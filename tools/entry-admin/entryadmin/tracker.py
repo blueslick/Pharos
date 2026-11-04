@@ -41,6 +41,11 @@ FLAGS = [
 ]
 FLAG_HEADERS = [h for _, h, _ in FLAGS]
 
+# Only payment problems get an email (see emails.py). Entrants who break a rule are disqualified and are not
+# emailed, so every other flag above stays an internal flag in the tracker. "Payment verified (Y/N)" = N is the
+# owner's own "not found, or wrong amount" decision and also gets the payment email.
+PAYMENT_FLAGS = ("no_proof", "duplicate_transfer")
+
 DATA_COLS = ["Entry ID", "Submission ID", "Submitted at", "Full name", "Email", "Country", "School", "Age",
              "Secondary email", "Prompt", "Fee", "Transfer reference", "Name on paying account", "Declaration",
              "Essay file", "Word count"]

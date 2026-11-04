@@ -34,6 +34,10 @@ edition = "Inaugural Edition (SDG 2: Zero Hunger)"
 # The address is typed in two places, so if you change one, change the other.
 contact_email = "pharosprize@gmail.com"
 soup_kitchen = "The Assembly Soup Kitchen (T.A.S.K)"
+# The payment email says what to transfer and by when. Keep in step with ENTRY_FEE_MYR in src/site.ts and with
+# the payment-fix day on the FAQ (the deadline plus PAYMENT_GRACE_DAYS_AFTER_DEADLINE, 7 days: 24 January 2027).
+fee_myr = "RM 40"
+payment_fix_by = "24 January 2027"
 sign_off = "The student volunteers"
 
 # Column mapping (the Tally form is final; these are its exact question titles): left = the name used by this toolkit (do not change),

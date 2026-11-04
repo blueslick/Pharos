@@ -1,0 +1,14 @@
+To: {email}
+Subject: We could not find your payment for entry {entry_id}
+
+Hello {first_name},
+
+Thank you for your entry to the {edition} of {site_name}. We could not find a payment of {fee_myr} for entry {entry_id}:
+
+{problems}
+
+The transfer must be {fee_myr}, and it must be found by {payment_fix_by}. If it is not, the entry is disqualified.
+
+Please reply to this email (or write to {contact_email}) and quote {entry_id}.
+
+{sign_off}

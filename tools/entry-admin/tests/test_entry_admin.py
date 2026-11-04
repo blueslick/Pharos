@@ -378,53 +378,52 @@ class TestEmails(Base):
             body = self.draft("received", eid)
             self.assertNotRegex(body.replace("[contact email]", ""), r"[{}]")
 
-    def test_problem_drafts_use_the_entrants_flags(self):
-        r = emails.make_drafts(self.cfg, "problem")
-        self.assertNotIn(self.eid("limit800"), r["made"])  # exactly 800 words, nothing wrong
-        self.assertNotIn(self.eid("old"), r["made"])
-        self.assertIn("ZH-002", r["made"])
-        self.assertIn("850 words", self.draft("problem", "ZH-002"))
-        self.assertIn("scan or photo", self.draft("problem", self.eid("scanned")))
-        for key in ("gdoc", "other_url", "few_words", "docx"):  # link, other link, text, .docx
-            self.assertIn("isn't a PDF", self.draft("problem", self.eid(key)))
-            self.assertIn("attached as a PDF", self.draft("problem", self.eid(key)))
-        self.assertIn("could not find an essay file", self.draft("problem", self.eid("nofile")))
-        multi = self.draft("problem", self.eid("multi"))
-        for phrase in ("900 words", "could not read the age", "proof of your payment"):
-            self.assertIn(phrase, multi)
+    def test_payment_drafts_are_made_for_payment_flags_only(self):
+        r = emails.make_drafts(self.cfg, "payment_not_found")
+        # no_proof, duplicate_transfer (both entries) and the entry that has no proof AND other problems
+        expected = {self.eid(k) for k in ("noproof", "txn_a", "txn_b", "multi")}
+        self.assertEqual(set(r["made"]), expected)
+        self.assertIn("proof of your payment", self.draft("payment_not_found", self.eid("noproof")))
+        self.assertIn("already been used", self.draft("payment_not_found", self.eid("txn_a")))
+        # the payment email says what to transfer, by when, and what happens if it is not found
+        text = self.draft("payment_not_found", self.eid("noproof"))
+        self.assertIn("RM 40", text)
+        self.assertIn("24 January 2027", text)
+        self.assertIn("disqualified", text)
+        self.assertNotRegex(text, r"[{}]")
+
+    def test_rule_breakers_are_not_emailed(self):
+        """Word count, PDF problem, name, age, parent email, duplicate entrant and fee answer are internal flags only."""
+        r = emails.make_drafts(self.cfg, "payment_not_found")
+        for key in ("over", "limit801", "scanned", "corrupt", "nofile", "gdoc", "other_url", "few_words", "docx",
+                    "nonlatin", "nonlatin_multi", "age26", "age99", "minor_none", "minor_self", "dupemail",
+                    "dupname_a", "dupname_b", "fee_other"):
+            self.assertNotIn(self.eid(key), r["made"], key)
+        # ... but they are still flagged in the tracker
+        f = self.flags()
+        self.assertEqual(f["over"], {"over_word_limit"})
+        self.assertEqual(f["scanned"], {"pdf_problem"})
+        self.assertEqual(f["minor_none"], {"parent_email"})
+        # and no other kind of problem email exists
+        self.assertEqual(emails.KINDS, ("received", "confirmed", "payment_not_found"))
+        self.assertFalse((self.cfg.path("emails") / "problem").exists())
+
+    def test_payment_email_lists_only_the_payment_problem_of_a_multi_problem_entry(self):
+        emails.make_drafts(self.cfg, "payment_not_found")
+        multi = self.draft("payment_not_found", self.eid("multi"))  # over the word limit, age unreadable, no proof
+        self.assertIn("proof of your payment", multi)
+        for leaked in ("900 words", "age on your entry form", "word limit", "PDF"):
+            self.assertNotIn(leaked, multi)
         # nothing about other entrants leaks into an email
-        self.assertNotRegex(self.draft("problem", "ZH-001"), self.eid("dupemail"))
-        self.assertNotRegex(self.draft("problem", self.eid("txn_a")), self.eid("txn_b"))
+        self.assertNotRegex(self.draft("payment_not_found", self.eid("txn_a")), self.eid("txn_b"))
+        self.assertNotRegex(self.draft("payment_not_found", self.eid("txn_b")), self.eid("txn_a"))
 
-    def test_non_latin_name_email_says_entry_is_still_in_only_when_it_is_the_only_flag(self):
-        asked = ("We print names on certificates in English letters, so could you send your name as you'd like "
-                 "it to appear in English letters?")
-        still_in = "Your entry is still in."
-        emails.make_drafts(self.cfg, "problem")
-        only = self.draft("problem", self.eid("nonlatin"))        # non-Latin name and nothing else
-        self.assertIn(asked + " " + still_in, only)
-        multi_id = self.eid("nonlatin_multi")
-        others = self.draft("problem", multi_id)      # non-Latin name AND unreadable age
-        self.assertIn(asked, others)
-        self.assertNotIn(still_in, others)
-        self.assertIn("age on your entry form", others)
-        # fixing the other problem later flips the wording back
-        rows = self.csv_rows()
-        row = next(r for r in rows if r["Full name"].endswith("Test"))  # the Cyrillic-name entry
-        row["Age on 17 January 2027"] = "17"
-        row["Secondary email"] = "parent.anna@example.com"  # an under-18 now, so they need a parent's email too
-        self.write_csv_rows(rows)
-        self.process()
-        emails.make_drafts(self.cfg, "problem", only={multi_id})
-        self.assertIn(still_in, self.draft("problem", multi_id))
-
-    def test_age_flags_have_problem_email_wording(self):
-        self.process()
-        emails.make_drafts(self.cfg, "problem")
-        over = self.draft("problem", self.by_key()["age26"]["Entry ID"])
-        self.assertIn("The Open category is for students aged 25 and under on 17 January 2027", over)  # {open_max_age} from config
-        minor = self.draft("problem", self.by_key()["minor_none"]["Entry ID"])
-        self.assertIn("we need a parent or guardian's email address", minor)
+    def test_payment_verified_n_gets_the_payment_email(self):
+        self.edit_tracker(clean={"Payment verified (Y/N)": "N"}, over={"Payment verified (Y/N)": "Y"})
+        r = emails.make_drafts(self.cfg, "payment_not_found")
+        self.assertIn("ZH-001", r["made"])        # checked on T.A.S.K's statement: not found or wrong amount
+        self.assertNotIn("ZH-002", r["made"])     # verified: no payment email
+        self.assertIn("could not find a transfer of RM 40", self.draft("payment_not_found", "ZH-001"))
 
     def test_confirmed_needs_status_and_payment_verified(self):
         self.edit_tracker(clean={"Payment verified (Y/N)": "Y", "Status": "Confirmed"},
@@ -434,10 +433,10 @@ class TestEmails(Base):
         self.assertTrue(any("ZH-002" in n for n in r["notes"]))
         self.assertIn("confirmed", self.draft("confirmed", "ZH-001"))
 
-    def test_no_problem_email_once_decided_and_rejected_get_no_received(self):
-        self.edit_tracker(over={"Status": "Confirmed", "Payment verified (Y/N)": "Y"}, old={"Status": "Rejected"})
-        self.assertNotIn("ZH-002", emails.make_drafts(self.cfg, "problem")["made"])
-        self.assertNotIn("ZH-011", emails.make_drafts(self.cfg, "problem")["made"])
+    def test_no_payment_email_once_decided_and_rejected_get_no_received(self):
+        noproof = self.eid("noproof")
+        self.edit_tracker(noproof={"Status": "Confirmed", "Payment verified (Y/N)": "Y"}, old={"Status": "Rejected"})
+        self.assertNotIn(noproof, emails.make_drafts(self.cfg, "payment_not_found")["made"])
         self.assertNotIn("ZH-011", emails.make_drafts(self.cfg, "received")["made"])
 
     def test_second_run_only_drafts_new_things(self):
@@ -448,23 +447,23 @@ class TestEmails(Base):
         self.assertEqual(len(emails.make_drafts(self.cfg, "received", redo_all=True)["made"]), self.n)
         self.assertEqual(emails.make_drafts(self.cfg, "received", only={"ZH-004"})["made"], ["ZH-004"])
 
-    def test_problem_draft_redone_when_flags_change(self):
-        emails.make_drafts(self.cfg, "problem")
-        self.assertEqual(emails.make_drafts(self.cfg, "problem")["made"], [])
-        # Jon fixes nothing, but a second, different problem appears: a new transfer-reference duplicate
-        src = self.dir / "tally-export.csv"
+    def test_payment_draft_redone_when_payment_problems_change(self):
+        emails.make_drafts(self.cfg, "payment_not_found")
+        self.assertEqual(emails.make_drafts(self.cfg, "payment_not_found")["made"], [])
+        # Jon (ZH-011) has no problem. A second entry now reuses his transfer reference, so both get a payment email.
         rows = self.csv_rows()
         rows[10]["Transfer reference or transaction ID"] = rows[0]["Transfer reference or transaction ID"]  # ZH-011 now duplicates ZH-001
         self.write_csv_rows(rows)
         self.process()
-        made = emails.make_drafts(self.cfg, "problem")["made"]
+        made = emails.make_drafts(self.cfg, "payment_not_found")["made"]
         self.assertIn("ZH-011", made)
         self.assertIn("ZH-001", made)
-        self.assertNotIn("ZH-002", made)
+        self.assertNotIn(self.eid("noproof"), made)  # unchanged: not drafted again
 
     def test_cli_sends_nothing_and_reports(self):
         self.assertEqual(run(["--config", str(self.dir / "config.toml"), "emails"]), 0)
-        self.assertTrue((self.cfg.path("emails") / "problem_ALL.txt").exists())
+        self.assertTrue((self.cfg.path("emails") / "payment_not_found_ALL.txt").exists())
+        self.assertFalse((self.cfg.path("emails") / "problem_ALL.txt").exists())
 
     def test_templates_obey_content_red_lines(self):
         for f in (ROOT / "templates").iterdir():
@@ -520,6 +519,26 @@ class TestNameInTheFileName(Base):
         self.assertEqual(sorted(p.name for p in self.cfg.path("judging").iterdir()), [f"{eid}.pdf", "key.xlsx"])
 
 
+class TestPaymentEmailMatchesSite(unittest.TestCase):
+    """The RM 40 and the 24 January date are typed in config.toml and in src/site.ts; fail if they drift apart."""
+
+    def test_fee_and_payment_fix_date_match_site_ts(self):
+        site_ts = ROOT.parent.parent / "src" / "site.ts"
+        if not site_ts.is_file():
+            self.skipTest("src/site.ts not found (toolkit used outside the website repo)")
+        src = site_ts.read_text(encoding="utf-8")
+        fee = re.search(r"""ENTRY_FEE_MYR\s*=\s*['"]([^'"]+)['"]""", src)
+        deadline = re.search(r"""deadline:\s*['"](\d{4})-(\d{2})-(\d{2})['"]""", src)
+        grace = re.search(r"PAYMENT_GRACE_DAYS_AFTER_DEADLINE\s*=\s*(\d+)", src)
+        self.assertTrue(fee and deadline and grace, "ENTRY_FEE_MYR, DATES.deadline or PAYMENT_GRACE_DAYS_AFTER_DEADLINE not found in src/site.ts")
+        import datetime
+        day = datetime.date(*map(int, deadline.groups())) + datetime.timedelta(days=int(grace.group(1)))
+        cfg = tomllib.loads((ROOT / "config.toml").read_text(encoding="utf-8"))
+        self.assertEqual(cfg["email"]["fee_myr"], fee.group(1))
+        self.assertEqual(cfg["email"]["payment_fix_by"], f"{day.day} {day.strftime('%B %Y')}")
+        self.assertEqual(cfg["fees"]["statement_amount"], fee.group(1) + ".00")  # RM 40.00 on T.A.S.K's statement
+
+
 class TestSampleDataIsFake(unittest.TestCase):
     """The committed sample files must never hold real people's details."""
 
@@ -537,7 +556,7 @@ class TestSampleDataIsFake(unittest.TestCase):
         import subprocess
         probes = ["work/submissions.csv", "work/tracker.xlsx", "work/judging/key.xlsx", "data/real/export.csv",
                   "real/export.csv", "downloads/essay.pdf", "export.csv", "tracker.xlsx", "judging/key.xlsx",
-                  "emails/problem_ALL.txt", "sample/output/tracker.xlsx"]
+                  "emails/payment_not_found_ALL.txt", "sample/output/tracker.xlsx"]
         for rel in probes:
             r = subprocess.run(["git", "check-ignore", "-q", rel], cwd=ROOT, capture_output=True)
             if r.returncode == 128:

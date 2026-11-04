@@ -129,10 +129,11 @@ Settings and wording for the entry-processing tools (tracker, email drafts, judg
 | Site name `Pharos` | `config.toml`, `[email] site_name` | Keep in step with `SITE_NAME` in `src/site.ts` if the name changes. |
 | Contact email `pharosprize@gmail.com` | `config.toml`, `[email] contact_email` | Must match `CONTACT_EMAIL` in `src/site.ts`. A toolkit test fails if the two differ. |
 | Edition wording | `config.toml`, `[email] edition` | Check it reads right. |
+| Payment email | `config.toml`, `[email] fee_myr` and `payment_fix_by`; `[fees] statement_amount` | `fee_myr` is "RM 40" and `payment_fix_by` is "24 January 2027" (the deadline plus 7 days): keep them in step with `ENTRY_FEE_MYR` and the FAQ's payment day; a toolkit test fails if they differ from `src/site.ts`. `statement_amount` ("RM 40.00") is the amount to match on T.A.S.K's statement. Only payment problems get an email (`templates/payment_not_found.txt`); entrants who break a rule are disqualified and are not emailed. |
 | Fee answer | `config.toml`, `[fees]` | Set to "USD 10". If the form still has a fee question, it must match word for word. If you edit the form's wording, update this or every entry is flagged. |
 | Question titles | `config.toml`, `[columns]` | Checked against the live Tally form on 26 October 2026. Payment columns are "Proof of payment", "Transfer reference or transaction ID" and "Name on the account you paid from"; the age column is "Age on 17 January 2027". If you rename a question in Tally, change the matching title here. The secondary-email question is not read by the toolkit. |
 | Word limit, entry ID prefix | `config.toml`, `[entry]` | Confirm 800 words and `ZH`. Open is 25 and under (age on 17 January 2027): the toolkit flags an age it can't read, an age over 25 (`open_max_age`), and an under-18 with no parent or guardian email (`adult_age`; the form's "Secondary email"). The Tally age box still allows up to 99, so the flag is the only guard. |
-| Email wording | `templates/*.txt`, `templates/flag_messages.toml` | Read through and adjust the drafts' wording before first use. |
+| Email wording | `templates/*.txt`, `templates/flag_messages.toml` | Read through and adjust the drafts' wording before first use. (`received.txt` and `confirmed.txt` still use the older, friendlier wording; the formal-register pass covered the website only.) |
 
 ## The Register page (switched by `REGISTRATION_OPEN`: `REGISTRATION_SWITCH` on launch day, or the entries-open PR preview)
 
