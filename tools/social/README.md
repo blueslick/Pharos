@@ -98,7 +98,7 @@ It **warns** (you decide) about:
 | Missing alt text | Every image needs it. |
 | "charity", "non-profit", "NGO", "foundation", "society" | We are never called these. Say "run by student volunteers" or "a fundraiser for The Assembly Soup Kitchen (T.A.S.K)". |
 | "Assembly Soup Kitchen" or "T.A.S.K" spelled any other way | The soup kitchen must be spelled exactly `The Assembly Soup Kitchen (T.A.S.K)` (as `SOUP_KITCHEN_NAME` in `src/site.ts`). |
-| A fundraising target, such as "raise USD 500" | We don't publish a target. |
+| A fundraising target, such as "raise MYR 2,000" | We don't publish a target. |
 | "UN", "United Nations", "Global Goals" | Fine when naming a source, never as part of our name or branding. |
 | A box or circle outside the cropped area | It would be cut off. |
 | A low-resolution crop | It would look blurry. |

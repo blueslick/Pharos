@@ -25,16 +25,20 @@ test('Competition shows both categories, the prizes and where the money goes', a
   const junior = page.locator('.cat--junior');
   await expect(junior).toContainText('Junior');
   await expect(junior).toContainText('14 and under');
-  await expect(junior).toContainText('USD 50');
+  await expect(junior).toContainText('MYR 200');
+  await expect(junior.locator('.cat__guide')).toHaveText('about USD 50');
   const open = page.locator('.cat--open');
   await expect(open).toContainText('Open');
   await expect(open).toContainText('25 and under');
-  await expect(open).toContainText('USD 100');
-  await expect(page.getByText('Prizes are funded separately, not from entry fees.')).toBeVisible();
+  await expect(open).toContainText('MYR 400');
+  await expect(open.locator('.cat__guide')).toHaveText('about USD 100');
+  await expect(page.locator('main')).not.toContainText('funded separately');
   await expect(page.getByText('Your age is your age on 17 January 2027.')).toBeVisible();
-  await expect(page.getByText('Every USD 10 entry funds about 3 meals at T.A.S.K.')).toBeVisible();
-  await expect(page.getByText('Entry fee: USD 10, transferred as MYR 40. You pay The Assembly Soup Kitchen (T.A.S.K) directly by bank transfer, and upload proof of payment on the form.')).toBeVisible();
+  await expect(page.getByText('Every MYR 40 entry funds about 3 meals at T.A.S.K.')).toBeVisible();
+  await expect(page.getByText('Entry fee: MYR 40 (about USD 10 at current FOREX rates). You pay The Assembly Soup Kitchen (T.A.S.K) directly by bank transfer, and upload proof of payment on the form.')).toBeVisible();
   await expect(page.getByText('Pharos never handles the money.')).toBeVisible();
+  // the currency note: once on the page, small, under the fee paragraph
+  await expect(page.getByText('All amounts are set and paid in Malaysian ringgit (MYR). US dollar (USD) figures are a guide only and may change with foreign exchange (FOREX) rates; the entry fee is always MYR 40.')).toHaveCount(1);
   await expect(page.locator('.fact', { hasText: 'Deadline' })).toContainText('17 January 2027');
   await expect(page.getByText('15:59 UTC').first()).toBeVisible();
   await expect(page.getByText('Winners announced by 3 February 2027.')).toBeVisible();

@@ -242,6 +242,10 @@ export function loadPost(dirArg, { today = new Date() } = {}) {
 
 // ---- caption --------------------------------------------------------------------
 
+// The fixed currency note (CURRENCY_NOTE in src/site.ts). It ends every caption that mentions money, word for word,
+// so it does not count towards the "about 45 words" length guide below.
+const CURRENCY_NOTE = 'All amounts are set and paid in Malaysian ringgit (MYR). US dollar (USD) figures are a guide only and may change with foreign exchange (FOREX) rates; the entry fee is always MYR 40.';
+
 export function buildCaption(raw, { sourceLine, imageCredit, warn, addText, fill = (s) => s }) {
   let paras = raw.caption;
   if (isObj(paras)) paras = [paras.one ?? paras.first, paras.two ?? paras.second];
@@ -252,7 +256,7 @@ export function buildCaption(raw, { sourceLine, imageCredit, warn, addText, fill
   paras = paras.map((p, i) => fill(String(p).trim().replace(/\s+/g, ' '), `caption paragraph ${i + 1}`));
   paras.forEach((p, i) => {
     addText(`caption paragraph ${i + 1}`, p);
-    const words = p.split(' ').length;
+    const words = p.replace(CURRENCY_NOTE, '').trim().split(' ').length;
     if (words > 45) warn(`caption paragraph ${i + 1} is ${words} words. The strategy asks for two short paragraphs, so aim for about 45 or fewer.`);
   });
   const lines = [paras.join('\n\n')];

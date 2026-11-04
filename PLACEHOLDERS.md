@@ -54,10 +54,10 @@ One judge (the owner). Nothing is left as a placeholder in the code: the rubric 
 | Under-18s (Privacy) | Waitlist: only an email is collected; parent or guardian should know; a parent can ask us to delete it any time. Entry form: a parent or guardian must agree to the entry, and we may contact the secondary email about this | `src/pages/privacy.astro` |
 | Entry data deleted by | 3 August 2027 (emails, ages, essays, proof of payment; published names and certificate records are kept) | `DATES.entryDataDeleted` in `src/site.ts` (Privacy) |
 | Entry form | Tally form `Ar7QeB`, https://tally.so/r/Ar7QeB (shown nowhere while `REGISTRATION_OPEN` is `false`) | `REGISTRATION_URL` in `src/site.ts` (one value) |
-| Entry fee wording | Advertised as USD 10 for everyone; every entrant transfers exactly MYR 40 (T.A.S.K's account takes Malaysian Ringgit only). No other amount and no exchange rate appears anywhere on the site | `ENTRY_FEE` and `ENTRY_FEE_MYR` in `src/site.ts`. The standard payment sentences ("Transfer exactly MYR 40 (the fee in Malaysian Ringgit)." and "Upload proof of payment on the form.") are `PAY_IN_MYR`, `PROOF_OF_PAYMENT` and `PROOF_OF_PAYMENT_INLINE`; the bank's currency is `BANK.currency` and its SWIFT code is `BANK.swift` |
-| Categories and prizes | Junior: 14 and under, prize USD 50. Open: 25 and under, prize USD 100. Age is counted on 17 January 2027. Both are for students only. "Prizes are funded separately, not from entry fees." | `CATEGORIES`, `PRIZES_NOTE` in `src/site.ts` (Competition, Register) |
-| Bank details | Assembly Ground Sdn Bhd (the company behind T.A.S.K), RHB Bank, account 262111-00010155, SWIFT code RHBBMYKL (also named in the FAQ's overseas answer), currency Malaysian Ringgit (MYR), reference "PHAROS + your full name". Shown only on `/register/` once `REGISTRATION_OPEN` is `true` (launch day, or the entries-open PR preview) | `BANK` in `src/site.ts` |
-| Meals per entry | "Every USD 10 entry funds about 3 meals at T.A.S.K." (figure from T.A.S.K) | `MEALS_PER_ENTRY` in `src/site.ts` (Competition, "Where the money goes") |
+| Entry fee wording | MYR 40 for everyone (T.A.S.K's account takes Malaysian ringgit only). US dollars appear only as "about USD 10", never on their own. No other amount and no exchange rate appears anywhere on the site (decided 4 Nov 2026) | `ENTRY_FEE`, `ENTRY_FEE_USD_GUIDE`, `ENTRY_FEE_FULL`, `ENTRY_FEE_SHORT` and `CURRENCY_NOTE` in `src/site.ts`. The standard payment sentences ("Transfer exactly MYR 40 (Malaysian ringgit)." and "Upload proof of payment on the form.") are `PAY_IN_MYR`, `PROOF_OF_PAYMENT` and `PROOF_OF_PAYMENT_INLINE`; the bank's currency is `BANK.currency` and its SWIFT code is `BANK.swift` |
+| Categories and prizes | Junior: 14 and under, prize MYR 200 (about USD 50). Open: 25 and under, prize MYR 400 (about USD 100). Age is counted on 17 January 2027. Both are for students only. No sentence says who funds the prizes (the earlier sentence about prize funding was withdrawn 4 Nov 2026) | `CATEGORIES` (with `usdGuide`) and `PRIZES_FULL` in `src/site.ts` (Competition, Register) |
+| Bank details | Assembly Ground Sdn Bhd (the company behind T.A.S.K), RHB Bank, account 262111-00010155, SWIFT code RHBBMYKL (also named in the FAQ's overseas answer), currency Malaysian ringgit (MYR), reference "PHAROS + your full name". Shown only on `/register/` once `REGISTRATION_OPEN` is `true` (launch day, or the entries-open PR preview) | `BANK` in `src/site.ts` |
+| Meals per entry | "Every MYR 40 entry funds about 3 meals at T.A.S.K." (figure from T.A.S.K) | `MEALS_PER_ENTRY` in `src/site.ts` (Competition, "Where the money goes") |
 | Volunteering card (Home) | Switched on: links to T.A.S.K's Instagram | `SOUP_KITCHEN_INSTAGRAM_URL` in `src/site.ts` |
 | About: "Why we started this" | Draft copy written for the owner's review | `src/pages/about.astro` |
 | Contact email | pharosprize@gmail.com (a `mailto:` link) | `CONTACT_EMAIL` in `src/site.ts` |
@@ -94,7 +94,7 @@ The Inaugural Edition's three prompts and the judging rubric are live, whether o
 The form is set up in Tally, not on this site. I could not open it from the build environment, so please check it matches the Privacy page and the Register page:
 
 - Questions: full name, email, country, school (optional), age on 17 January 2027, chosen prompt, essay (PDF), proof of payment, transfer reference, the name on the paying account, and a secondary email for under-18s.
-- There is one fee for everyone. Remove the fee-support option and the "Fee support code" question from the form (Cowork does this after merge). If the form keeps a fee question, its only option must read exactly "USD 10" (or update `[fees]` in `tools/entry-admin/config.toml` to match).
+- There is one fee for everyone. Remove the fee-support option and the "Fee support code" question from the form (Cowork does this after merge). If the form keeps a fee question, its only option must read exactly "MYR 40" (or update `[fees]` in `tools/entry-admin/config.toml` to match).
 - Tickboxes: agree to us storing details and the essay (as set out in the Privacy notice); name may be published if shortlisted or winning (name only, and it stays published after the competition); for under-18s, a parent or guardian agrees. The Register page's under-18 line says the same.
 - Ask T.A.S.K to share its list of incoming transfers (date, amount, reference), as the Privacy page says.
 
@@ -102,9 +102,9 @@ The form is set up in Tally, not on this site. I could not open it from the buil
 
 | Item | Decided value |
 |---|---|
-| Entry fee | USD 10 for everyone |
-| Prizes | Junior (14 and under): USD 50. Open (25 and under): USD 100. Funded separately, not from entry fees |
-| Payment | The fee is USD 10, paid as exactly MYR 40 by bank transfer directly to T.A.S.K's account; entrants upload proof of payment on the form. Pharos never handles the money. No payment code or link on the site |
+| Entry fee | MYR 40 for everyone (about USD 10 at current FOREX rates) |
+| Prizes | Junior (14 and under): MYR 200 (about USD 50). Open (25 and under): MYR 400 (about USD 100). No sentence about who funds the prizes |
+| Payment | The fee is MYR 40 (about USD 10 at current FOREX rates), paid by bank transfer directly to T.A.S.K's account; entrants upload proof of payment on the form. Pharos never handles the money. No payment code or link on the site |
 
 ## Social post maker (`tools/social/`)
 
@@ -129,8 +129,8 @@ Settings and wording for the entry-processing tools (tracker, email drafts, judg
 | Site name `Pharos` | `config.toml`, `[email] site_name` | Keep in step with `SITE_NAME` in `src/site.ts` if the name changes. |
 | Contact email `pharosprize@gmail.com` | `config.toml`, `[email] contact_email` | Must match `CONTACT_EMAIL` in `src/site.ts`. A toolkit test fails if the two differ. |
 | Edition wording | `config.toml`, `[email] edition` | Check it reads right. |
-| Payment email | `config.toml`, `[email] fee_myr` and `payment_fix_by`; `[fees] statement_amount` | `fee_myr` is "MYR 40" and `payment_fix_by` is "24 January 2027" (the deadline plus 7 days): keep them in step with `ENTRY_FEE_MYR` and the FAQ's payment day; a toolkit test fails if they differ from `src/site.ts`. `statement_amount` ("RM 40.00") is the amount to match on T.A.S.K's statement. Only payment problems get an email (`templates/payment_not_found.txt`); entrants who break a rule are disqualified and are not emailed. |
-| Fee answer | `config.toml`, `[fees]` | Set to "USD 10". If the form still has a fee question, it must match word for word. If you edit the form's wording, update this or every entry is flagged. |
+| Payment email | `config.toml`, `[email] fee_myr` and `payment_fix_by`; `[fees] statement_amount` | `fee_myr` is "MYR 40" and `payment_fix_by` is "24 January 2027" (the deadline plus 7 days): keep them in step with `ENTRY_FEE` and the FAQ's payment day; a toolkit test fails if they differ from `src/site.ts`. `statement_amount` ("RM 40.00") is the amount to match on T.A.S.K's statement. Only payment problems get an email (`templates/payment_not_found.txt`); entrants who break a rule are disqualified and are not emailed. |
+| Fee answer | `config.toml`, `[fees]` | Set to "MYR 40". If the form still has a fee question, it must match word for word. If you edit the form's wording, update this or every entry is flagged. |
 | Question titles | `config.toml`, `[columns]` | Checked against the live Tally form on 26 October 2026. Payment columns are "Proof of payment", "Transfer reference or transaction ID" and "Name on the account you paid from"; the age column is "Age on 17 January 2027". If you rename a question in Tally, change the matching title here. The secondary-email question is not read by the toolkit. |
 | Word limit, entry ID prefix | `config.toml`, `[entry]` | Confirm 800 words and `ZH`. Open is 25 and under (age on 17 January 2027): the toolkit flags an age it can't read, an age over 25 (`open_max_age`), and an under-18 with no parent or guardian email (`adult_age`; the form's "Secondary email"). The Tally age box still allows up to 99, so the flag is the only guard. |
 | Email wording | `templates/*.txt`, `templates/flag_messages.toml` | Read through and adjust the drafts' wording before first use. (`received.txt` and `confirmed.txt` still use the older, friendlier wording; the formal-register pass covered the website only.) |

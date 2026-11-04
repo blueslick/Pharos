@@ -21,9 +21,9 @@ adult_age = 18            # under this age, the entry needs a parent or guardian
 # match its answer WORD FOR WORD (only capital letters and extra spaces are ignored), or EVERY entry
 # will be flagged "Fee problem: Unclear" until you change it. If the form no longer asks, nothing is checked.
 [fees]
-full = "USD 10"
-# The amount to match on T.A.S.K's bank statement. The fee is advertised as USD 10, but every entrant transfers exactly this in
-# ringgit (T.A.S.K's account takes ringgit only), so a payment is found and correct only if it shows this amount.
+full = "MYR 40"
+# The amount to match on T.A.S.K's bank statement. The fee is MYR 40 everywhere (US dollars are only an "about" guide on the
+# website, never the fee), and T.A.S.K's bank statement shows it as "RM 40.00", so a payment is found and correct only if it shows this amount.
 statement_amount = "RM 40.00"
 
 # What goes into the email drafts. Placeholders stay in [brackets] until you know them.
@@ -34,7 +34,7 @@ edition = "Inaugural Edition (SDG 2: Zero Hunger)"
 # The address is typed in two places, so if you change one, change the other.
 contact_email = "pharosprize@gmail.com"
 soup_kitchen = "The Assembly Soup Kitchen (T.A.S.K)"
-# The payment email says what to transfer and by when. Keep in step with ENTRY_FEE_MYR in src/site.ts and with
+# The payment email says what to transfer and by when. Keep in step with ENTRY_FEE in src/site.ts and with
 # the payment-fix day on the FAQ (the deadline plus PAYMENT_GRACE_DAYS_AFTER_DEADLINE, 7 days: 24 January 2027).
 fee_myr = "MYR 40"
 payment_fix_by = "24 January 2027"

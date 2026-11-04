@@ -40,7 +40,7 @@ Reads the CSV and builds `work/tracker.xlsx`, one row per entry, with an entry I
 | Age unclear | age missing or not a number | red |
 | Over Open age limit | age above 25 (`open_max_age` in `config.toml`). The Open category is 25 and under, counted on 17 January 2027, and the form's own age box goes up to 99, so it can't stop these. Look before confirming: it may be a typo, or someone who typed their age today instead of their age on the deadline | red |
 | Parent email missing | under 18 (`adult_age`) and the form's "Secondary email" is blank, or is the entrant's own address. The form suggests a parent or guardian's address but can't check whose it is, so this only catches a missing or obviously wrong one. The "parent or guardian agrees" tick is a required box on the form, so every entry has it | red |
-| Fee problem | the form's fee answer is not the one fee in `config.toml` (`USD 10`). Not checked if the export has no fee column. | red |
+| Fee problem | the form's fee answer is not the one fee in `config.toml` (`MYR 40`). Not checked if the export has no fee column. | red |
 | No proof of payment | the Proof of payment question is empty | red |
 | Duplicate transfer reference | same transfer reference as another entry | red |
 
@@ -56,8 +56,8 @@ Things to know:
 - The payment screenshot only needs to exist in the CSV. It isn't opened.
 - The essay is a PDF upload only (Tally takes no pasted text or links). Anything else in the essay answer (blank, text, a link, or another file type) gets the red "PDF problem" flag (internal only: no email). The tool never opens or fetches links, and there is no word count for those entries.
 - **A name in the file name is expected, not a problem.** Entrants are asked to name the PDF with their full name and the essay title (for example "Jane Tan - Who Gets to Eat.pdf"). Nothing flags that. Only a name, email address or school written **inside** the essay is a problem, and `pack` warns about it. `pack` also renames every essay to its entry ID (`ZH-001.pdf`), so the entrant's file name never reaches the judges.
-- **The amount to match on T.A.S.K's statement is RM 40.00.** The fee is advertised as USD 10, but every entrant transfers exactly MYR 40 (T.A.S.K's account takes Malaysian Ringgit only, and its bank statement shows the amount as RM 40.00). It is set as `statement_amount` under `[fees]` in `config.toml`; a payment that shows any other amount is not a match.
-- **There is one fee, for everyone.** If the Tally form still has a fee question, its answer must be exactly "USD 10" (capital letters and extra spaces don't matter). That is set under `[fees]` in `config.toml`; **if you edit the fee wording in Tally, update that line too, or every entry will be flagged.** If the form has no fee question at all, `process` says so and skips the check.
+- **The amount to match on T.A.S.K's statement is RM 40.00.** The fee is MYR 40 everywhere (the website shows US dollars only as an "about" guide), and T.A.S.K's bank statement shows the amount as RM 40.00. It is set as `statement_amount` under `[fees]` in `config.toml`; a payment that shows any other amount is not a match.
+- **There is one fee, for everyone.** If the Tally form still has a fee question, its answer must be exactly "MYR 40" (capital letters and extra spaces don't matter). That is set under `[fees]` in `config.toml`; **if you edit the fee wording in Tally, update that line too, or every entry will be flagged.** If the form has no fee question at all, `process` says so and skips the check.
 
 ### 2. `emails`: draft emails (nothing is sent)
 Writes drafts into `work/emails/`, one `.txt` per entry in a folder per type, plus one combined file per type (`received_ALL.txt` etc.) you can read straight through:

@@ -220,8 +220,8 @@ class TestFlags(Base):
 
     def test_fee_answer_must_be_the_one_fee_but_ignores_case_and_spacing(self):
         rows = self.csv_rows()
-        rows[0]["Your entry fee"] = "  usd 10 "
-        rows[1]["Your entry fee"] = "Fee support at 50%: USD 5"  # the old half-fee option no longer exists
+        rows[0]["Your entry fee"] = "  myr 40 "
+        rows[1]["Your entry fee"] = "USD 10"  # a US-dollar answer is not the fee: the fee is MYR 40
         self.write_csv_rows(rows)
         self.process()
         f = self.flags()
@@ -239,7 +239,7 @@ class TestFlags(Base):
 
     def test_there_is_no_fee_support_anywhere_in_the_toolkit(self):
         self.assertEqual(list(self.cfg["fees"]), ["full", "statement_amount"])  # one fee; no half
-        self.assertEqual(self.cfg["fees"]["full"], "USD 10")
+        self.assertEqual(self.cfg["fees"]["full"], "MYR 40")
         self.assertEqual(self.cfg["fees"]["statement_amount"], "RM 40.00")  # what to match on T.A.S.K's statement
         self.assertNotIn("fee_code", self.cfg["columns"])
         for h in tracker.HEADERS:
@@ -527,10 +527,10 @@ class TestPaymentEmailMatchesSite(unittest.TestCase):
         if not site_ts.is_file():
             self.skipTest("src/site.ts not found (toolkit used outside the website repo)")
         src = site_ts.read_text(encoding="utf-8")
-        fee = re.search(r"""ENTRY_FEE_MYR\s*=\s*['"]([^'"]+)['"]""", src)
+        fee = re.search(r"""ENTRY_FEE\s*=\s*['"]([^'"]+)['"]""", src)
         deadline = re.search(r"""deadline:\s*['"](\d{4})-(\d{2})-(\d{2})['"]""", src)
         grace = re.search(r"PAYMENT_GRACE_DAYS_AFTER_DEADLINE\s*=\s*(\d+)", src)
-        self.assertTrue(fee and deadline and grace, "ENTRY_FEE_MYR, DATES.deadline or PAYMENT_GRACE_DAYS_AFTER_DEADLINE not found in src/site.ts")
+        self.assertTrue(fee and deadline and grace, "ENTRY_FEE, DATES.deadline or PAYMENT_GRACE_DAYS_AFTER_DEADLINE not found in src/site.ts")
         import datetime
         day = datetime.date(*map(int, deadline.groups())) + datetime.timedelta(days=int(grace.group(1)))
         cfg = tomllib.loads((ROOT / "config.toml").read_text(encoding="utf-8"))
