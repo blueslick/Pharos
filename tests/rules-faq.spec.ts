@@ -27,7 +27,7 @@ const rulesText = [
   'Under 18? A parent or guardian must agree to you entering. On the form, tick the box saying they agree and give their email address; we may email them to check.',
   'Submit by Sunday 17 January 2027, 15:59 UTC. No extensions.',
   "Essays are read and judged by people, against the published judging criteria. The judges' decisions are final.",
-  'Winners and shortlisted entrants may be named (name only) on pharosprize.org and Instagram. Prizes: USD 50 (Junior) and USD 100 (Open).',
+  'Winners and shortlisted entrants may be named (name only) on pharosprize.org and Instagram. Prizes: USD 50 (Junior) and USD 100 (Open). Copyright in each essay remains with its writer. An essay is published only with the separate written permission of its writer (and of a parent or guardian, if the writer is under 18).',
   'Before a prize is paid, the winner must confirm their age and that they are a student (see the FAQ). If a winner cannot be reached, or does not complete this check, within 14 days of the results email, they do not receive the prize and it goes to the next-ranked entry.',
 ];
 
@@ -56,8 +56,8 @@ const faqAnswers: Record<string, string> = {
   'prizes-paid': "By bank transfer or Wise to the winner, or to a parent or guardian if the winner is under 18, within 2 weeks of the results. Prizes are funded separately, not from entry fees. If a winner cannot be reached, or does not complete the age and student check, within 14 days of the results email, they do not receive the prize and it goes to the next-ranked entry.",
   'winner-age-check': "Before we pay a prize, we check the winner's age and that they are a student. You can either show your ID on a short video call, or send a photo of it with the ID number partly covered (on a MyKad, cover the last six digits; the first six show your date of birth). A letter from your school is also accepted. If you are under 18, a parent or guardian joins the call or sends the photo. We do not keep a copy of your ID or its number; we only note that the check was done.",
   'certificate': 'There are three e-certificates: a participation certificate for every eligible entrant, a shortlist certificate for shortlisted entrants, and a top-3 certificate for the top three essays in each category. All are emailed by 24 February 2027. Each has a code that anyone can check at pharosprize.org/verify/.',
-  'who-owns-my-essay': 'You do. You let us store and read it to run the competition.',
-  'essay-published': "Only if it wins and you (and a parent or guardian, if you are under 18) give separate permission after the results.",
+  'who-owns-my-essay': 'You do. Copyright remains with you. By entering, you allow Pharos to store, read and judge your essay for this competition only.',
+  'essay-published': 'Only with your permission. After the results, we may ask winners whether they would like their essay published on pharosprize.org. If you are under 18, a parent or guardian must also agree. You may decline; this does not affect your result, prize or certificate. If you agree and later change your mind, email pharosprize@gmail.com and we will remove it within 14 days.',
   'what-we-publish': "If you are shortlisted or win: your name only (no school, country or age), on pharosprize.org and Instagram, as you agreed on the entry form.",
   'your-data': 'See our Privacy notice: pharosprize.org/privacy/.',
   'follow-or-tag': 'No.',
@@ -175,7 +175,7 @@ test.describe('Rules page', () => {
     const small = page.locator('main p.rules__small');
     await expect(small).toHaveText([
       'If a poster, listing or post says something different, these rules apply.',
-      'Last updated 4 November 2026: fee support removed; the fee is paid as RM 40; rule 10 has a 14-day time limit; Junior-eligible entrants may enter Open; entries that break the rules are disqualified.',
+      'Last updated 4 November 2026: fee support removed; the fee is paid as RM 40; rule 10 has a 14-day time limit; copyright line added to rule 9; Junior-eligible entrants may enter Open; entries that break the rules are disqualified.',
     ]);
     // Both come after the list, and are smaller than the rules but not under 16px.
     const [list, line, rule] = await Promise.all([
@@ -385,7 +385,7 @@ test.describe('Privacy page fixes', () => {
       "Winners only: before prizes are paid, we look at an ID document or a school letter to confirm age and student status. We do not keep a copy or the ID number; we only record that the check was done.",
     );
     await expect(section('If you are shortlisted or win')).toContainText(
-      "We will only publish a winning essay if its writer (and a parent or guardian, if under 18) gives separate permission after the results.",
+      'We publish an essay only if its writer (and a parent or guardian, if the writer is under 18) gives separate written permission after the results. Published essays carry the writer\'s name and can be removed on request.',
     );
     await expect(section('If you email us')).not.toContainText('fee support');
   });

@@ -191,6 +191,8 @@ export const PAYMENT_GRACE_DAYS_AFTER_DEADLINE = 7;
 // A winner who cannot be reached, or does not complete the age and student check, within this many days of the
 // results email does not receive the prize (Rules rule 10 and the FAQ).
 export const WINNER_CHECK_DAYS = 14;
+// A published essay is removed within this many days of its writer asking (FAQ).
+export const ESSAY_REMOVAL_DAYS = 14;
 
 // The deadline is 15:59 UTC (the end of the day in Malaysia, which is UTC+8, so 23:59 there is 15:59 UTC on the same date).
 // Public text always shows it in UTC, never in Malaysia time. These are the one source for every page and post.
