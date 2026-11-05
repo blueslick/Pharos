@@ -28,7 +28,7 @@ const intro = 'Ten rules. The FAQ explains the details.';
   <main id="main" class="rules">
     <ol class="rules__list">
       <li>
-        Students only, from any country. {junior.name} is {junior.who}; {open.name} is {open.who}. Your age is your age on {formatDate(DATES.deadline)}. Junior-eligible entrants may enter Open instead.
+        Students only, from any country. There are two categories, by your age on {formatDate(DATES.deadline)}: {junior.name} for ages {junior.who}, and {open.name} for ages {open.who}.
       </li>
       <li>One essay per person, answering one of the three prompts.</li>
       <li>Up to 800 words, in English, uploaded as a PDF. Do not put your name or school inside the essay.</li>
@@ -46,7 +46,7 @@ const intro = 'Ten rules. The FAQ explains the details.';
         Essays are read and judged by people, against the published <a href={JUDGING_PDF_URL}>judging criteria</a>. The judges' decisions are final.
       </li>
       <li>
-        Winners may be named on {domain} and Instagram by their pen name only (the name given on the entry form, which may be their real name or a pen name). Shortlisted entrants are not named publicly. Prizes: {PRIZES_FULL}; only the winner in each category receives prize money. Copyright in each essay remains with its writer. An essay is published only under its writer's pen name, and only with the separate written permission of its writer (and of a parent or guardian, if the writer is under 18).
+        Winners may be named on {domain} and Instagram by their pen name (the name given on the entry form, which may be their real name or a pen name) and category ({junior.name} or {open.name}) only. Shortlisted entrants are not named publicly. Prizes: {PRIZES_FULL}; only the winner in each category receives prize money. Copyright in each essay remains with its writer. An essay is published only under its writer's pen name and category, and only with the separate written permission of its writer (and of a parent or guardian, if the writer is under 18).
       </li>
       <li>
         Before the prize is paid, the winner must confirm their age and that they are a student (see <a href={FAQ_URL_WINNER_AGE}>the FAQ</a>). If a winner cannot be reached, or does not complete this check, within {WINNER_CHECK_DAYS} days of the results email, they do not receive the prize and it goes to the next-ranked entry.

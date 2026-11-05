@@ -34,7 +34,36 @@ test.describe('Home layout (sections and order)', () => {
     await expect(doings.locator('.doing')).toHaveCount(3);
     await expect(doings.getByRole('link', { name: 'See the competition' })).toHaveAttribute('href', '/competition/');
     await expect(doings.getByRole('link', { name: 'Read the blog' })).toHaveAttribute('href', '/blog/');
-    await expect(doings.getByRole('link', { name: /Find out on Instagram/ })).toBeVisible();
+    // Volunteering card: two buttons, Instagram and Facebook, each opening in a new tab.
+    const volunteer = doings.locator('.doing--volunteer');
+    await expect(volunteer).toContainText('Volunteering with The Assembly Soup Kitchen (T.A.S.K).');
+    await expect(volunteer.getByRole('link')).toHaveCount(2);
+    await expect(volunteer.getByRole('link', { name: /^Instagram/ })).toHaveAttribute('href', 'https://www.instagram.com/assemblysoupkitchen/');
+    await expect(volunteer.getByRole('link', { name: /^Facebook/ })).toHaveAttribute('href', 'https://www.facebook.com/theassemblysoupkitchen/');
+    for (const name of ['Instagram', 'Facebook']) {
+      const link = volunteer.getByRole('link', { name: new RegExp(`^${name}`) });
+      await expect(link).toHaveClass(/btn--cream/);
+      await expect(link).toHaveAttribute('target', '_blank');
+      await expect(link).toHaveAttribute('rel', /noopener/);
+      await expect(link.locator('.visually-hidden')).toHaveText('(opens in a new tab)');
+    }
+    await expect(doings.getByText('Find out on Instagram')).toHaveCount(0);
+  });
+
+  test('the Volunteering buttons sit side by side on desktop and stay inside the card on a phone', async ({ page }) => {
+    for (const [viewport, sideBySide] of [[{ width: 1440, height: 900 }, true], [{ width: 360, height: 800 }, false]] as const) {
+      await page.setViewportSize(viewport);
+      await page.goto('/');
+      const card = (await page.locator('.doing--volunteer').boundingBox())!;
+      const a = (await page.locator('.doing--volunteer').getByRole('link', { name: /^Instagram/ }).boundingBox())!;
+      const b = (await page.locator('.doing--volunteer').getByRole('link', { name: /^Facebook/ }).boundingBox())!;
+      for (const box of [a, b]) {
+        expect(box.x).toBeGreaterThanOrEqual(card.x - 1);
+        expect(box.x + box.width).toBeLessThanOrEqual(card.x + card.width + 1);
+      }
+      if (sideBySide) expect(Math.abs(a.y - b.y)).toBeLessThan(2);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    }
   });
 
   test('the SDG panel and the "Why Pharos?" block are not on Home', async ({ page }) => {

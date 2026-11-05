@@ -172,7 +172,7 @@ export const DATES = {
   results: '2027-02-03', // winners are announced on this date
   certificatesBy: '2027-02-24', // every e-certificate is emailed by this date (FAQ)
   entryDataDeleted: '2027-08-03', // by this date entry data we no longer need is deleted (see the Privacy page)
-  privacyUpdated: '2026-11-04', // "Last updated" on the Privacy page (and its Malay version): change it whenever either notice changes
+  privacyUpdated: '2026-11-05', // "Last updated" on the Privacy page (and its Malay version): change it whenever either notice changes
   rulesUpdated: '2026-11-05', // "Last updated" line under the Rules list: change it whenever a rule changes
 } as const;
 
@@ -202,6 +202,11 @@ export const PAYMENT_GRACE_DAYS_AFTER_DEADLINE = 7;
 export const WINNER_CHECK_DAYS = 14;
 // A published essay is removed within this many days of its writer asking (FAQ).
 export const ESSAY_REMOVAL_DAYS = 14;
+// How long T.A.S.K keeps a winner's ID photos for its audit (FAQ "How do winners confirm their age?" and Privacy).
+// Placeholder wording: replace with a date once T.A.S.K confirms (T142).
+export const ID_KEEP_PERIOD = 'only for its audit, and deletes them after that';
+// The same wording for the Malay Privacy page. Change both together.
+export const ID_KEEP_PERIOD_MS = 'hanya untuk tujuan auditnya, dan memadamkannya selepas itu';
 
 // The deadline is 15:59 UTC (the end of the day in Malaysia, which is UTC+8, so 23:59 there is 15:59 UTC on the same date).
 // Public text always shows it in UTC, never in Malaysia time. These are the one source for every page and post.
