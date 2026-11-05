@@ -19,16 +19,16 @@ const redLines = ['charity', 'non-profit', 'nonprofit', 'not-for-profit', 'ngo',
 const footerPages = ['/', '/competition/', '/about/', '/blog/', '/contact/', '/privacy/', '/verify/', '/rules/', '/faq/'];
 
 const rulesText = [
-  'Students only, from any country. Junior is 14 and under; Open is 25 and under. Your age is your age on 17 January 2027. Junior-eligible entrants may enter Open instead.',
-  'One essay per person, answering one of the three prompts.',
-  "Up to 800 words, in English, uploaded as a PDF. Do not put your name or school inside the essay.",
-  "It must be your own work. Do not use AI to write, rewrite, expand or translate any of it (AI may be used only to find sources and brainstorm ideas; see the FAQ). Grammarly, QuillBot and similar tools are not allowed; the ordinary spelling and grammar check in Word or Google Docs is. Tell us on the entry form what you used AI for. Do not enter an essay that has been published or entered somewhere else.",
-  'Pay the entry fee of MYR 40 straight to The Assembly Soup Kitchen (T.A.S.K) before you submit, and upload proof of payment on the form.',
-  'Under 18? A parent or guardian must agree to you entering. On the form, tick the box saying they agree and give their email address; we may email them to check.',
-  'Submit by Sunday 17 January 2027, 15:59 UTC. No extensions.',
+  'Entry is open to students from any country. Junior: 14 and under. Open: 25 and under. Age is counted as at 17 January 2027. Students eligible for Junior may enter Open instead.',
+  'Each person may enter one essay, answering one of the three prompts.',
+  'Essays must be in English, no longer than 800 words, and uploaded as a PDF. Do not include your name or school anywhere in the essay.',
+  'The essay must be your own work. AI may be used only to find sources and brainstorm ideas; it must not be used to write, rewrite, expand or translate any part of the essay (see the FAQ). Grammarly, QuillBot and similar tools are not allowed; the standard spelling and grammar check in Word or Google Docs is. State on the entry form what, if anything, you used AI for. Essays that have been published or entered elsewhere are not eligible.',
+  'Pay the entry fee of MYR 40 directly to The Assembly Soup Kitchen (T.A.S.K) before you submit, and upload proof of payment on the form.',
+  'If you are under 18, a parent or guardian must agree to your entry. Tick the box on the form confirming their agreement and give their email address; we may contact them to check.',
+  'Entries must be submitted by Sunday 17 January 2027, 15:59 UTC. Late entries are not accepted.',
   "Essays are read and judged by people, against the published judging criteria. The judges' decisions are final.",
-  'Winners may be named on pharosprize.org and Instagram by their pen name only (the name given on the entry form, which may be their real name or a pen name). Shortlisted entrants are not named publicly. Prizes: MYR 200 (Junior) and MYR 400 (Open), about USD 50 and USD 100 at current FOREX rates; only the winner in each category receives prize money. Copyright in each essay remains with its writer. An essay is published only under its writer\'s pen name, and only with the separate written permission of its writer (and of a parent or guardian, if the writer is under 18).',
-  'Before the prize is paid, the winner must confirm their age and that they are a student (see the FAQ). If a winner cannot be reached, or does not complete this check, within 14 days of the results email, they do not receive the prize and it goes to the next-ranked entry.',
+  "Winners may be named on pharosprize.org and Instagram by pen name only. The pen name is the name given on the entry form and may be your real name. Shortlisted entrants are not named publicly. Prizes: MYR 200 (Junior) and MYR 400 (Open), about USD 50 and USD 100 at current FOREX rates. Only the winner in each category receives prize money. Copyright in each essay remains with its writer. An essay is published only under its writer's pen name, and only with the writer's separate written permission (and that of a parent or guardian, if the writer is under 18).",
+  'Before the prize is paid, the winner must confirm their age and that they are a student (see the FAQ). If a winner cannot be contacted, or does not complete this check, within 14 days of the results email, the prize passes to the next-ranked entry.',
 ];
 
 // Every FAQ answer (the ones that differ between builds are checked separately).
@@ -138,7 +138,7 @@ test.describe('Rules page', () => {
     await expect(page.getByText('Ten rules. The FAQ explains the details.', { exact: true })).toBeVisible();
     const items = page.locator('main ol > li');
     await expect(items).toHaveCount(10);
-    await expect(items).toHaveText(rulesText);
+    await expect(items).toHaveText(rulesText, { useInnerText: true });
     await expect(page.locator('main ol')).toHaveCount(1);
     const main = page.locator('main');
     await expect(main.getByText("An entry that breaks these rules is disqualified.", { exact: true })).toBeVisible();
@@ -174,7 +174,7 @@ test.describe('Rules page', () => {
   test('says the Open category is 25 and under, and the rules themselves never say "any age"', async ({ page }) => {
     await page.goto('/rules/');
     const list = page.locator('main ol');
-    await expect(list).toContainText('Open is 25 and under');
+    await expect(list).toContainText('Open: 25 and under');
     await expect(list).not.toContainText(/any age|no upper (age )?limit|of any age/i);
     const rest = await page.locator('main').innerText();
     expect(rest).toContain('25 and under');
@@ -204,7 +204,7 @@ test.describe('Rules page', () => {
 
   test('is the same in the entries-open build', async ({ page }) => {
     await page.goto(`${OPEN}/rules/`);
-    await expect(page.locator('main ol > li')).toHaveText(rulesText);
+    await expect(page.locator('main ol > li')).toHaveText(rulesText, { useInnerText: true });
   });
 
   test('stays short on a phone', async ({ page }) => {

@@ -11,7 +11,7 @@ const day = (key) => {
   return { date, dayDate: `${fmt({ weekday: 'long' })} ${date}` };
 };
 
-export const ENTRIES_OPEN = day('entriesOpen').date; // 5 November 2026
-export const ENTRIES_OPEN_DAY = day('entriesOpen').dayDate; // Thursday 5 November 2026
+export const ENTRIES_OPEN = day('entriesOpen').date; // 9 November 2026
+export const ENTRIES_OPEN_DAY = day('entriesOpen').dayDate; // Monday 9 November 2026
 export const DEADLINE_DAY = day('deadline').dayDate; // Sunday 17 January 2027
 export const RESULTS_DAY = day('results').dayDate; // Wednesday 3 February 2027
