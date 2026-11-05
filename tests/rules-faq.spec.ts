@@ -19,7 +19,7 @@ const redLines = ['charity', 'non-profit', 'nonprofit', 'not-for-profit', 'ngo',
 const footerPages = ['/', '/competition/', '/about/', '/blog/', '/contact/', '/privacy/', '/verify/', '/rules/', '/faq/'];
 
 const rulesText = [
-  'Students only, from any country. Junior is 14 and under; Open is 25 and under. Your age is your age on 17 January 2027. Junior-eligible entrants may enter Open instead.',
+  'Students only, from any country. There are two categories, by your age on 17 January 2027: Junior for ages 14 and under, and Open for ages 25 and under.',
   'One essay per person, answering one of the three prompts.',
   "Up to 800 words, in English, uploaded as a PDF. Do not put your name or school inside the essay.",
   "It must be your own work. Do not use AI to write, rewrite, expand or translate any of it (AI may be used only to find sources and brainstorm ideas; see the FAQ). Grammarly, QuillBot and similar tools are not allowed; the ordinary spelling and grammar check in Word or Google Docs is. Tell us on the entry form what you used AI for. Do not enter an essay that has been published or entered somewhere else.",
@@ -27,13 +27,13 @@ const rulesText = [
   'Under 18? A parent or guardian must agree to you entering. On the form, tick the box saying they agree and give their email address; we may email them to check.',
   'Submit by Sunday 17 January 2027, 15:59 UTC. No extensions.',
   "Essays are read and judged by people, against the published judging criteria. The judges' decisions are final.",
-  'Winners may be named on pharosprize.org and Instagram by their pen name only (the name given on the entry form, which may be their real name or a pen name). Shortlisted entrants are not named publicly. Prizes: MYR 200 (Junior) and MYR 400 (Open), about USD 50 and USD 100 at current FOREX rates; only the winner in each category receives prize money. Copyright in each essay remains with its writer. An essay is published only under its writer\'s pen name, and only with the separate written permission of its writer (and of a parent or guardian, if the writer is under 18).',
+  'Winners may be named on pharosprize.org and Instagram by their pen name (the name given on the entry form, which may be their real name or a pen name) and category (Junior or Open) only. Shortlisted entrants are not named publicly. Prizes: MYR 200 (Junior) and MYR 400 (Open), about USD 50 and USD 100 at current FOREX rates; only the winner in each category receives prize money. Copyright in each essay remains with its writer. An essay is published only under its writer\'s pen name and category, and only with the separate written permission of its writer (and of a parent or guardian, if the writer is under 18).',
   'Before the prize is paid, the winner must confirm their age and that they are a student (see the FAQ). If a winner cannot be reached, or does not complete this check, within 14 days of the results email, they do not receive the prize and it goes to the next-ranked entry.',
 ];
 
 // Every FAQ answer (the ones that differ between builds are checked separately).
 const faqAnswers: Record<string, string> = {
-  'who-is-a-student': 'Anyone studying at a school, college or university on 17 January 2027. We may ask for proof, such as a student card or a letter from your school, before we award the prize.',
+  'who-is-a-student': 'Anyone studying at a school, college or university on 17 January 2027. We ask only winners for proof: an ID such as a national ID (MyKad) or passport for their age, and a student card or a letter from their school to show they are a student. See How do winners confirm their age?',
   'which-category': "Your age on 17 January 2027. If you are 14 or under, you are Junior. Otherwise, if you are 25 or under, you are Open. If you are eligible for Junior, you can also choose to enter as Open. You may enter only one category, with one essay.",
   'poster-says-any-age': 'The Open category is for students aged 25 and under (as at 17 January 2027). Some early posters and listings show an older version; the Rules page is always the one that counts.',
   'enter-more-than-once': 'No, one essay per person.',
@@ -46,18 +46,18 @@ const faqAnswers: Record<string, string> = {
   'name-in-the-pdf': 'So that essays are judged without knowing who wrote them. The file name is removed before judging, and the form collects your name separately.',
   'make-a-pdf': 'In Google Docs or Word, use File, then Download (or Save as), then PDF. Open the file before you submit to check it works. Name your PDF with your full name and the essay title, for example “Jane Tan - Who Gets to Eat.pdf”. Do not put your name or school inside the essay.',
   'ai-policy': 'You may use AI to find sources and to brainstorm ideas. You must read the sources yourself and write every word of your essay yourself.You may not use AI to write, rewrite, expand or translate any part of your essay. This includes Grammarly, QuillBot, and the AI writing features in Google Docs (Gemini) and Word (Copilot). The ordinary spelling and grammar check built into Word or Google Docs is permitted.The entry form asks what you used AI for. Answer in your own words, or write "Nothing". Using AI for sources or brainstorming will not count against you. We do not ask for your prompts.If the organisers believe your essay breaks this policy, it will be disqualified. We will not contact you about this decision. The organisers\' decision is final. A detection tool\'s result is never the only reason.',
-  'where-the-fee-goes': 'Straight to The Assembly Soup Kitchen (T.A.S.K). Pharos never handles the money. T.A.S.K tells us every MYR 40 is about 3 meals.',
+  'where-the-fee-goes': 'Paid directly to The Assembly Soup Kitchen (T.A.S.K). Pharos never handles the money. According to T.A.S.K, every MYR 40 provides about 3 meals for people in need.',
   'pay-from-abroad': "Use your bank's international transfer or a service such as Wise, Remitly or Western Union, and send MYR 40 to T.A.S.K's account (SWIFT code RHBBMYKL). Transfer fees and bank charges are paid by you, not by Pharos, and the full MYR 40 must arrive. If less arrives, your entry is not complete.",
   'payment-arrived': "We check payments with T.A.S.K once a week and email you within a week of your entry. If we cannot find your payment, we will email you. You have until Sunday 24 January 2027 to resolve it. If we still cannot find it by then, your entry is disqualified.",
   'who-judges': 'The Pharos organisers, against the published judging criteria: response to the prompt (30), insight and understanding (30), clarity and structure (20) and voice and originality (20). You can download the criteria from the Competition page. AI is never used to score, rank or shortlist essays.',
   'feedback': "No. We cannot give individual scores or feedback.",
   'results': 'Wednesday 3 February 2027, on pharosprize.org and Instagram (@pharosprize). Winners are also told by email.',
   'prizes-paid': "T.A.S.K sends the prize money by bank transfer or Wise to the winner (or to a parent or guardian, if the winner is under 18) once the winner's ID has been checked (see How do winners confirm their age?). If a winner cannot be reached, or does not complete the age and student check, within 14 days of the results email, they do not receive the prize and it goes to the next-ranked entry.",
-  'winner-age-check': "Before we pay the prize, we check the winner's age and that they are a student. You can either show your ID on a short video call, or send a photo of it with the ID number partly covered (on a MyKad, cover the last six digits; the first six show your date of birth). A letter from your school is also accepted. If you are under 18, a parent or guardian joins the call or sends the photo. We do not keep a copy of your ID or its number; we only note that the check was done.",
+  'winner-age-check': "Only winners are checked, before the prize is paid. We check two things: your age and that you are a student. Send us a photo of your ID with the ID number partly covered (on a MyKad, cover the last six digits; the first six show your date of birth), and a photo of your student card or a letter from your school. If you are under 18, a parent or guardian sends the photos. T.A.S.K pays the prize and, as a non-profit that is audited, must keep a record of who it paid and why. So we pass these photos to T.A.S.K and delete our own copy. T.A.S.K keeps them only for its audit, and deletes them after that.",
   'certificate': 'There are three e-certificates: a participation certificate for every eligible entrant, a shortlist certificate for shortlisted entrants, and a top-3 certificate for the top three essays in each category. All are emailed by 24 February 2027. Each has a code that anyone can check at pharosprize.org/verify/. Only the winner in each category receives prize money: MYR 200 (Junior) and MYR 400 (Open), about USD 50 and USD 100 at current FOREX rates. The shortlist and top-3 certificates do not come with prize money.',
   'who-owns-my-essay': 'You do. Copyright remains with you. By entering, you allow Pharos to store, read and judge your essay for this competition only.',
-  'essay-published': 'Only with your permission, and only under your pen name (your real name or a name you choose). After the results, we may ask winners whether they would like their essay published on pharosprize.org under the pen name they gave on the entry form. If you are under 18, a parent or guardian must also agree. You may decline; this does not affect your result, prize or certificate. If you agree and later change your mind, email pharosprize@gmail.com and we will remove it within 14 days.',
-  'what-we-publish': "If you win: your pen name only (no school, country or age), on pharosprize.org and Instagram, as you agreed on the entry form. Your pen name can be your real name or a name you choose. Shortlisted entrants are not named publicly; we tell them by email.",
+  'essay-published': 'Only with your permission, and only under your pen name and the category you won (Junior or Open). After the results, we may ask winners whether they would like their essay published on pharosprize.org under the pen name they gave on the entry form. If you are under 18, a parent or guardian must also agree. You may decline; this does not affect your result, prize or certificate. If you agree and later change your mind, email pharosprize@gmail.com and we will remove it within 14 days.',
+  'what-we-publish': "If you win: your pen name and the category you won (Junior or Open), on pharosprize.org and Instagram, as you agreed on the entry form. We do not publish your school, country or age. Your pen name can be your real name or a name you choose. Shortlisted entrants are not named publicly; we tell them by email.",
   'your-data': 'See our Privacy notice: pharosprize.org/privacy/.',
   'follow-or-tag': 'No.',
   'who-runs-it': 'Student volunteers who have also volunteered at The Assembly Soup Kitchen (T.A.S.K). This edition is a fundraiser for T.A.S.K.',
@@ -92,7 +92,8 @@ for (const [buildName, base] of builds) {
 
       test(`${path} uses none of the words the site never uses for itself`, async ({ page }) => {
         await page.goto(`${base}${path}`);
-        const text = (await page.locator('main').evaluate((el) => el.textContent ?? '')).toLowerCase();
+        // The FAQ's winner-check answer describes T.A.S.K (not this competition) as audited; that one owner-approved phrase is allowed.
+        const text = (await page.locator('main').evaluate((el) => el.textContent ?? '')).toLowerCase().replace('as a non-profit that is audited', '');
         for (const word of redLines) expect(text, `${path} should not say "${word}"`).not.toMatch(new RegExp(`\\b${word}\\b`));
       });
 
@@ -174,7 +175,7 @@ test.describe('Rules page', () => {
   test('says the Open category is 25 and under, and the rules themselves never say "any age"', async ({ page }) => {
     await page.goto('/rules/');
     const list = page.locator('main ol');
-    await expect(list).toContainText('Open is 25 and under');
+    await expect(list).toContainText('Open for ages 25 and under');
     await expect(list).not.toContainText(/any age|no upper (age )?limit|of any age/i);
     const rest = await page.locator('main').innerText();
     expect(rest).toContain('25 and under');
@@ -384,17 +385,14 @@ test.describe('Privacy page fixes', () => {
     await expect(m).not.toContainText('Draft');
     await expect(m).not.toContainText('waiting for review');
     await expect(page.locator('.pill')).toHaveCount(0);
-    await expect(m).toContainText('Last updated 4 November 2026.');
+    await expect(m).toContainText('Last updated 5 November 2026.');
   });
 
   test('the three new lines are in the right sections', async ({ page }) => {
     await main(page);
     const section = (title: string) => page.locator('main section', { has: page.getByRole('heading', { level: 2, name: title, exact: true }) });
     await expect(section('The entry form')).toContainText(
-      "If you win, we may ask for proof that you are a student, such as a student card or a school letter. We use it only to check eligibility and delete it once the prize is paid.",
-    );
-    await expect(section('The entry form')).toContainText(
-      "Winners only: before prizes are paid, we look at an ID document or a school letter to confirm age and student status. We do not keep a copy or the ID number; we only record that the check was done.",
+      "Winners only: before a prize is paid, we check your age and that you are a student. We ask for a photo of your ID with the ID number partly covered, and a photo of your student card or a letter from your school. If you are under 18, a parent or guardian sends the photos. We pass these photos to The Assembly Soup Kitchen (T.A.S.K), which pays the prize and needs them for its audit records, and we delete our own copy. T.A.S.K keeps them only for its audit, and deletes them after that.",
     );
     await expect(section('If you win')).toContainText(
       'We publish an essay only if its writer (and a parent or guardian, if the writer is under 18) gives separate written permission after the results. Published essays carry the writer\'s pen name and can be removed on request.',

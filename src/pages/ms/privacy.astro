@@ -5,7 +5,7 @@
 import Base from '../../layouts/Base.astro';
 import Hero from '../../components/Hero.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
-import { SITE_NAME, CONTACT_EMAIL, INSTAGRAM_HANDLE, INSTAGRAM_URL, SOUP_KITCHEN_NAME, DATES, formatDateMs, WAITLIST_FORM_URL, PRIVACY_PATH, PRIVACY_PATH_MS, TALLY_PRIVACY_URL } from '../../site';
+import { SITE_NAME, CONTACT_EMAIL, INSTAGRAM_HANDLE, INSTAGRAM_URL, SOUP_KITCHEN_NAME, ID_KEEP_PERIOD_MS, DATES, formatDateMs, WAITLIST_FORM_URL, PRIVACY_PATH, PRIVACY_PATH_MS, TALLY_PRIVACY_URL } from '../../site';
 
 const intro = `Apa yang dikumpul oleh ${SITE_NAME} tentang anda, dan apa yang kami lakukan dengannya.`;
 ---
@@ -107,11 +107,7 @@ const intro = `Apa yang dikumpul oleh ${SITE_NAME} tentang anda, dan apa yang ka
         dasarnya.
       </p>
       <p>
-        Jika anda menang, kami mungkin meminta bukti bahawa anda seorang pelajar, seperti kad pelajar atau surat daripada
-        sekolah. Kami menggunakannya hanya untuk menyemak kelayakan dan memadamkannya sebaik sahaja hadiah dibayar.
-      </p>
-      <p>
-        Pemenang sahaja: sebelum hadiah dibayar, kami melihat dokumen pengenalan diri atau surat sekolah untuk mengesahkan umur dan status pelajar. Kami tidak menyimpan salinan atau nombor pengenalan diri; kami hanya merekodkan bahawa semakan telah dibuat.
+        Pemenang sahaja: sebelum hadiah dibayar, kami menyemak umur anda dan bahawa anda seorang pelajar. Kami meminta foto kad pengenalan anda dengan nombornya ditutup sebahagian, dan foto kad pelajar atau surat daripada sekolah anda. Jika anda berumur di bawah 18 tahun, ibu bapa atau penjaga menghantar foto tersebut. Kami menyerahkan foto ini kepada {SOUP_KITCHEN_NAME}, yang membayar hadiah dan memerlukannya untuk rekod auditnya, dan kami memadamkan salinan kami sendiri. T.A.S.K menyimpannya {ID_KEEP_PERIOD_MS}.
       </p>
     </section>
 

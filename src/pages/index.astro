@@ -4,7 +4,7 @@ import Hero from '../components/Hero.astro';
 import EditionCover from '../components/EditionCover.astro';
 import WaitlistAndFooter from '../components/WaitlistAndFooter.astro';
 import SoupKitchenCard from '../components/SoupKitchenCard.astro';
-import { SITE_NAME, SOUP_KITCHEN_NAME, SOUP_KITCHEN_INSTAGRAM_URL, FAQ_URL, DATES, CATEGORIES, formatDate } from '../site';
+import { SITE_NAME, SOUP_KITCHEN_NAME, SOUP_KITCHEN_INSTAGRAM_URL, SOUP_KITCHEN_FACEBOOK_URL, FAQ_URL, DATES, CATEGORIES, formatDate } from '../site';
 
 const junior = CATEGORIES.find((c) => c.id === 'junior')!;
 const open = CATEGORIES.find((c) => c.id === 'open')!;
@@ -46,9 +46,14 @@ const intro = `${SITE_NAME} is an essay competition for students, with a Junior 
           <div class="doing doing--volunteer">
             <h3 class="t-heading-sm">Volunteering</h3>
             <p>Volunteering with {SOUP_KITCHEN_NAME}.</p>
-            <a class="btn btn--cream" href={SOUP_KITCHEN_INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">
-              Find out on Instagram<span class="visually-hidden"> (opens in a new tab)</span>
-            </a>
+            <div class="doing__buttons">
+              <a class="btn btn--cream" href={SOUP_KITCHEN_INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">
+                Instagram<span class="visually-hidden"> (opens in a new tab)</span>
+              </a>
+              <a class="btn btn--cream" href={SOUP_KITCHEN_FACEBOOK_URL} target="_blank" rel="noopener noreferrer">
+                Facebook<span class="visually-hidden"> (opens in a new tab)</span>
+              </a>
+            </div>
           </div>
         </div>
       </section>
@@ -106,6 +111,8 @@ const intro = `${SITE_NAME} is an essay competition for students, with a Junior 
   .doings__grid { display: flex; flex-direction: column; gap: 16px; }
   .doing { display: flex; flex-direction: column; gap: 8px; }
   .doing .btn { margin-top: 6px; }
+  .doing__buttons { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 6px; }
+  .doing .doing__buttons .btn { margin-top: 0; }
   .doing--comp {
     margin-left: calc(-1 * var(--gutter));
     background: var(--c-plum);
@@ -176,6 +183,7 @@ const intro = `${SITE_NAME} is an essay competition for students, with a Junior 
     .doings__grid { display: grid; grid-template-columns: 1.25fr 1fr 1fr; gap: 20px; align-items: stretch; }
     .doing { gap: 10px; font-size: 18px; }
     .doing .btn { margin-top: auto; }
+    .doing .doing__buttons { margin-top: auto; }
     .doing p:last-of-type { margin-bottom: 12px; }
     .doing--comp { margin-left: 0; border-radius: 0 180px 180px 0; padding: 36px clamp(80px, 8.3vw, 120px) 36px 36px; }
     .doing--blog { margin-right: 0; border-radius: 180px 0 0 180px; padding: 36px 36px 36px clamp(80px, 7.6vw, 110px); }

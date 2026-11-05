@@ -51,16 +51,19 @@ test('Competition fits a phone and passes the accessibility check', async ({ pag
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
 });
 
-test('the Volunteering card on Home is live, links to the soup kitchen Instagram and has no Placeholder tag', async ({ page }) => {
+test('the Volunteering card on Home is live, links to the soup kitchen Instagram and Facebook and has no Placeholder tag', async ({ page }) => {
   await page.goto('/');
   const card = page.locator('.doing--volunteer');
   await expect(card).toContainText('Volunteering with The Assembly Soup Kitchen (T.A.S.K)');
   await expect(card).not.toContainText('Placeholder');
   await expect(card).not.toContainText('coming soon');
-  const link = card.getByRole('link');
-  await expect(link).toHaveAttribute('href', 'https://www.instagram.com/assemblysoupkitchen/');
-  await expect(link).toHaveAttribute('target', '_blank');
-  await expect(link).toHaveAttribute('rel', /noopener/);
+  await expect(card.getByRole('link')).toHaveCount(2);
+  for (const [name, href] of [['Instagram', 'https://www.instagram.com/assemblysoupkitchen/'], ['Facebook', 'https://www.facebook.com/theassemblysoupkitchen/']]) {
+    const link = card.getByRole('link', { name: new RegExp(`^${name}`) });
+    await expect(link).toHaveAttribute('href', href);
+    await expect(link).toHaveAttribute('target', '_blank');
+    await expect(link).toHaveAttribute('rel', /noopener/);
+  }
 });
 
 test('About names the soup kitchen instead of "a local soup kitchen"', async ({ page }) => {
@@ -81,7 +84,7 @@ test('the Register page is only an "Opening soon" notice while closed', async ({
 test('the Privacy page covers the entry form, payments, publishing, under-18s and retention', async ({ page }) => {
   await page.goto('/privacy/');
   const main = page.locator('main');
-  await expect(main).toContainText('Last updated 4 November 2026.');
+  await expect(main).toContainText('Last updated 5 November 2026.');
   await expect(main).not.toContainText('Draft');
   for (const item of [
     'your full name, pen name, email and country', 'your school (optional) and your age', 'your essay (a PDF)',
