@@ -44,12 +44,12 @@ One judge (the owner). Nothing is left as a placeholder in the code: the rubric 
 
 | Item | Value | Where it's set |
 |---|---|---|
-| Entries open | 5 November 2026 | `DATES.entriesOpen` in `src/site.ts` (Home, Competition, Register) |
+| Entries open | 9 November 2026 | `DATES.entriesOpen` in `src/site.ts` (Home, Competition, Register) |
 | Entry deadline | 17 January 2027, 15:59 UTC (the end of the day in Malaysia). Always shown in UTC, never in Malaysia time. Ages are counted on this date | `DATES.deadline` and `DEADLINE_TIME` (with `DEADLINE_TIME_PLAIN`, `DEADLINE_TIME_SHORT`, `DEADLINE_TIME_UTC`, all one value) in `src/site.ts` (FAQ, Rules, Competition, Register, How to enter). The Instagram posts in `tools/social/posts` repeat it as text, so change them too |
 | Results | 3 February 2027 | `DATES.results` in `src/site.ts` (Competition, "How it works") |
 | Waitlist form | Tally form `kbdkBR`, share link https://tally.so/r/kbdkBR | `WAITLIST_FORM_ID` in `src/site.ts` (one line; the share link and embed address are built from it) |
 | Privacy "Last updated" | 4 November 2026 | `DATES.privacyUpdated` in `src/site.ts`. Change it whenever the notice's wording changes |
-| Rules "Last updated" | 4 November 2026, with a note of what changed (see the Rules page note) | `DATES.rulesUpdated` in `src/site.ts` and the note in `src/pages/rules.astro`. Change both whenever a rule changes |
+| Rules "Last updated" | 5 November 2026 (rules reworded for clarity; same meaning) | `DATES.rulesUpdated` in `src/site.ts` and the note in `src/pages/rules.astro`. Change both whenever a rule changes |
 | Email retention (Privacy) | 12 months after our last reply | `src/pages/privacy.astro` |
 | Under-18s (Privacy) | Waitlist: only an email is collected; parent or guardian should know; a parent can ask us to delete it any time. Entry form: a parent or guardian must agree to the entry, and we may contact the secondary email about this | `src/pages/privacy.astro` |
 | Entry data deleted by | 3 August 2027 (emails, ages, essays, proof of payment; published names and certificate records are kept) | `DATES.entryDataDeleted` in `src/site.ts` (Privacy) |

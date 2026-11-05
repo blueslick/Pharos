@@ -4,10 +4,14 @@ import Hero from '../components/Hero.astro';
 import EditionCover from '../components/EditionCover.astro';
 import WaitlistAndFooter from '../components/WaitlistAndFooter.astro';
 import SoupKitchenCard from '../components/SoupKitchenCard.astro';
+import { getPosts } from '../lib/blog';
 import { SITE_NAME, SOUP_KITCHEN_NAME, SOUP_KITCHEN_INSTAGRAM_URL, FAQ_URL, DATES, CATEGORIES, formatDate } from '../site';
 
 const junior = CATEGORIES.find((c) => c.id === 'junior')!;
 const open = CATEGORIES.find((c) => c.id === 'open')!;
+// Same query as the blog index, so the "Read the blog" button appears by itself once the first post is published.
+const hasPosts = (await getPosts()).length > 0;
+
 const intro = `${SITE_NAME} is an essay competition for students, with a Junior category (${junior.who}) and an Open category (${open.who}), built around the Sustainable Development Goals (SDGs).`;
 ---
 
@@ -18,41 +22,16 @@ const intro = `${SITE_NAME} is an essay competition for students, with a Junior 
   </Hero>
 
   <main id="main">
-    <div class="top-row">
-      <section class="who">
-        <span class="who__dot" aria-hidden="true"></span>
-        <h2 class="t-heading">Who we are</h2>
-        <p class="t-lead who__text">
-          We are student volunteers who think young people should have a say on the world's biggest problems, and that
-          writing about them can do real good. Each edition takes one goal, asks three questions, and is a
-          fundraiser for {SOUP_KITCHEN_NAME}.
-        </p>
-        <a class="btn btn--plum" href="/about/">About us</a>
-      </section>
-
-      <section class="doings" aria-labelledby="doings-title">
-        <h2 id="doings-title" class="t-heading">What we do</h2>
-        <div class="doings__grid">
-          <div class="doing doing--comp">
-            <h3 class="t-heading-sm">The competition</h3>
-            <p>One SDG per edition, judged by humans.</p>
-            <a class="btn btn--coral" href="/competition/">See the competition</a>
-          </div>
-          <div class="doing doing--blog">
-            <h3 class="t-heading-sm">The blog</h3>
-            <p>Essays and explainers on the SDGs.</p>
-            <a class="btn btn--plum" href="/blog/">Read the blog</a>
-          </div>
-          <div class="doing doing--volunteer">
-            <h3 class="t-heading-sm">Volunteering</h3>
-            <p>Volunteering with {SOUP_KITCHEN_NAME}.</p>
-            <a class="btn btn--cream" href={SOUP_KITCHEN_INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">
-              Find out on Instagram<span class="visually-hidden"> (opens in a new tab)</span>
-            </a>
-          </div>
-        </div>
-      </section>
-    </div>
+    <section class="who" aria-labelledby="who-title">
+      <span class="who__dot" aria-hidden="true"></span>
+      <h2 id="who-title" class="t-heading">Who we are</h2>
+      <p class="t-lead who__text">
+        We are student volunteers who believe young people should be part of the solution to the world's biggest
+        problems, and that writing about them can create awareness and inspire change. Each edition takes one goal,
+        asks three questions, and is a fundraiser for {SOUP_KITCHEN_NAME}.
+      </p>
+      <a class="btn btn--plum" href="/about/">About us</a>
+    </section>
 
     <section class="edition" aria-labelledby="edition-title">
       <span class="rings edition__rings-a" aria-hidden="true"></span>
@@ -72,6 +51,32 @@ const intro = `${SITE_NAME} is an essay competition for students, with a Junior 
       </div>
     </section>
 
+    <section class="doings" aria-labelledby="doings-title">
+      <h2 id="doings-title" class="t-heading">What we do</h2>
+      <p class="doings__intro">Three ways to get involved: enter the competition, read our writing on the SDGs, or volunteer with our partner.</p>
+      <div class="doings__grid">
+        <div class="doing doing--comp">
+          <h3 class="t-heading-sm">The competition</h3>
+          <p>An essay competition on one SDG each edition, read and judged by people.</p>
+          <a class="btn btn--coral" href="/competition/">See the competition</a>
+        </div>
+        <div class="doing doing--blog">
+          <h3 class="t-heading-sm">The blog</h3>
+          <p>Short essays and explainers on the SDGs, with every figure sourced.</p>
+          {hasPosts
+            ? <a class="btn btn--plum" href="/blog/">Read the blog</a>
+            : <p class="doing__soon">First posts coming soon.</p>}
+        </div>
+        <div class="doing doing--volunteer">
+          <h3 class="t-heading-sm">Volunteering</h3>
+          <p>Help out at {SOUP_KITCHEN_NAME}, our Inaugural Edition partner. Find out how to join on their Instagram.</p>
+          <a class="btn btn--cream" href={SOUP_KITCHEN_INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">
+            Find out on Instagram<span class="visually-hidden"> (opens in a new tab)</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
     <WaitlistAndFooter id="home-waitlist">
       <a class="btn btn--cream mobile-only" href="/competition/">See the competition</a>
       <p class="faq-link mobile-only">Questions? <a href={FAQ_URL}>Read the FAQ</a></p>
@@ -82,12 +87,13 @@ const intro = `${SITE_NAME} is an essay competition for students, with a Junior 
 <style>
   .home-title { margin-top: 64px; max-width: 290px; }
 
-  /* Top row: Who we are + What we do */
+  /* Who we are: its own section, with a reading-width paragraph */
   .who {
     position: relative;
-    padding: 44px var(--gutter) 48px;
+    padding: var(--space-6) var(--gutter);
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
     gap: 14px;
     overflow: hidden;
   }
@@ -101,32 +107,23 @@ const intro = `${SITE_NAME} is an essay competition for students, with a Junior 
   }
   .who__text { max-width: none; }
 
-  /* What we do */
-  .doings { padding: 0 var(--gutter) 52px; display: flex; flex-direction: column; gap: 20px; }
-  .doings__grid { display: flex; flex-direction: column; gap: 16px; }
-  .doing { display: flex; flex-direction: column; gap: 8px; }
-  .doing .btn { margin-top: 6px; }
-  .doing--comp {
-    margin-left: calc(-1 * var(--gutter));
-    background: var(--c-plum);
-    color: var(--c-cream);
-    border-radius: 0 120px 120px 0;
-    padding: 24px 90px 24px var(--gutter);
-  }
-  .doing--blog {
-    margin-right: calc(-1 * var(--gutter));
-    background: var(--c-pink);
-    color: var(--c-plum-deep);
-    border-radius: 120px 0 0 120px;
-    padding: 24px var(--gutter) 24px 56px;
-  }
-
-  .doing--volunteer {
-    background: var(--c-slate);
-    color: var(--c-cream);
+  /* What we do: three plain rounded cards (stacked on phones, one equal-height row on desktop) */
+  .doings { padding: var(--space-6) var(--gutter); display: flex; flex-direction: column; gap: 14px; }
+  .doings__intro { font-size: 17px; line-height: 1.45; max-width: 40em; text-wrap: pretty; }
+  .doings__grid { display: flex; flex-direction: column; gap: 16px; margin-top: 6px; }
+  .doing {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
     border-radius: var(--radius-card);
     padding: 24px var(--gutter);
   }
+  .doing .btn { margin-top: 6px; }
+  .doing__soon { margin-top: 6px; font-size: 16px; line-height: 1.4; font-weight: 600; }
+  .doing--comp { background: var(--c-plum); color: var(--c-cream); }
+  .doing--blog { background: var(--c-pink); color: var(--c-plum-deep); }
+  .doing--volunteer { background: var(--c-slate); color: var(--c-cream); }
 
   /* Current edition */
   .edition {
@@ -157,30 +154,17 @@ const intro = `${SITE_NAME} is an essay competition for students, with a Junior 
   @media (min-width: 960px) {
     .home-title { margin-top: 110px; max-width: 820px; }
 
-    .top-row { margin-top: 72px; }
-    .who {
-      padding: 40px var(--gutter) 24px;
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
-      column-gap: 48px;
-      row-gap: 18px;
-      align-items: start;
-      overflow: visible;
-    }
-    .who .t-heading { grid-column: 1; grid-row: 1 / span 2; }
-    .who__text { grid-column: 2; max-width: 32em; }
-    .who .btn { grid-column: 2; justify-self: start; }
-    .who__dot { left: -130px; right: auto; top: -70px; width: 160px; height: 160px; }
-    
-    .doings { padding: 40px var(--gutter) 96px; gap: 28px; }
-    .doings__grid { display: grid; grid-template-columns: 1.25fr 1fr 1fr; gap: 20px; align-items: stretch; }
-    .doing { gap: 10px; font-size: 18px; }
+    .who { padding: var(--space-12) var(--gutter); gap: 18px; overflow: visible; }
+    .who__text { max-width: 32em; }
+    .who__dot { left: auto; right: var(--gutter); top: 40px; width: 160px; height: 160px; }
+
+    .doings { padding: var(--space-12) var(--gutter); gap: 18px; }
+    .doings__intro { font-size: 20px; }
+    .doings__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; align-items: stretch; margin-top: 10px; }
+    .doing { gap: 10px; font-size: 18px; padding: 36px; }
     .doing .btn { margin-top: auto; }
-    .doing p:last-of-type { margin-bottom: 12px; }
-    .doing--comp { margin-left: 0; border-radius: 0 180px 180px 0; padding: 36px clamp(80px, 8.3vw, 120px) 36px 36px; }
-    .doing--blog { margin-right: 0; border-radius: 180px 0 0 180px; padding: 36px 36px 36px clamp(80px, 7.6vw, 110px); }
-    .doing--volunteer { padding: 36px; }
-    .doing--volunteer p { font-size: 18px; }
+    .doing__soon { margin-top: auto; font-size: 17px; }
+    .doing p:not(.doing__soon) { margin-bottom: 12px; }
 
     .edition { flex-direction: row; padding: 80px var(--gutter) 88px; gap: clamp(48px, 6.25vw, 90px); }
     .edition__rings-a { width: 420px; height: 420px; left: -200px; top: 260px; }

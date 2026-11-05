@@ -67,19 +67,19 @@ const steps = [
         <div class="top__text">
           <p class="t-label top__label">Inaugural edition: Goal 2</p>
           <h1 class="top__title">Zero Hunger</h1>
-          <p class="top__sdg desktop-only">This edition is based on Sustainable Development Goal 2 (SDG 2): Zero Hunger.</p>
+          <p class="top__sdg desktop-only">This edition is based on Sustainable Development Goal 2 (SDG 2): Zero Hunger. The SDGs are 17 shared global goals for 2030; Goal 2 is to end hunger. <a class="top__sdg-link" href="/about/#sdgs">What are the SDGs?</a></p>
           <p class="top__opens">Opens {formatDate(DATES.entriesOpen)}</p>
         </div>
         <EditionCover size={[140, 456]} frame={[3, 8]} />
       </div>
-      <p class="top__sdg mobile-only">This edition is based on Sustainable Development Goal 2 (SDG 2): Zero Hunger.</p>
+      <p class="top__sdg mobile-only">This edition is based on Sustainable Development Goal 2 (SDG 2): Zero Hunger. The SDGs are 17 shared global goals for 2030; Goal 2 is to end hunger. <a class="top__sdg-link" href="/about/#sdgs">What are the SDGs?</a></p>
     </div>
 
     {/* PARTNER: the soup kitchen's logo, name and socials (SoupKitchenCard). When its
         announcement is ready, add an endorsement and a link to their post about it. */}
     <div class="partner">
       <SoupKitchenCard />
-      <p class="partner__note">Entry fees are paid straight to {SOUP_KITCHEN_NAME} by bank transfer.</p>
+      <p class="partner__note">Entry fees are paid directly to {SOUP_KITCHEN_NAME} by bank transfer.</p>
     </div>
   </header>
 
@@ -120,7 +120,7 @@ const steps = [
         ))}
       </ul>
       <p class="cats__note">
-        Your age is your age on {formatDate(DATES.deadline)}. Both categories are for students only.
+        Age is counted as at {formatDate(DATES.deadline)}. Both categories are for students only.
       </p>
     </section>
 

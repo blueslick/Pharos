@@ -33,7 +33,7 @@ test('Competition shows both categories, the prizes and where the money goes', a
   await expect(open).toContainText('MYR 400');
   await expect(open.locator('.cat__guide')).toHaveText('about USD 100');
   await expect(page.locator('main')).not.toContainText('funded separately');
-  await expect(page.getByText('Your age is your age on 17 January 2027.')).toBeVisible();
+  await expect(page.getByText('Age is counted as at 17 January 2027. Both categories are for students only.')).toBeVisible();
   await expect(page.getByText('Every MYR 40 entry funds about 3 meals at T.A.S.K.')).toBeVisible();
   await expect(page.getByText('Entry fee: MYR 40 (about USD 10 at current FOREX rates). You pay The Assembly Soup Kitchen (T.A.S.K) directly by bank transfer, and upload proof of payment on the form.')).toBeVisible();
   await expect(page.getByText('Pharos never handles the money.')).toBeVisible();
@@ -54,7 +54,7 @@ test('Competition fits a phone and passes the accessibility check', async ({ pag
 test('the Volunteering card on Home is live, links to the soup kitchen Instagram and has no Placeholder tag', async ({ page }) => {
   await page.goto('/');
   const card = page.locator('.doing--volunteer');
-  await expect(card).toContainText('Volunteering with The Assembly Soup Kitchen (T.A.S.K)');
+  await expect(card).toContainText('Help out at The Assembly Soup Kitchen (T.A.S.K), our Inaugural Edition partner. Find out how to join on their Instagram.');
   await expect(card).not.toContainText('Placeholder');
   await expect(card).not.toContainText('coming soon');
   const link = card.getByRole('link');

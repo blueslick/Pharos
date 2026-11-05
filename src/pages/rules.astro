@@ -28,28 +28,30 @@ const intro = 'Ten rules. The FAQ explains the details.';
   <main id="main" class="rules">
     <ol class="rules__list">
       <li>
-        Students only, from any country. {junior.name} is {junior.who}; {open.name} is {open.who}. Your age is your age on {formatDate(DATES.deadline)}. Junior-eligible entrants may enter Open instead.
+        Entry is open to students from any country. {junior.name}: {junior.who}. {open.name}: {open.who}. Age is counted as at {formatDate(DATES.deadline)}. Students eligible for {junior.name} may enter {open.name} instead.
       </li>
-      <li>One essay per person, answering one of the three prompts.</li>
-      <li>Up to 800 words, in English, uploaded as a PDF. Do not put your name or school inside the essay.</li>
+      <li>Each person may enter one essay, answering one of the three prompts.</li>
+      <li>Essays must be in English, no longer than 800 words, and uploaded as a PDF. Do not include your name or school anywhere in the essay.</li>
       <li>
-        It must be your own work. Do not use AI to write, rewrite, expand or translate any of it (AI may be used only to find sources and brainstorm ideas; <a href="/faq/#ai-policy">see the FAQ</a>). Grammarly, QuillBot and similar tools are not allowed; the ordinary spelling and grammar check in Word or Google Docs is. Tell us on the entry form what you used AI for. Do not enter an essay that has been published or entered somewhere else.
-      </li>
-      <li>
-        Pay the entry fee of {ENTRY_FEE} straight to {SOUP_KITCHEN_NAME} before you submit, and {PROOF_OF_PAYMENT_INLINE}.
+        The essay must be your own work. AI may be used only to find sources and brainstorm ideas; it must not be used to write, rewrite, expand or translate any part of the essay (<a href="/faq/#ai-policy">see the FAQ</a>). Grammarly, QuillBot and similar tools are not allowed; the standard spelling and grammar check in Word or Google Docs is. State on the entry form what, if anything, you used AI for. Essays that have been published or entered elsewhere are not eligible.
       </li>
       <li>
-        Under 18? A parent or guardian must agree to you entering. On the form, tick the box saying they agree and give their email address; we may email them to check.
+        Pay the entry fee of {ENTRY_FEE} directly to {SOUP_KITCHEN_NAME} before you submit, and {PROOF_OF_PAYMENT_INLINE}.
       </li>
-      <li>Submit by {formatDateDay(DATES.deadline)}, {DEADLINE_TIME_PLAIN}. No extensions.</li>
+      <li>
+        If you are under 18, a parent or guardian must agree to your entry. Tick the box on the form confirming their agreement and give their email address; we may contact them to check.
+      </li>
+      <li>Entries must be submitted by {formatDateDay(DATES.deadline)}, {DEADLINE_TIME_PLAIN}. Late entries are not accepted.</li>
       <li>
         Essays are read and judged by people, against the published <a href={JUDGING_PDF_URL}>judging criteria</a>. The judges' decisions are final.
       </li>
       <li>
-        Winners may be named on {domain} and Instagram by their pen name only (the name given on the entry form, which may be their real name or a pen name). Shortlisted entrants are not named publicly. Prizes: {PRIZES_FULL}; only the winner in each category receives prize money. Copyright in each essay remains with its writer. An essay is published only under its writer's pen name, and only with the separate written permission of its writer (and of a parent or guardian, if the writer is under 18).
+        <p>Winners may be named on {domain} and Instagram by pen name only. The pen name is the name given on the entry form and may be your real name. Shortlisted entrants are not named publicly.</p>
+        <p>Prizes: {PRIZES_FULL}. Only the winner in each category receives prize money.</p>
+        <p>Copyright in each essay remains with its writer. An essay is published only under its writer's pen name, and only with the writer's separate written permission (and that of a parent or guardian, if the writer is under 18).</p>
       </li>
       <li>
-        Before the prize is paid, the winner must confirm their age and that they are a student (see <a href={FAQ_URL_WINNER_AGE}>the FAQ</a>). If a winner cannot be reached, or does not complete this check, within {WINNER_CHECK_DAYS} days of the results email, they do not receive the prize and it goes to the next-ranked entry.
+        Before the prize is paid, the winner must confirm their age and that they are a student (see <a href={FAQ_URL_WINNER_AGE}>the FAQ</a>). If a winner cannot be contacted, or does not complete this check, within {WINNER_CHECK_DAYS} days of the results email, the prize passes to the next-ranked entry.
       </li>
     </ol>
 
@@ -86,6 +88,7 @@ const intro = 'Ten rules. The FAQ explains the details.';
   /* Real numbered list; the numbers use the display face through ::marker, so the list stays a list for screen readers. */
   .rules__list { padding-left: 2.1em; display: flex; flex-direction: column; gap: 12px; }
   .rules__list li { padding-left: 4px; text-wrap: pretty; }
+  .rules__list li > p + p { margin-top: 0.6em; }
   .rules__list li::marker { font-family: var(--font-display); font-size: 1.35em; }
   .rules__after { text-wrap: pretty; }
   .rules__after:first-of-type { margin-top: var(--space-1); font-weight: 600; }

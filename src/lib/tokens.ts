@@ -39,3 +39,6 @@ export function tokensCss(): string {
 
 export const editionColor = tokens.color.tokens.find((t) => t.name === 'edition')!.value.light;
 export const mosaic = tokens.mosaic;
+
+/** One colour ramp per food (dark to light), used only inside the edition cover. */
+export const foodRamps = tokens.mosaic['food-ramps'];

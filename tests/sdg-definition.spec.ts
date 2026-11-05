@@ -28,7 +28,9 @@ test('Home: the intro reads "the Sustainable Development Goals (SDGs)" with no "
 
 test('Competition: "This edition is based on Sustainable Development Goal 2 (SDG 2): Zero Hunger."', async ({ page }) => {
   await page.goto('/competition/');
-  await expect(page.locator('p.top__sdg:visible')).toHaveText('This edition is based on Sustainable Development Goal 2 (SDG 2): Zero Hunger.');
+  const sdg = page.locator('p.top__sdg:visible');
+  await expect(sdg).toHaveText('This edition is based on Sustainable Development Goal 2 (SDG 2): Zero Hunger. The SDGs are 17 shared global goals for 2030; Goal 2 is to end hunger. What are the SDGs?');
+  await expect(sdg.getByRole('link', { name: 'What are the SDGs?' })).toHaveAttribute('href', '/about/#sdgs');
   expect(await textWithoutDisclaimer(page.locator('header.top'))).not.toMatch(UN);
   expect(await textWithoutDisclaimer(page.locator('main'))).not.toMatch(UN);
 });

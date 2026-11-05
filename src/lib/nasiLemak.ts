@@ -1,18 +1,21 @@
 // The edition cover: a plate of nasi lemak drawn as a 36 x 36 grid of patterned
 // tiles, ported from the design's nasi-lemak-cover.js. It renders to an SVG at
 // build time, so the page needs no JavaScript. The egg yolk takes the edition
-// colour; everything else maps light-to-dark values onto the mosaic ramp.
-import { editionColor, mosaic } from './tokens';
+// colour; every other food maps its light-to-dark values onto its own ramp
+// (foodRamps in tokens.json), so rice, egg, sambal, peanuts, cucumber and
+// banana leaf each read as themselves.
+import { editionColor, mosaic, foodRamps } from './tokens';
 
 const N = 36;
 
-type Tile = { t: number; yolk: boolean };
+type Part = 'leaf' | 'rice' | 'sambal' | 'anchovySambal' | 'peanut' | 'cucumberSkin' | 'cucumberFlesh' | 'eggWhite' | 'yolk';
+type Tile = { t: number; part: Part };
 
 function lcg(seed: number) {
   return () => (seed = (seed * 16807) % 2147483647) / 2147483647;
 }
 
-// Tone (0 dark to 1 light) for every tile, row by row.
+// Tone (0 dark to 1 light) and the food part for every tile, row by row. The last thing drawn on a tile wins, as before.
 function buildGrid(): Tile[] {
   const rnd = lcg(5);
   const clamp = (v: number) => Math.max(0, Math.min(1, v));
@@ -28,43 +31,43 @@ function buildGrid(): Tile[] {
     const u = (i + 0.5) / N, v = (j + 0.5) / N, n = nz(i, j) + (rnd() - 0.5) * 0.25;
     // banana leaf: dark, diagonal veins, light sheen top-left
     let t = 0.08 + 0.06 * Math.sin((u * 0.7 + v) * 46) + 0.1 * clamp(1 - Math.hypot(u - 0.15, v - 0.1) / 0.6) + n * 0.05;
-    let yolk = false;
+    let part: Part = 'leaf';
     // contact shadows
     if (E(u, v, .56, .62, .34, .30) < 1) t -= 0.06;
     if (E(u, v, .90, .55, .16, .32) < 1) t -= 0.04;
     // peanuts
     for (const [x, y] of nuts) {
-      if (Math.hypot(u - x, (v - y) * 1.15) < 0.036) t = 0.3 + 0.2 * clamp(1 - Math.hypot(u - x + 0.012, v - y + 0.012) / 0.04) + n * 0.04;
+      if (Math.hypot(u - x, (v - y) * 1.15) < 0.036) { part = 'peanut'; t = 0.3 + 0.2 * clamp(1 - Math.hypot(u - x + 0.012, v - y + 0.012) / 0.04) + n * 0.04; }
     }
     // sambal, top left
     const s1 = E(u, v, .19, .30, .21, .15) + n * 0.35;
-    if (s1 < 1) t = 0.46 + 0.1 * (1 - s1) + 0.12 * n + (rnd() < 0.15 ? 0.1 : 0);
+    if (s1 < 1) { part = 'sambal'; t = 0.46 + 0.1 * (1 - s1) + 0.12 * n + (rnd() < 0.15 ? 0.1 : 0); }
     // anchovy sambal, bottom
     const s2 = E(u, v, .66, .85, .26, .11) + n * 0.35;
-    if (s2 < 1) t = 0.34 + 0.12 * (1 - s2) + 0.16 * n + (Math.sin((u * 3 - v) * 40) > 0.7 ? 0.14 : 0);
+    if (s2 < 1) { part = 'anchovySambal'; t = 0.34 + 0.12 * (1 - s2) + 0.16 * n + (Math.sin((u * 3 - v) * 40) > 0.7 ? 0.14 : 0); }
     // eggs
     for (const [cx, cy, rx, ry] of [[.87, .37, .15, .12], [.89, .63, .13, .15]]) {
       const e = E(u, v, cx, cy, rx, ry);
       if (e < 1) {
         const ye = E(u, v, cx + 0.01, cy, rx * 0.58, ry * 0.58);
-        if (ye < 1) { yolk = true; t = 0.45 + 0.45 * (1 - ye) + n * 0.1; }
-        else t = 0.95 + 0.05 * (1 - Math.hypot(u - cx + 0.05, v - cy + 0.04) / 0.2) - (e > 0.85 ? 0.14 : 0);
+        if (ye < 1) { part = 'yolk'; t = 0.45 + 0.45 * (1 - ye) + n * 0.1; }
+        else { part = 'eggWhite'; t = 0.95 + 0.05 * (1 - Math.hypot(u - cx + 0.05, v - cy + 0.04) / 0.2) - (e > 0.85 ? 0.14 : 0); }
       }
     }
     // cucumber slices, bottom left, later ones overlap
     for (const [cx, cy] of cukes) {
       const d = Math.hypot(u - cx, (v - cy) * 1.25) / 0.085;
-      if (d < 1) { yolk = false; t = d > 0.8 ? 0.2 + n * 0.05 : 0.74 - 0.14 * d + n * 0.04; }
+      if (d < 1) { if (d > 0.8) { part = 'cucumberSkin'; t = 0.2 + n * 0.05; } else { part = 'cucumberFlesh'; t = 0.74 - 0.14 * d + n * 0.04; } }
     }
     // rice dome
     const dome = v < 0.66 ? Math.hypot(u - 0.48, v - 0.5) / 0.28 : E(u, v, .48, .66, .27, .10);
     if (dome < 1) {
-      yolk = false;
+      part = 'rice';
       const l = Math.hypot(u - 0.39, v - 0.36) / 0.42;
       t = 1.02 - 0.26 * clamp(l) - (dome > 0.9 ? 0.08 : 0) + (rnd() - 0.5) * 0.08;
       if (v > 0.62) t -= (0.06 * (v - 0.62)) / 0.1;
     }
-    out.push({ t: clamp(t), yolk });
+    out.push({ t: clamp(t), part });
   }
   return out;
 }
@@ -88,12 +91,12 @@ function pattern(k: number, x: number, y: number, fg: string): string {
 export function nasiLemakSvg(accent: string = editionColor): string {
   const grid = buildGrid();
   const rnd = lcg(11);
-  const ramp = mosaic.ramp;
   const yramp = mosaic['edition-ramp'].map((c) => (c === 'edition' ? accent : c));
+  const ramps: Record<Part, string[]> = { ...foodRamps, yolk: yramp };
   const parts: string[] = [];
 
   for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
-    const o = grid[j * N + i], R = o.yolk ? yramp : ramp, L = R.length;
+    const o = grid[j * N + i], R = ramps[o.part], L = R.length;
     const idx = Math.max(0, Math.min(L - 1, Math.round(o.t * (L - 1) + (rnd() - 0.5) * 0.5)));
     const f = Math.max(0, Math.min(L - 1, idx + (rnd() < 0.5 ? -1 : 1)));
     const x = i * 10, y = j * 10;
